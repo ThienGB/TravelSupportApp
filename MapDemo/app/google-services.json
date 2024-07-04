@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "137586477286",
+    "project_id": "mapdemo-b04e7",
+    "storage_bucket": "mapdemo-b04e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137586477286:android:4c113e8cd7379e28035327",
+        "android_client_info": {
+          "package_name": "com.example.mapdemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfKci1Dvw5X1YVku7VaEgoojbvNqFIQ5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

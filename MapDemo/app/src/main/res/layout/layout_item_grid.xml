@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="110dp"
+            android:layout_margin="10dp"
+            android:layout_height="140dp"
+            android:background="@drawable/background_city"
+
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/imgCity"
+                android:layout_margin="5dp"
+                android:layout_width="100dp"
+                android:layout_height="90dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/city">
+            </ImageView>
+            <TextView
+                android:id="@+id/tvxName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Kỹ thuật"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_marginRight ="10dp"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>
