@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#6BBD6F"
+        android:text="Thông tin nhân viên"
+        android:textAlignment="center"
+        android:textSize="20dp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TableRow>
+
+            <TextView
+                android:layout_width="124dp"
+                android:layout_height="wrap_content"
+                android:text="Mã NV:"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/editMaNV"
+                android:layout_width="205dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:textSize="20dp"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="146dp"
+                android:layout_height="wrap_content"
+                android:text="Tên NV:"
+                android:textSize="20dp" />
+
+            <EditText
+                android:id="@+id/editTenNV"
+                android:layout_width="251dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:textSize="20dp"/>
+        </TableRow>
+        <TableRow>
+            <TextView android:layout_width="146dp" android:layout_height="wrap_content" android:text="Giới tính:" android:textSize="20dp"/>
+            <RadioGroup android:id="@+id/genderGr" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Giới tính:" android:textSize="20dp" android:orientation="horizontal">
+                <RadioButton android:id="@+id/radNam" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nam" android:checked="true" android:textSize="20dp"/>
+                <RadioButton android:id="@+id/radNu" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nữ" android:textSize="20dp"/>
+            </RadioGroup>
+        </TableRow>
+        <TableRow>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnXoaTrang"
+                android:text="Xóa trắng"
+                android:textSize="20dp"
+                />
+            <Button
+                android:id="@+id/btnNhap"
+                android:layout_width="146dp"
+                android:layout_height="wrap_content"
+                android:text="Lưu NV"
+                android:layout_column="1"
+                android:textSize="20dp" />
+
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

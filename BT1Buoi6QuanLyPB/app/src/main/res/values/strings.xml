@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">QuanLyPB</string>
+    <string name="hello_world">Hello_World !</string>
+    <string name="title_activity_thiet_lap_truong_phong">ThietLapTruongPhong</string>
+    <string name="title_activity_danh_sach_nhan_vien">DanhSachNhanVien</string>
+    <string name="title_activity_them_nhan_vien">ThemNhanVien</string>
+    <string name="title_activity_chuyen_phong_ban">ChuyenPhongBan</string>
+</resources>
