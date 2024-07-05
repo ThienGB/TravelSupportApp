@@ -55,8 +55,11 @@ public class UserCityListActivity extends AppCompatActivity {
         activityComponent.inject(this);
         realmHelper.openRealm();
         userCityListViewModel = new ViewModelProvider(this, viewModelFactory).get(UserCityListViewModel.class);
+        binding.setViewModel(userCityListViewModel);
+        binding.setLifecycleOwner(this);
     }
     private void fetchData(){
+        userCityListViewModel.setIsLoading(true);
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {

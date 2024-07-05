@@ -63,7 +63,7 @@ public class UserBookingListActivity extends AppCompatActivity {
         userBookingListViewModel = new ViewModelProvider(this, viewModelFactory).get(UserBookingListViewModel.class);
     }
     private void setUpRecycleView(){
-        binding.rcvFavorite.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.rcvFavorite.setLayoutManager(new GridLayoutManager(this, 1));
         bookings = userBookingListViewModel.getBookingByIdUser(firebaseAuth.getCurrentUser().getEmail());
         if (bookings == null){
             binding.txvInfor.setText("There are no favorites yet");

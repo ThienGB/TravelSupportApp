@@ -11,6 +11,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:mcv_selectionMode="range"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/select_number_of_rooms"/>
+
+    <com.shawnlin.numberpicker.NumberPicker
+        android:id="@+id/npkNumOfRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        app:np_dividerColor="@color/main_darkest_blue"
+        app:np_height="40dp"
+        app:np_max="15"
+        app:np_min="1"
+        app:np_orientation="horizontal"
+        app:np_selectedTextColor="@color/main_darker_blue"
+        app:np_textColor="@color/main_blue"
+        app:np_value="1"
+        app:np_width="150dp" />
 
     <Button
         android:id="@+id/btnOk"

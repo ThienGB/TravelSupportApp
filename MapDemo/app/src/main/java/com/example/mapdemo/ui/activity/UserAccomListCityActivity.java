@@ -72,6 +72,8 @@ public class UserAccomListCityActivity extends AppCompatActivity {
         activityComponent.inject(this);
         realmHelper.openRealm();
         userAccomListCityViewModel = new ViewModelProvider(this, viewModelFactory).get(UserAccomListCityViewModel.class);
+        binding.setViewModel(userAccomListCityViewModel);
+        binding.setLifecycleOwner(this);
     }
     private void setUpRecycleView(){
         binding.rcvCity.setLayoutManager(new GridLayoutManager(this, 2));

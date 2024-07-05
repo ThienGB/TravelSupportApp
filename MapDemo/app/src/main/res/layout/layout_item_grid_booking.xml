@@ -3,14 +3,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="@drawable/img_1"
-        android:layout_margin="5dp"
-        android:layout_height="350dp">
+        android:background="@drawable/img_background_booking"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="30dp"
+        android:layout_height="390dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="380dp"
             android:layout_margin="10dp"
+            android:layout_marginBottom="30dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -29,7 +32,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -48,9 +51,10 @@
                         android:id="@+id/txvAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
                         android:text="address:"
-                        android:textSize="18dp"
+                        android:textSize="16dp"
                         android:textStyle="italic" />
                 </LinearLayout>
             </LinearLayout>
@@ -59,8 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="40dp"
                 android:layout_marginBottom="5dp"
                 android:orientation="horizontal">
 
@@ -69,7 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Booking date:"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -79,8 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="27dp"
                     android:text="Kỹ thuật"
-                    android:textAlignment="center"
-                    android:textSize="16dp"
+                    android:textSize="14dp"
                     android:textStyle="italic" />
             </LinearLayout>
 
@@ -88,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="40dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -96,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Check-out date:"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -104,10 +106,9 @@
                     android:id="@+id/txvCheckOutDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="12dp"
                     android:text="Kỹ thuật"
-                    android:textAlignment="center"
-                    android:textSize="16dp"
+                    android:textSize="14dp"
                     android:textStyle="italic" />
             </LinearLayout>
 
@@ -125,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Total price:"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -135,8 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="48dp"
                     android:text="Kỹ thuật"
-                    android:textAlignment="center"
-                    android:textSize="16dp"
+                    android:textSize="14dp"
                     android:textStyle="italic" />
             </LinearLayout>
             <LinearLayout
@@ -152,7 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Description:"
-                    android:textSize="18dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -162,8 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="42dp"
                     android:text="Kỹ thuật"
-                    android:textAlignment="center"
-                    android:textSize="16dp"
+                    android:textSize="14dp"
                     android:textStyle="italic" />
             </LinearLayout>
 

@@ -26,6 +26,7 @@ import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.shawnlin.numberpicker.NumberPicker;
 import com.squareup.picasso.Picasso;
 
 import java.time.temporal.ChronoUnit;
@@ -120,6 +121,10 @@ public class AccomInforActivity extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_date_booking, null);
         builder.setView(dialogView);
         final MaterialCalendarView calendarView = dialogView.findViewById(R.id.calendarView);
+        calendarView.state().edit()
+                .setMinimumDate(CalendarDay.today())
+                .commit();
+        NumberPicker numberPicker = findViewById(R.id.npkNumOfRoom);
         final Button btnConfirm = dialogView.findViewById(R.id.btnOk);
         AlertDialog dialog = builder.create();
         btnConfirm.setOnClickListener(new View.OnClickListener() {
@@ -136,9 +141,9 @@ public class AccomInforActivity extends AppCompatActivity {
                             CalendarDay startDate = selectedDates.get(0);
                             CalendarDay endDate = selectedDates.get(selectedDates.size() - 1);
                             Date startDateAsDate = convertCalendarDayToDate(startDate);
-
                             Date endDateAsDate = convertCalendarDayToDate(endDate);
                             String idBooking = UUID.randomUUID().toString();
+                            int currentValue = numberPicker.getValue();
                             int price = currentAccom.getPrice() * getDaysBetween(startDate, endDate);
                             Booking booking = new Booking(idBooking,
                                     currentAccom.getAccommodationId(),
@@ -147,6 +152,8 @@ public class AccomInforActivity extends AppCompatActivity {
                             accomInforViewModel.addBooking(booking);
                             Toast.makeText(AccomInforActivity.this, "Booking Succesfully.", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
+                            Intent intent = new Intent(AccomInforActivity.this, UserBookingListActivity.class);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(AccomInforActivity.this, "Please select a range of dates.", Toast.LENGTH_SHORT).show();
                         }

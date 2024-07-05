@@ -18,9 +18,13 @@ public class UserCityListViewModel extends ViewModel {
     private RealmResults<City> cities;
     public UserCityListViewModel(RealmHelper realmHelper){
         cityRepo = new CityRepositoryImpl(realmHelper);
+        isLoading.setValue(true);
     }
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
+    }
+    public void setIsLoading(boolean isLoading){
+        this.isLoading.setValue(isLoading);
     }
 
     public void fetchCities() {

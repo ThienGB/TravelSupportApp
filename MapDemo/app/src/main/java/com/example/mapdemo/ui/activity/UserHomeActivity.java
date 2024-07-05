@@ -9,14 +9,18 @@ import android.view.View;
 
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityUserHomeBinding;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class UserHomeActivity extends AppCompatActivity {
     ActivityUserHomeBinding binding;
-
+    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding= DataBindingUtil.setContentView(this, R.layout.activity_user_home);
+        loadData();
         addEvents();
     }
     private void addEvents(){
@@ -41,5 +45,9 @@ public class UserHomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    private void loadData(){
+        firebaseAuth = FirebaseAuth.getInstance();
+        binding.txvTenHS.setText(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getDisplayName());
     }
 }

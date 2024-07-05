@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,21 +29,37 @@ public class RegisterViewModel extends ViewModel {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    progressDialog.dismiss();
-                                    Toast.makeText(context,"Đã có email gửi về, hãy verify",Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(context, LoginActivity.class);
-                                    context.startActivity(intent);
-                                }
-                            });
+                        if(task.isSuccessful()) {
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            if (user != null) {
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(ten)
+                                        .build();
 
-                        }
-                        else {
-                            Toast.makeText(context,"ĐK thất bại",Toast.LENGTH_SHORT).show();
-                            progressDialog.dismiss();
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            progressDialog.dismiss();
+                                                            Toast.makeText(context, "Đã có email gửi về, hãy verify", Toast.LENGTH_SHORT).show();
+                                                            Intent intent = new Intent(context, LoginActivity.class);
+                                                            context.startActivity(intent);
+                                                        }
+                                                    });
+                                                } else {
+                                                    progressDialog.dismiss();
+                                                    Toast.makeText(context, "Cập nhật tên thất bại", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(context, "ĐK thất bại", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                            }
                         }
                     }
                 });

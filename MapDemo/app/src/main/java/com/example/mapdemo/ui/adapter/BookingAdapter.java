@@ -24,7 +24,7 @@ public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHo
     UserBookingListViewModel userBookingListViewModel;
 
     public BookingAdapter(OnItemClickListener listener, OnItemLongClickListener listener2,
-                          UserBookingListViewModel serBookingListViewModel) {
+                          UserBookingListViewModel userBookingListViewModel) {
         super(diffCallback);
         this.listener = listener;
         this.listener2 = listener2;
@@ -95,7 +95,8 @@ public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHo
             });
         }
         public void bind(Booking booking) {
-            Accommodation accommodation = userBookingListViewModel.getAccomById(booking.getIdTarget());
+            String target = booking.getIdTarget();
+            Accommodation accommodation = userBookingListViewModel.getAccomById(target);
             binding.txvAccomName.setText(accommodation.getName());
             binding.txvAddress.setText(accommodation.getAddress());
             binding.txvDescription.setText(accommodation.getDescription());
