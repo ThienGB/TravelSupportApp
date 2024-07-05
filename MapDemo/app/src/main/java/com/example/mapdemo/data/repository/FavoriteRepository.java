@@ -1,7 +1,9 @@
 package com.example.mapdemo.data.repository;
 
+import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Favorite;
 
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public interface FavoriteRepository {
@@ -9,5 +11,6 @@ public interface FavoriteRepository {
     void deleteFavorite(String idFavorite);
     void deleteAllFavorite();
     RealmResults<Favorite> getFavoriteList();
+    RealmList<Accommodation> getFavoriteByIdUser(String idUser);
     Favorite getFavoriteById(String idFavorite);
 }

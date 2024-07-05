@@ -23,6 +23,7 @@ import com.example.mapdemo.databinding.ActivityUserCityListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.CityAdapter;
 import com.example.mapdemo.ui.viewmodel.UserCityListViewModel;
+import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 
 import javax.inject.Inject;
 

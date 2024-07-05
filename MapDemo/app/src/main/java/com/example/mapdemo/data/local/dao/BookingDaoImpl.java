@@ -45,7 +45,7 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public RealmResults<Booking> getBookingByIdUser(String idUser) {
-        RealmResults<Booking> realmResults = realm.where(Booking.class).equalTo(idUser, idUser).findAll();
+        RealmResults<Booking> realmResults = realm.where(Booking.class).equalTo("idUser", idUser).findAll();
         return realmResults;
     }
 }

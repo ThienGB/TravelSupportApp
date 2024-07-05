@@ -6,14 +6,35 @@ import io.realm.annotations.PrimaryKey;
 public class Favorite extends RealmObject {
     @PrimaryKey
     private String idFavorite;
+    private String idTarget;
+    private String idUser;
+
     private String type;
 
-    public Favorite(String idFavorite, String type) {
+    public Favorite(String idFavorite, String idTarget, String idUser, String type) {
         this.idFavorite = idFavorite;
+        this.idTarget = idTarget;
+        this.idUser = idUser;
         this.type = type;
     }
 
     public Favorite() {
+    }
+
+    public String getIdTarget() {
+        return idTarget;
+    }
+
+    public void setIdTarget(String idTarget) {
+        this.idTarget = idTarget;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getIdFavorite() {

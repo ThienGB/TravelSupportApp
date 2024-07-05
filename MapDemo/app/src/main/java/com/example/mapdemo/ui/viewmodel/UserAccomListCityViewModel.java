@@ -44,4 +44,8 @@ public class UserAccomListCityViewModel extends ViewModel {
         accoms = accomRepo.getAccomsByCity(cityId);
         return accoms;
     }
+
+    public Accommodation getAccomById(String idAccom){
+        return accomRepo.getAccomnById(idAccom);
+    }
 }

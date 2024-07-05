@@ -10,5 +10,6 @@ public interface FavoriteDao {
     void deleteFavorite(String idFavorite);
     void deleteAllFavorite();
     RealmResults<Favorite> getFavoriteList();
+    RealmResults<Favorite> getFavoriteByIdUser(String idUser);
     Favorite getFavoriteById(String idFavorite);
 }

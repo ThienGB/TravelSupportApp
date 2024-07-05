@@ -45,6 +45,12 @@ public class FavoriteDaoImpl implements FavoriteDao {
     }
 
     @Override
+    public RealmResults<Favorite> getFavoriteByIdUser(String idUser) {
+        RealmResults<Favorite> realmResults = realm.where(Favorite.class).equalTo("idUser", idUser).findAll();
+        return realmResults;
+    }
+
+    @Override
     public Favorite getFavoriteById(String idFavorite) {
         Favorite realmResults = realm.where(Favorite.class).equalTo("idFavorite", idFavorite).findFirst();
         return realmResults;

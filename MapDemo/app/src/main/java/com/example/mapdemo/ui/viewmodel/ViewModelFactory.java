@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.ui.activity.UserFavoriteListActivity;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
     private final RealmHelper realmHelper;
@@ -26,6 +27,14 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             return (T) new UserCityListViewModel(realmHelper);
         } else if (modelClass.isAssignableFrom(UserAccomListCityViewModel.class)) {
             return (T) new UserAccomListCityViewModel(realmHelper);
+        }else if (modelClass.isAssignableFrom(RegisterViewModel.class)) {
+            return (T) new RegisterViewModel();
+        }else if (modelClass.isAssignableFrom(LoginViewModel.class)) {
+            return (T) new LoginViewModel();
+        } else if (modelClass.isAssignableFrom(UserBookingListViewModel.class)) {
+            return (T) new UserBookingListViewModel(realmHelper);
+        }else if (modelClass.isAssignableFrom(UserFavoriteListViewModel.class)) {
+            return (T) new UserFavoriteListViewModel(realmHelper);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

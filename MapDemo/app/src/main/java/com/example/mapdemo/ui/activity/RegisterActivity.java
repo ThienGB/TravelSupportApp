@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -13,60 +11,47 @@ import android.view.View;
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
 import com.example.mapdemo.data.RealmHelper;
-import com.example.mapdemo.databinding.ActivityLoginBinding;
+import com.example.mapdemo.databinding.ActivityRegisterBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
-import com.example.mapdemo.ui.viewmodel.LoginViewModel;
+import com.example.mapdemo.ui.viewmodel.RegisterViewModel;
 import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 
 import javax.inject.Inject;
 
-public class LoginActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
+    ActivityRegisterBinding binding;
     @Inject
     RealmHelper realmHelper;
     @Inject
     ViewModelFactory viewModelFactory;
-    private LoginViewModel loginViewModel;
-    public static final String SHARED_PREFS="sharePrefs";
-    private ActivityLoginBinding binding;
+    private RegisterViewModel registerViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
+        binding= DataBindingUtil.setContentView(this, R.layout.activity_register);
         initInjec();
         addEvents();
-
     }
     private void initInjec(){
         MainApplication mainApplication = (MainApplication) getApplication();
         ActivityComponent activityComponent =mainApplication.getActivityComponent();
         activityComponent.inject(this);
-        loginViewModel = new ViewModelProvider(this, viewModelFactory).get(LoginViewModel.class);
+        registerViewModel = new ViewModelProvider(this, viewModelFactory).get(RegisterViewModel.class);
     }
     private void addEvents(){
-        binding.btnSignUpEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
         binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CheckAllFields()) {
-                    loginViewModel.handleLogin(binding.edtEmail.getText().toString(),
+                onBackPressed();
+            }
+        });
+        binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CheckAllFields()){
+                    registerViewModel.handleSignUp(binding.edtEmail.getText().toString(),
                             binding.edtPassword.getText().toString(),
-                            LoginActivity.this, new LoginViewModel.UploadCallback() {
-                        @Override
-                        public void onUploadComplete() {
-                            Intent intent= new Intent(LoginActivity.this, UserHomeActivity.class);
-                            startActivity(intent);
-                            SharedPreferences sharedPreferences=getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
-                            SharedPreferences.Editor editor= sharedPreferences.edit();
-                            editor.putString("name","true");
-                            editor.apply();
-                        }
-                    });
+                            binding.edtName.getText().toString(),RegisterActivity.this);
                 }
             }
         });

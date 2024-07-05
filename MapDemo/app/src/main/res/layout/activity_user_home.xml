@@ -33,14 +33,14 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:paddingLeft="10dp">
+                        android:paddingStart="10dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:layout_marginBottom="1dp"
-                            android:text="Xin chào"
+                            android:text="@string/hello"
                             android:textColor="@color/black_high_emp"
                             android:textSize="10dp" />
 
@@ -62,7 +62,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_margin="10dp"
                 android:background="@drawable/background_fullbutton"
                 android:elevation="10dp"
@@ -82,16 +81,6 @@
                 android:elevation="10dp"
                 android:orientation="vertical"
                 android:padding="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:text="Chức năng"
-                    android:textColor="@color/black"
-                    android:textSize="17dp"
-                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -120,8 +109,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:textSize="10dp"
-                            android:text="Booked Room"
-                            android:layout_centerInParent="true" />
+                            android:text="@string/booked_room" />
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="60dp"
@@ -145,8 +133,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:textSize="10dp"
-                            android:text="Research"
-                            android:layout_centerInParent="true" />
+                            android:text="@string/research" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/btnFavorite"
@@ -170,8 +157,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:textSize="10dp"
-                            android:text="Favorite list"
-                            android:layout_centerInParent="true" />
+                            android:text="@string/favorite_list"
+                     />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

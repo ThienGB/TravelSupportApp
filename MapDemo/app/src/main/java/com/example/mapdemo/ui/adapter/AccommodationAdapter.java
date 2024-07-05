@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mapdemo.data.model.Accommodation;
+import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.LayoutItemGridAccomBinding;
 import com.example.mapdemo.databinding.LayoutItemGridBinding;

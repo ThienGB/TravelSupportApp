@@ -23,7 +23,7 @@ public class UserHomeActivity extends AppCompatActivity {
         binding.btnBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserHomeActivity.this, UserCityListActivity.class);
+                Intent intent = new Intent(UserHomeActivity.this, UserBookingListActivity.class);
                 startActivity(intent);
             }
         });
@@ -31,6 +31,13 @@ public class UserHomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(UserHomeActivity.this, UserCityListActivity.class);
+                startActivity(intent);
+            }
+        });
+        binding.btnFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserHomeActivity.this, UserFavoriteListActivity.class);
                 startActivity(intent);
             }
         });

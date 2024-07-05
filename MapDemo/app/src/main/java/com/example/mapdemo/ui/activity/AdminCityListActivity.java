@@ -33,6 +33,7 @@ import com.example.mapdemo.databinding.DialogEditCityBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.CityAdapter;
 import com.example.mapdemo.ui.viewmodel.AdminCityListViewModel;
+import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 
 import java.util.UUID;
 

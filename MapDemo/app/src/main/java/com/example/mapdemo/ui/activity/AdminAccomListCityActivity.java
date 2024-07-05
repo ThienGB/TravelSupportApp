@@ -32,6 +32,7 @@ import com.example.mapdemo.databinding.DialogEditAccomBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.AccommodationAdapter;
 import com.example.mapdemo.ui.viewmodel.AdminListAccomCityViewModel;
+import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 
 import java.util.UUID;
 

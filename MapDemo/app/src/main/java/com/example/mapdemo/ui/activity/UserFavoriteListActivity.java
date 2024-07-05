@@ -1,5 +1,7 @@
 package com.example.mapdemo.ui.activity;
 
+import static com.example.mapdemo.data.ActionHelper.ACTION_EDIT;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,33 +21,38 @@ import com.example.mapdemo.data.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityUserAccomListCityBinding;
+import com.example.mapdemo.databinding.ActivityUserCityListBinding;
+import com.example.mapdemo.databinding.ActivityUserFavoriteListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.AccommodationAdapter;
+import com.example.mapdemo.ui.adapter.CityAdapter;
 import com.example.mapdemo.ui.viewmodel.UserAccomListCityViewModel;
+import com.example.mapdemo.ui.viewmodel.UserCityListViewModel;
+import com.example.mapdemo.ui.viewmodel.UserFavoriteListViewModel;
 import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
+import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
 
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
-public class UserAccomListCityActivity extends AppCompatActivity {
-
+public class UserFavoriteListActivity extends AppCompatActivity {
     private AccommodationAdapter accomAdapter;
-    private ActivityUserAccomListCityBinding binding;
+    private ActivityUserFavoriteListBinding binding;
     @Inject
     RealmHelper realmHelper;
-    RealmResults<Accommodation> accoms;
+    RealmList<Accommodation> accoms;
     @Inject
     ViewModelFactory viewModelFactory;
-    private UserAccomListCityViewModel userAccomListCityViewModel;
+    private UserFavoriteListViewModel userFavoriteListViewModel;
     private City currentCity = null;
+    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_accom_list_city);
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_favorite_list);
         initInjec();
-        fetchData();
         getDataFromIntent();
         setUpRecycleView();
         addEvents();
@@ -55,31 +62,28 @@ public class UserAccomListCityActivity extends AppCompatActivity {
         String idCity = i.getStringExtra("idCity");
         String name = i.getStringExtra("name");
         currentCity = new City(idCity, name);
+        firebaseAuth = FirebaseAuth.getInstance();
     }
-    private void fetchData(){
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if (networkInfo != null) {
-            userAccomListCityViewModel.fetchAccommodations();
-        } else {
-            Toast.makeText(this, "Không có kết nối mạng, dữ liệu có thể không chính xác", Toast.LENGTH_SHORT).show();
-        }
 
-    }
     private void initInjec(){
         MainApplication mainApplication = (MainApplication) getApplication();
         ActivityComponent activityComponent =mainApplication.getActivityComponent();
         activityComponent.inject(this);
         realmHelper.openRealm();
-        userAccomListCityViewModel = new ViewModelProvider(this, viewModelFactory).get(UserAccomListCityViewModel.class);
+        userFavoriteListViewModel = new ViewModelProvider(this, viewModelFactory).get(UserFavoriteListViewModel.class);
     }
     private void setUpRecycleView(){
-        binding.rcvCity.setLayoutManager(new GridLayoutManager(this, 2));
-        accoms = userAccomListCityViewModel.getAccomsByCityId(currentCity.getIdCity());
+        binding.rcvFavorite.setLayoutManager(new GridLayoutManager(this, 2));
+        accoms = userFavoriteListViewModel.getFavoriteByIdUser(firebaseAuth.getCurrentUser().getEmail());
+        if (accoms == null){
+            binding.txvInfor.setText("There are no favorites yet");
+            return;
+        }
+
         accomAdapter = new AccommodationAdapter(new AccommodationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Accommodation accommodation) {
-                Intent intent = new Intent(UserAccomListCityActivity.this, AccomInforActivity.class);
+                Intent intent = new Intent(UserFavoriteListActivity.this, AccomInforActivity.class);
                 intent.putExtra("idAccom", accommodation.getAccommodationId());
                 intent.putExtra("nameAccom", accommodation.getName());
                 startActivity(intent);
@@ -90,11 +94,7 @@ public class UserAccomListCityActivity extends AppCompatActivity {
             public void onItemLongClick(Accommodation accommodation) {
             }
         });
-        accoms.addChangeListener(accommodations -> {
-            accomAdapter.submitList(accoms);
-            accomAdapter.notifyDataSetChanged();
-        });
-        binding.rcvCity.setAdapter(accomAdapter);
+        binding.rcvFavorite.setAdapter(accomAdapter);
         accomAdapter.submitList(accoms);
         accomAdapter.notifyDataSetChanged();
     }
@@ -102,7 +102,7 @@ public class UserAccomListCityActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserAccomListCityActivity.this, UserCityListActivity.class);
+                Intent intent = new Intent(UserFavoriteListActivity.this, UserHomeActivity.class);
                 startActivity(intent);
             }
         });
