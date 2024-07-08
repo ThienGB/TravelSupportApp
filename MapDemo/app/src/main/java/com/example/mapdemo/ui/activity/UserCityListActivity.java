@@ -18,12 +18,15 @@ import android.widget.Toast;
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
 import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityUserCityListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.CityAdapter;
 import com.example.mapdemo.ui.viewmodel.UserCityListViewModel;
 import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -35,6 +38,7 @@ public class UserCityListActivity extends AppCompatActivity {
     @Inject
     RealmHelper realmHelper;
     RealmResults<City> cities;
+    List<City> cityList;
     @Inject
     ViewModelFactory viewModelFactory;
     private UserCityListViewModel userCityListViewModel;
@@ -46,8 +50,7 @@ public class UserCityListActivity extends AppCompatActivity {
         initInjec();
         fetchData();
         setUpRecycleView();
-        handleBack();
-
+        addEvents();
     }
     private void initInjec(){
         MainApplication mainApplication = (MainApplication) getApplication();
@@ -85,13 +88,15 @@ public class UserCityListActivity extends AppCompatActivity {
         });
         cities = userCityListViewModel.getCities();
         cities.addChangeListener(results -> {
-            cityAdapter.submitList(cities);
+            cityList = realmHelper.getRealm().copyFromRealm(cities);
+            cityAdapter.submitList(cityList);
             cityAdapter.notifyDataSetChanged();
         });
         binding.rcvCity.setAdapter(cityAdapter);
-        cityAdapter.submitList(cities);
+        cityAdapter.submitList(cityList);
     }
-    private void handleBack(){
+    private void addEvents(){
+        binding.searchView.setQueryHint("Find by city name");
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +104,27 @@ public class UserCityListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<City> filterCities = userCityListViewModel.filterCities(cityList, newText);
+                reLoad(filterCities);
+                return true;
+            }
+        });
+    }
+    private void reLoad(List<City> filterCities ){
+        cityAdapter.submitList(filterCities);
+        if (filterCities.size() == 0){
+            binding.txvInfor.setVisibility(View.VISIBLE);
+        }else {
+            binding.txvInfor.setVisibility(View.GONE);
+        }
+        cityAdapter.notifyDataSetChanged();
     }
     @Override
     protected void onDestroy() {

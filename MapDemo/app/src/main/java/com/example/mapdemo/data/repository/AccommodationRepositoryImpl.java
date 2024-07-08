@@ -30,6 +30,7 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.observers.DisposableObserver;
 import io.reactivex.rxjava3.observers.DisposableSingleObserver;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.realm.Case;
 import io.realm.RealmResults;
 
 public class AccommodationRepositoryImpl implements AccommodationRepository{

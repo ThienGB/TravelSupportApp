@@ -10,6 +10,9 @@ import com.example.mapdemo.data.repository.AccommodationRepository;
 import com.example.mapdemo.data.repository.AccommodationRepositoryImpl;
 import com.example.mapdemo.ui.LoadingHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.RealmResults;
 
 public class UserAccomListCityViewModel extends ViewModel {
@@ -44,8 +47,18 @@ public class UserAccomListCityViewModel extends ViewModel {
         accoms = accomRepo.getAccomsByCity(cityId);
         return accoms;
     }
-
-    public Accommodation getAccomById(String idAccom){
-        return accomRepo.getAccomnById(idAccom);
+    public List<Accommodation> filterAccoms(List<Accommodation> accomList, String newText, int minPrice, int maxPrice) {
+        List<Accommodation> filterAccoms= new ArrayList<>();
+        String query = newText.toLowerCase();
+        for (Accommodation accommodation: accomList){
+            String name = accommodation.getName().toLowerCase();
+            String address = accommodation.getAddress().toLowerCase();
+            if ((name.contains(query) || address.contains(query))
+                    && accommodation.getPrice() > minPrice
+                    && accommodation.getPrice() < maxPrice){
+                filterAccoms.add(accommodation);
+            }
+        }
+        return filterAccoms;
     }
 }

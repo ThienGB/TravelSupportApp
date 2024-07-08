@@ -124,7 +124,7 @@ public class AccomInforActivity extends AppCompatActivity {
         calendarView.state().edit()
                 .setMinimumDate(CalendarDay.today())
                 .commit();
-        NumberPicker numberPicker = findViewById(R.id.npkNumOfRoom);
+        NumberPicker numberPicker = dialogView.findViewById(R.id.npkNumOfRoom);
         final Button btnConfirm = dialogView.findViewById(R.id.btnOk);
         AlertDialog dialog = builder.create();
         btnConfirm.setOnClickListener(new View.OnClickListener() {

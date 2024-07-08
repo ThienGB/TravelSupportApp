@@ -17,4 +17,5 @@ public interface AccommodationRepository {
     Accommodation getAccomnById(String idAccom);
     Completable fetchAccommodations(LoadingHelper loadingHelper);
     RealmResults<Accommodation> getAccomsByCity(String idCity);
+
 }

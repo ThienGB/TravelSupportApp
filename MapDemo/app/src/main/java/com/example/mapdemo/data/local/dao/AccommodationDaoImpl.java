@@ -52,4 +52,5 @@ public class AccommodationDaoImpl implements AccommodationDao {
         Accommodation realmResults = realm.where(Accommodation.class).equalTo("accommodationId", idAccom).findFirst();
         return realmResults;
     }
+
 }

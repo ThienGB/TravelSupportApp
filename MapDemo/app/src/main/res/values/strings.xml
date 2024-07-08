@@ -37,6 +37,8 @@
     <string name="hello">Hello</string>
     <string name="booked_room">Booked Room</string>
     <string name="research">Research</string>
-    <string name="loading_data_please_wait">Loading data, please wait...</string>
+    <string name="loading_data_please_wait">Loading data, please wait…</string>
     <string name="select_number_of_rooms">Select number of rooms:</string>
+    <string name="there_are_no_matching_results">There are no matching results</string>
+    <string name="confirm_booking">Confirm booking</string>
 </resources>
