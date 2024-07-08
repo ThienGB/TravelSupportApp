@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menuThemNV" android:title="Thêm nhân viên"></item>
-    <item android:id="@+id/menuDanhSachNV" android:title="Danh sách nhân viên"></item>
-    <item android:id="@+id/menuTruongPhong" android:title="Lập trưởng phòng"></item>
-    <item android:id="@+id/menuXoaPB" android:title="Xóa phòng bàn"></item>
-</menu>
