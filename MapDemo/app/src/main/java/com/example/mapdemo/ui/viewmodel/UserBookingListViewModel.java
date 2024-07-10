@@ -2,15 +2,19 @@ package com.example.mapdemo.ui.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.repository.AccommodationRepository;
 import com.example.mapdemo.data.repository.AccommodationRepositoryImpl;
 import com.example.mapdemo.data.repository.BookingRepository;
 import com.example.mapdemo.data.repository.BookingRepositoryImpl;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
-import io.realm.RealmList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import io.realm.RealmResults;
 
 public class UserBookingListViewModel extends ViewModel {

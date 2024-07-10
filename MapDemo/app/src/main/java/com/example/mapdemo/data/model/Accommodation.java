@@ -9,6 +9,7 @@ public class Accommodation extends RealmObject {
     private String name;
     private int price;
     private int freeroom;
+    private int currentFreeroom;
     private String image;
     private String description;
     private String address;
@@ -75,6 +76,14 @@ public class Accommodation extends RealmObject {
 
     public void setFreeroom(int freeroom) {
         this.freeroom = freeroom;
+    }
+
+    public int getCurrentFreeroom() {
+        return currentFreeroom;
+    }
+
+    public void setCurrentFreeroom(int currentFreeroom) {
+        this.currentFreeroom = currentFreeroom;
     }
 
     public String getImage() {

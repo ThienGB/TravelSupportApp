@@ -1,7 +1,6 @@
 package com.example.mapdemo.data.local.dao;
 
-import com.example.mapdemo.data.RealmHelper;
-import com.example.mapdemo.data.model.City;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Favorite;
 
 import io.realm.Realm;

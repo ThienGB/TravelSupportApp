@@ -1,6 +1,7 @@
 package com.example.mapdemo.ui.activity;
 
-import static com.example.mapdemo.data.ActionHelper.ACTION_EDIT;
+import static com.example.mapdemo.helper.ActionHelper.ACTION_EDIT;
+import static com.example.mapdemo.helper.DialogHelper.showErrorDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -17,8 +18,9 @@ import android.widget.Toast;
 
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.data.RealmHelper;
-import com.example.mapdemo.data.model.Accommodation;
+import com.example.mapdemo.data.model.api.ErrorResponse;
+import com.example.mapdemo.helper.CallbackHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityUserCityListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
@@ -43,11 +45,13 @@ public class UserCityListActivity extends AppCompatActivity {
     ViewModelFactory viewModelFactory;
     private UserCityListViewModel userCityListViewModel;
     private int currentAction = ACTION_EDIT;
+    private int countryCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_city_list);
         initInjec();
+        getDataFromIntent();
         fetchData();
         setUpRecycleView();
         addEvents();
@@ -61,12 +65,16 @@ public class UserCityListActivity extends AppCompatActivity {
         binding.setViewModel(userCityListViewModel);
         binding.setLifecycleOwner(this);
     }
+    private void getDataFromIntent(){
+        Intent intent = getIntent();
+        countryCode = intent.getIntExtra("countryCode", 1);
+    }
     private void fetchData(){
         userCityListViewModel.setIsLoading(true);
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {
-            userCityListViewModel.fetchCities();
+            userCityListViewModel.fetchCities(countryCode);
         } else {
             Toast.makeText(this, "Không có kết nối mạng, dữ liệu có thể không chính xác", Toast.LENGTH_SHORT).show();
         }
@@ -111,9 +119,17 @@ public class UserCityListActivity extends AppCompatActivity {
             }
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (cityList == null){
+                    return false;
+                }
                 List<City> filterCities = userCityListViewModel.filterCities(cityList, newText);
                 reLoad(filterCities);
                 return true;
+            }
+        });
+        userCityListViewModel.getErrorLiveData().observe(this, error -> {
+            if (error != null) {
+                showErrorDialog(this, error.getMessage());
             }
         });
     }

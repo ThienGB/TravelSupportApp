@@ -1,6 +1,6 @@
 package com.example.mapdemo.data.repository;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.local.dao.AccommodationDao;
 import com.example.mapdemo.data.local.dao.AccommodationDaoImpl;
 import com.example.mapdemo.data.local.dao.FavoriteDao;

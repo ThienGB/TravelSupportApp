@@ -1,14 +1,18 @@
 package com.example.mapdemo.ui.activity;
 
+import static com.example.mapdemo.helper.DialogHelper.showErrorDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,7 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.CallbackHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityUserAccomListCityBinding;
@@ -24,8 +29,11 @@ import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.AccommodationAdapter;
 import com.example.mapdemo.ui.viewmodel.UserAccomListCityViewModel;
 import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.text.NumberFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -43,16 +51,15 @@ public class UserAccomListCityActivity extends AppCompatActivity {
     List<Accommodation> filterAccoms;
     @Inject
     ViewModelFactory viewModelFactory;
-    private UserAccomListCityViewModel userAccomListCityViewModel;
+    private UserAccomListCityViewModel userAccCityVm;
     private City currentCity = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_accom_list_city);
-
         initInjec();
-        fetchData();
         getDataFromIntent();
+        fetchData();
         setUpRecycleView();
         addEvents();
     }
@@ -66,7 +73,7 @@ public class UserAccomListCityActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {
-            userAccomListCityViewModel.fetchAccommodations();
+            userAccCityVm.fetchAccommodations(currentCity.getIdCity());
         } else {
             Toast.makeText(this, "Không có kết nối mạng, dữ liệu có thể không chính xác", Toast.LENGTH_SHORT).show();
         }
@@ -77,13 +84,13 @@ public class UserAccomListCityActivity extends AppCompatActivity {
         ActivityComponent activityComponent =mainApplication.getActivityComponent();
         activityComponent.inject(this);
         realmHelper.openRealm();
-        userAccomListCityViewModel = new ViewModelProvider(this, viewModelFactory).get(UserAccomListCityViewModel.class);
-        binding.setViewModel(userAccomListCityViewModel);
+        userAccCityVm = new ViewModelProvider(this, viewModelFactory).get(UserAccomListCityViewModel.class);
+        binding.setViewModel(userAccCityVm);
         binding.setLifecycleOwner(this);
     }
     private void setUpRecycleView(){
         binding.rcvCity.setLayoutManager(new GridLayoutManager(this, 2));
-        accoms = userAccomListCityViewModel.getAccomsByCityId(currentCity.getIdCity());
+        accoms = userAccCityVm.getAccomsByCityId(currentCity.getIdCity());
         accomAdapter = new AccommodationAdapter(new AccommodationAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Accommodation accommodation) {
@@ -104,12 +111,17 @@ public class UserAccomListCityActivity extends AppCompatActivity {
             accomAdapter.notifyDataSetChanged();
         });
         binding.rcvCity.setAdapter(accomAdapter);
-        accomAdapter.submitList(accomList);
     }
     private void addEvents(){
         final int[] minPrice = {0};
         final int[] maxPrice = {Integer.MAX_VALUE};
         final String[] query = {""};
+        userAccCityVm.getErrorLiveData().observe(this, error -> {
+            if (error != null) {
+                showErrorDialog(this, error.getMessage());
+            }
+        });
+
         binding.searchView.setQueryHint("Find by name or address");
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +147,7 @@ public class UserAccomListCityActivity extends AppCompatActivity {
                 maxPrice[0] = (progress);
                 String budgetText = "VND " + NumberFormat.getInstance().format(0) + " - VND " + NumberFormat.getInstance().format(maxPrice[0]);
                 binding.txvRangePrice.setText(budgetText);
-                filterAccoms = userAccomListCityViewModel.filterAccoms(accomList, query[0] ,minPrice[0], maxPrice[0]);
+                filterAccoms = userAccCityVm.filterAccoms(accomList, query[0] ,minPrice[0], maxPrice[0]);
                 reLoad();
             }
 
@@ -156,11 +168,57 @@ public class UserAccomListCityActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 query[0] = newText;
-                filterAccoms = userAccomListCityViewModel.filterAccoms(accomList, query[0] ,minPrice[0], maxPrice[0]);
+                filterAccoms = userAccCityVm.filterAccoms(accomList, query[0] ,minPrice[0], maxPrice[0]);
                 reLoad();
                 return true;
             }
         });
+        binding.btnCalendar.setOnClickListener(v -> showCalendarDialog());
+    }
+    private void showCalendarDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_date_accom, null);
+        builder.setView(dialogView);
+        final MaterialCalendarView calendarView = dialogView.findViewById(R.id.calendarView);
+        calendarView.state().edit().setMinimumDate(CalendarDay.today()).commit();
+        final Button btnConfirm = dialogView.findViewById(R.id.btnOk);
+        AlertDialog dialog = builder.create();
+        btnConfirm.setOnClickListener(v -> {
+            List<CalendarDay> selectedDates = calendarView.getSelectedDates();
+            if (selectedDates.size() >= 2) {
+                userAccCityVm.isLoading.setValue(true);
+                Date startDate = userAccCityVm.convertToDate(selectedDates.get(0));
+                Date endDate = userAccCityVm.convertToDate(selectedDates.get(selectedDates.size() - 1));
+                CallbackHelper onCompleteCallback = new CallbackHelper() {
+                    private int completedCount = 0;
+                    @Override
+                    public synchronized void onComplete() {
+                        completedCount++;
+                        if (completedCount == accomList.size()) {
+                            dialog.dismiss();
+                            accomAdapter.submitList(accomList);
+                            userAccCityVm.isLoading.setValue(false);
+                            accomAdapter.notifyDataSetChanged();
+                        }
+                    }
+                };
+                for (int i = 0; i < accomList.size(); i++){
+                    int finalI = i;
+                    userAccCityVm.getFreeroom(accomList.get(i).getAccommodationId(), startDate, endDate, new CallbackHelper() {
+                        @Override
+                        public void onDataReceived(int freeRoom) {
+                            accomList.get(finalI).setCurrentFreeroom(freeRoom);
+                            onCompleteCallback.onComplete();
+                        }
+                    });
+                }
+
+            }else {
+                Toast.makeText(UserAccomListCityActivity.this, "Please select a range of dates.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show();
     }
     private void reLoad(){
         accomAdapter.submitList(filterAccoms);

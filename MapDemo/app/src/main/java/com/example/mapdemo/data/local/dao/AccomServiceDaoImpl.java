@@ -1,11 +1,9 @@
 package com.example.mapdemo.data.local.dao;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.AccomService;
-import com.example.mapdemo.data.model.Accommodation;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class AccomServiceDaoImpl implements AccomServiceDao {
     private Realm realm;

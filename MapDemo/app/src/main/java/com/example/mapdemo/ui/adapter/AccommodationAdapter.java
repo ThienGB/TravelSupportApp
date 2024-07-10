@@ -4,11 +4,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mapdemo.R;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.model.City;
@@ -93,7 +95,7 @@ public class AccommodationAdapter extends ListAdapter<Accommodation, Accommodati
         public void bind(Accommodation accommodation) {
             binding.tvxName.setText(accommodation.getName());
             String freeRoomStr ="";
-            int freeRoom = accommodation.getFreeroom();
+            int freeRoom = accommodation.getCurrentFreeroom();
             if (freeRoom == 0){
                 freeRoomStr = "Out of room";
             }else if (freeRoom == 1){
@@ -101,6 +103,7 @@ public class AccommodationAdapter extends ListAdapter<Accommodation, Accommodati
             }else {
                 freeRoomStr = freeRoom + " rooms left";
             }
+            binding.txvAddress.setText(accommodation.getAddress());
             binding.txvFreeRoom.setText(freeRoomStr);
             Picasso.get().load(accommodation.getImage()).into(binding.imgAccom);
         }

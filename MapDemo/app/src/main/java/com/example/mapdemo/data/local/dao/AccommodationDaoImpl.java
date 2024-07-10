@@ -1,6 +1,6 @@
 package com.example.mapdemo.data.local.dao;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 
 import io.realm.Realm;
@@ -29,6 +29,17 @@ public class AccommodationDaoImpl implements AccommodationDao {
             }
         });
     }
+
+    @Override
+    public void deleteAccomByCityId(String idCity) {
+        realm.executeTransactionAsync(realm -> {
+            RealmResults<Accommodation> results = realm.where(Accommodation.class)
+                    .equalTo("cityId", idCity)
+                    .findAll();
+            results.deleteAllFromRealm();
+        });
+    }
+
     public void deleteAllAccom() {
         realm.executeTransactionAsync(r -> {
             r.delete(Accommodation.class);

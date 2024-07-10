@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.activity.UserSelectCountryActivity">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/background_fullbutton"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back_icon" />
+
+            <TextView
+                android:id="@+id/txvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_gravity="center"
+                android:text="@string/choose_country" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btnVietnamese"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:background="@drawable/background_bottomsheet"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/imgVN"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:layout_width="280dp"
+                android:layout_height="200dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/img_vietnamese">
+            </ImageView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/vietnamese"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_marginRight ="10dp"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btnChinese"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/background_bottomsheet"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imgChina"
+                android:layout_width="280dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/img_chinese"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/chinese"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:layout_marginRight ="10dp"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

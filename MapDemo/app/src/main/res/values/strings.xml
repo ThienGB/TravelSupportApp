@@ -41,4 +41,8 @@
     <string name="select_number_of_rooms">Select number of rooms:</string>
     <string name="there_are_no_matching_results">There are no matching results</string>
     <string name="confirm_booking">Confirm booking</string>
+    <string name="confirm">Confirm</string>
+    <string name="vietnamese">vietnamese</string>
+    <string name="chinese">chinese</string>
+    <string name="choose_country">Choose Country</string>
 </resources>

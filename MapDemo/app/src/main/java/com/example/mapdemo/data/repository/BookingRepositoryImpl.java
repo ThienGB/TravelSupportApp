@@ -1,14 +1,12 @@
 package com.example.mapdemo.data.repository;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.local.dao.AccommodationDao;
 import com.example.mapdemo.data.local.dao.AccommodationDaoImpl;
 import com.example.mapdemo.data.local.dao.BookingDao;
 import com.example.mapdemo.data.local.dao.BookingDaoImpl;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
-import com.example.mapdemo.data.model.Favorite;
-import com.example.mapdemo.ui.LoadingHelper;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;

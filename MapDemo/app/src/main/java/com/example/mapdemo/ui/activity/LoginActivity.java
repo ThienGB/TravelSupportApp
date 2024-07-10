@@ -12,7 +12,7 @@ import android.view.View;
 
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.databinding.ActivityLoginBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.viewmodel.LoginViewModel;

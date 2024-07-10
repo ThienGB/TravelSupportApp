@@ -2,14 +2,12 @@ package com.example.mapdemo.di.module;
 
 import android.content.Context;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.repository.AccommodationRepository;
 import com.example.mapdemo.data.repository.AccommodationRepositoryImpl;
 import com.example.mapdemo.data.repository.CityRepository;
 import com.example.mapdemo.data.repository.CityRepositoryImpl;
-import com.example.mapdemo.ui.activity.AdminCityListActivity;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;

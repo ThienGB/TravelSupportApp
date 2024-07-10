@@ -56,6 +56,16 @@
                         android:text="address:"
                         android:textSize="16dp"
                         android:textStyle="italic" />
+                    <TextView
+                        android:textColor="@color/white"
+                        android:id="@+id/txvNumOfRoom"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:text="3 rooms"
+                        android:textSize="16dp"
+                        android:textStyle="italic" />
                 </LinearLayout>
             </LinearLayout>
 

@@ -1,6 +1,6 @@
 package com.example.mapdemo.di.module;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 
 import dagger.Module;

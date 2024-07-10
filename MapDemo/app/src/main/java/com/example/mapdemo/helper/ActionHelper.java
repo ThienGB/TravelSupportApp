@@ -1,4 +1,4 @@
-package com.example.mapdemo.data;
+package com.example.mapdemo.helper;
 
 public class ActionHelper {
     public static final int ACTION_EDIT = 1;

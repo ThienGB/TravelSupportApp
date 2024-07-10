@@ -60,6 +60,15 @@
                     android:queryHint="Search..."
                     android:layout_weight="2" />
                 <ImageButton
+                    android:id="@+id/btnCalendar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginRight="5dp"
+                    android:padding="5dp"
+                    android:background="@drawable/background_fullbutton"
+                    android:src="@drawable/icon_calendar"
+                    android:scaleType="fitCenter"/>
+                <ImageButton
                     android:id="@+id/btnFilter"
                     android:layout_width="48dp"
                     android:layout_height="48dp"

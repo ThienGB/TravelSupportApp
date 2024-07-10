@@ -8,6 +8,7 @@ import io.realm.RealmResults;
 public interface AccommodationDao {
     void addOrUpdateAccom(Accommodation accommodation);
     void deleteAccom(String idAccom);
+    void deleteAccomByCityId(String idCity);
     void deleteAllAccom();
     RealmResults<Accommodation> getAccomList();
     RealmResults<Accommodation> getAccomListByCity(String idCity);

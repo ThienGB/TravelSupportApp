@@ -98,6 +98,13 @@ public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHo
             String target = booking.getIdTarget();
             Accommodation accommodation = userBookingListViewModel.getAccomById(target);
             binding.txvAccomName.setText(accommodation.getName());
+            String numOfRoom="";
+            if (booking.getNumOfRooms()>1) {
+                numOfRoom= booking.getNumOfRooms() + " rooms";
+            } else {
+                numOfRoom= booking.getNumOfRooms() + " room";
+            }
+            binding.txvNumOfRoom.setText(numOfRoom);
             binding.txvAddress.setText(accommodation.getAddress());
             binding.txvDescription.setText(accommodation.getDescription());
             binding.txvPrice.setText(String.valueOf(booking.getPrice()));

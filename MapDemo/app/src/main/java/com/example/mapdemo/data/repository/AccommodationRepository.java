@@ -1,12 +1,10 @@
 package com.example.mapdemo.data.repository;
 
 import com.example.mapdemo.data.model.Accommodation;
-import com.example.mapdemo.ui.LoadingHelper;
-
-import java.util.List;
+import com.example.mapdemo.helper.CallbackHelper;
+import com.example.mapdemo.helper.LoadingHelper;
 
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
 import io.realm.RealmResults;
 
 public interface AccommodationRepository {
@@ -15,7 +13,7 @@ public interface AccommodationRepository {
     void deleteAccom(String idAccom);
     RealmResults<Accommodation> getAccomList();
     Accommodation getAccomnById(String idAccom);
-    Completable fetchAccommodations(LoadingHelper loadingHelper);
+    Completable fetchAccommodations(String cityId, LoadingHelper loadingHelper, CallbackHelper callback);
     RealmResults<Accommodation> getAccomsByCity(String idCity);
 
 }

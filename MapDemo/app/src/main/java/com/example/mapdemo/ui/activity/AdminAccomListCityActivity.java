@@ -1,6 +1,6 @@
 package com.example.mapdemo.ui.activity;
 
-import static com.example.mapdemo.data.ActionHelper.ACTION_MOVE_ACCOM;
+import static com.example.mapdemo.helper.ActionHelper.ACTION_MOVE_ACCOM;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityAdminAccomListCityBinding;

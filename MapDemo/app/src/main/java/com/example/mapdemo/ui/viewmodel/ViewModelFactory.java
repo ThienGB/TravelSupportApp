@@ -4,8 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mapdemo.data.RealmHelper;
-import com.example.mapdemo.ui.activity.UserFavoriteListActivity;
+import com.example.mapdemo.helper.RealmHelper;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
     private final RealmHelper realmHelper;

@@ -1,24 +1,17 @@
 package com.example.mapdemo.data.model;
 
-import java.util.Date;
-
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class Booking extends RealmObject {
-    @PrimaryKey
+public class FirebaseBooking {
     private String idBooking;
     private String idTarget;
     private String idUser;
-    private Date startDay;
-    private Date endDay;
+    private long startDay;
+    private long endDay;
     private int price;
     private int numOfRooms;
-
-    public Booking() {
+    public FirebaseBooking() {
     }
 
-    public Booking(String idBooking, String idTarget, String idUser, Date startDay, Date endDay, int price, int numOfRooms) {
+    public FirebaseBooking(String idBooking, String idTarget, String idUser, long startDay, long endDay, int price, int numOfRooms) {
         this.idBooking = idBooking;
         this.idTarget = idTarget;
         this.idUser = idUser;
@@ -30,14 +23,6 @@ public class Booking extends RealmObject {
 
     public String getIdBooking() {
         return idBooking;
-    }
-
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
     }
 
     public void setIdBooking(String idBooking) {
@@ -52,19 +37,27 @@ public class Booking extends RealmObject {
         this.idTarget = idTarget;
     }
 
-    public Date getStartDay() {
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+
+    public long getStartDay() {
         return startDay;
     }
 
-    public void setStartDay(Date startDay) {
+    public void setStartDay(long startDay) {
         this.startDay = startDay;
     }
 
-    public Date getEndDay() {
+    public long getEndDay() {
         return endDay;
     }
 
-    public void setEndDay(Date endDay) {
+    public void setEndDay(long endDay) {
         this.endDay = endDay;
     }
 

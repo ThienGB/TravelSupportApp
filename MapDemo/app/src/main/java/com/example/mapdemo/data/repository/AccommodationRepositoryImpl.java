@@ -3,38 +3,27 @@ package com.example.mapdemo.data.repository;
 import static com.example.mapdemo.data.remote.RetrofitClient.ACCOM_BASE_URL;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.data.model.api.ErrorResponse;
+import com.example.mapdemo.helper.CallbackHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.local.dao.AccommodationDao;
 import com.example.mapdemo.data.local.dao.AccommodationDaoImpl;
-import com.example.mapdemo.data.model.AccomService;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.api.AccommodationResponse;
 import com.example.mapdemo.data.remote.ApiService;
 import com.example.mapdemo.data.remote.RetrofitClient;
-import com.example.mapdemo.ui.LoadingHelper;
+import com.example.mapdemo.helper.LoadingHelper;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.core.SingleObserver;
-import io.reactivex.rxjava3.core.SingleSource;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Function;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.observers.DisposableSingleObserver;
+import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import io.realm.Case;
 import io.realm.RealmResults;
 
 public class AccommodationRepositoryImpl implements AccommodationRepository{
-    private LoadingHelper loadingHelper;
     private AccommodationDao accomDao;
     public AccommodationRepositoryImpl(RealmHelper realmHelper) {
         accomDao = new AccommodationDaoImpl(realmHelper);
@@ -71,26 +60,37 @@ public class AccommodationRepositoryImpl implements AccommodationRepository{
     }
 
     @SuppressLint("CheckResult")
-    public Completable fetchAccommodations(LoadingHelper loadingHelper) {
+    public Completable fetchAccommodations(String cityId, LoadingHelper loadingHelper, CallbackHelper callback) {
         return Completable.create(emitter -> {
             ApiService apiService = RetrofitClient.getApiService(ACCOM_BASE_URL);
-            apiService.getAccommodations("accommodation")
+            apiService.getAccommodations(cityId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> {
                         if (loadingHelper != null) loadingHelper.onLoadingStarted();
                     })
+                    .flatMapCompletable(accommodationResponses -> {
+                        if (accommodationResponses != null && !accommodationResponses.isEmpty()) {
+                            return saveAccommodationsToDatabase(accommodationResponses, cityId);
+                        } else {
+                            return Completable.complete();
+                        }
+                    })
                     .doFinally(() -> {
                         if (loadingHelper != null) loadingHelper.onLoadingFinished();
                     })
-                    .subscribe(accommodationResponses -> saveAccommodationsToDatabase(accommodationResponses)
-                                    .subscribe(emitter::onComplete, emitter::onError),
-                            emitter::onError);
+                    .subscribe(emitter::onComplete, throwable -> {
+                        accomDao.deleteAccomByCityId(cityId);
+                        ErrorResponse error = new ErrorResponse();
+                        error.setMessage("This City have no accommodation");
+                        callback.onError(error);
+                        emitter.onComplete();
+                    });
         });
     }
-    private Completable saveAccommodationsToDatabase(List<AccommodationResponse> accommodations) {
-        return Completable.fromAction(() -> {
-            accomDao.deleteAllAccom();
+    private Completable saveAccommodationsToDatabase(List<AccommodationResponse> accommodations, String idCity) {
+        return Completable.defer(() -> {
+            accomDao.deleteAccomByCityId(idCity);
             for (AccommodationResponse acc : accommodations) {
                 Accommodation accommodation = new Accommodation(
                         acc.getAccommodationId(), acc.getName(), acc.getPrice(),
@@ -99,6 +99,7 @@ public class AccommodationRepositoryImpl implements AccommodationRepository{
                         acc.getCityId());
                 accomDao.addOrUpdateAccom(accommodation);
             }
+            return Completable.complete();
         });
     }
 

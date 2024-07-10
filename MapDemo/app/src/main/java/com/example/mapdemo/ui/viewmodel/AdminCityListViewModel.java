@@ -2,7 +2,7 @@ package com.example.mapdemo.ui.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.mapdemo.data.RealmHelper;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.data.repository.AccommodationRepository;

@@ -34,7 +34,7 @@ public class UserHomeActivity extends AppCompatActivity {
         binding.btnResearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserHomeActivity.this, UserCityListActivity.class);
+                Intent intent = new Intent(UserHomeActivity.this, UserSelectCountryActivity.class);
                 startActivity(intent);
             }
         });

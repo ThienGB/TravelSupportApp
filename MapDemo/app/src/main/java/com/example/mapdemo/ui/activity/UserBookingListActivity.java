@@ -11,13 +11,11 @@ import android.view.View;
 
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.data.RealmHelper;
-import com.example.mapdemo.data.model.Accommodation;
+import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityUserBookingListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
-import com.example.mapdemo.ui.adapter.AccommodationAdapter;
 import com.example.mapdemo.ui.adapter.BookingAdapter;
 import com.example.mapdemo.ui.viewmodel.UserBookingListViewModel;
 import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
