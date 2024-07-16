@@ -15,16 +15,18 @@ import com.example.mapdemo.helper.LoadingHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.realm.RealmResults;
 
 public class UserCityListViewModel extends ViewModel {
-    private CityRepository cityRepo;
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    private MutableLiveData<ErrorResponse> error = new MutableLiveData<>();
-    private RealmResults<City> cities;
-    public UserCityListViewModel(RealmHelper realmHelper){
-        cityRepo = new CityRepositoryImpl(realmHelper);
-        isLoading.setValue(true);
+    private final CityRepository cityRepo;
+    private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private final MutableLiveData<ErrorResponse> error = new MutableLiveData<>();
+    @Inject
+    public UserCityListViewModel(CityRepository cityRepo){
+        this.cityRepo = cityRepo;
+        isLoading.setValue(false);
     }
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
@@ -36,6 +38,9 @@ public class UserCityListViewModel extends ViewModel {
     public LiveData<ErrorResponse> getErrorLiveData() {
         return error;
     }
+    public void clearErrorLiveData() {
+        error.setValue(null); // Gán giá trị null cho LiveData
+    }
 
     public void fetchCities(int countryCode) {
         isLoading.setValue(true);
@@ -44,7 +49,6 @@ public class UserCityListViewModel extends ViewModel {
             public void onLoadingStarted() {
                 isLoading.setValue(true);
             }
-
             @Override
             public void onLoadingFinished() {
                 isLoading.setValue(false);
@@ -57,7 +61,7 @@ public class UserCityListViewModel extends ViewModel {
         }).subscribe();
     }
     public RealmResults<City> getCities(){
-        cities = cityRepo.getCityList();
+        RealmResults<City> cities = cityRepo.getCityList();
         return cities;
     }
 
@@ -71,5 +75,9 @@ public class UserCityListViewModel extends ViewModel {
             }
         }
         return filterCities;
+    }
+    public List<City> realmResultToList(RealmResults<City> cityRealm){
+        List<City> cityList = cityRepo.realmResultToList(cityRealm);
+        return cityList;
     }
 }

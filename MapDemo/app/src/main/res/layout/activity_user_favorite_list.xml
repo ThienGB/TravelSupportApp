@@ -53,21 +53,31 @@
                     android:layout_height="wrap_content"
                     android:queryHint="Search..."
                     android:layout_weight="2" />
+
             </LinearLayout>
-            <RelativeLayout
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/srlReload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rcvFavorite"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
+                    android:layout_height="wrap_content">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcvFavorite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18dp"
                 android:layout_gravity="center"
                 android:id="@+id/txvInfor"/>
+
+
+
         </LinearLayout>
 
     </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.mapdemo.data.remote;
+package com.example.mapdemo.data.remote.api;
 
 import com.example.mapdemo.data.model.api.AccommodationResponse;
 import com.example.mapdemo.data.model.api.PlaceResponse;

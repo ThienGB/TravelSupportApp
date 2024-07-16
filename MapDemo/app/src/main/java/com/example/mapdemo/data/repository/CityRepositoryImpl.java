@@ -1,20 +1,17 @@
 package com.example.mapdemo.data.repository;
 
-import static com.example.mapdemo.data.remote.RetrofitClient.CITY_BASE_URL;
+import static com.example.mapdemo.data.remote.api.RetrofitClient.CITY_BASE_URL;
 
 import android.annotation.SuppressLint;
 
-import com.example.mapdemo.data.local.dao.CitiyDaoImpl;
 import com.example.mapdemo.data.local.dao.CityDao;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.data.model.api.CityResponse;
 import com.example.mapdemo.data.model.api.ErrorResponse;
-import com.example.mapdemo.data.model.api.ResultOrError;
-import com.example.mapdemo.data.remote.ApiService;
-import com.example.mapdemo.data.remote.RetrofitClient;
+import com.example.mapdemo.data.remote.api.ApiService;
+import com.example.mapdemo.data.remote.api.RetrofitClient;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.helper.LoadingHelper;
-import com.example.mapdemo.helper.RealmHelper;
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -23,19 +20,19 @@ import com.google.gson.JsonParser;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.ObservableSource;
-import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 
 public class CityRepositoryImpl implements CityRepository{
     private CityDao cityDao;
-    public CityRepositoryImpl(RealmHelper realmHelper) {
-        cityDao = new CitiyDaoImpl(realmHelper);
+    @Inject
+    public CityRepositoryImpl(CityDao cityDao) {
+        this.cityDao = cityDao;
     }
     @Override
     public boolean addCity(City city) {
@@ -69,26 +66,6 @@ public class CityRepositoryImpl implements CityRepository{
     public City getCityById(String idCity) {
         return cityDao.getCityById(idCity);
     }
-
-//    @SuppressLint("CheckResult")
-//    @Override
-//    public Completable fetchcities(int countryCode,LoadingHelper loadingHelper) {
-//        return Completable.create(emitter -> {
-//            ApiService apiService = RetrofitClient.getApiService(ACCOM_BASE_URL);
-//            apiService.getCities(countryCode)
-//                    .subscribeOn(Schedulers.io())
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .doOnSubscribe(disposable -> {
-//                        if (loadingHelper != null) loadingHelper.onLoadingStarted();
-//                    })
-//                    .doFinally(() -> {
-//                        if (loadingHelper != null) loadingHelper.onLoadingFinished();
-//                    })
-//                    .subscribe(cityResponses -> saveCitiesToDatabase(cityResponses)
-//                                    .subscribe(emitter::onComplete, emitter::onError),
-//                            emitter::onError);
-//        });
-//    }
     @SuppressLint("CheckResult")
     public Completable fetchcities(int countryCode,LoadingHelper loadingHelper, CallbackHelper callback) {
         ApiService apiService = RetrofitClient.getApiService(CITY_BASE_URL);
@@ -130,6 +107,12 @@ public class CityRepositoryImpl implements CityRepository{
                     .subscribe(emitter::onComplete, emitter::onError);
         });
     }
+
+    @Override
+    public List<City> realmResultToList(RealmResults<City> cityRealm) {
+        return cityDao.realmResultToList(cityRealm);
+    }
+
     public Completable saveCitiesToDatabase(List<CityResponse> cityResponseList) {
         return Completable.defer(() -> {
             cityDao.deleteAllCity();

@@ -60,15 +60,6 @@
                     android:queryHint="Search..."
                     android:layout_weight="2" />
                 <ImageButton
-                    android:id="@+id/btnCalendar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginRight="5dp"
-                    android:padding="5dp"
-                    android:background="@drawable/background_fullbutton"
-                    android:src="@drawable/icon_calendar"
-                    android:scaleType="fitCenter"/>
-                <ImageButton
                     android:id="@+id/btnFilter"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -98,7 +89,27 @@
                     android:max="10000000"
                     android:min="500000"
                     android:value="500000,10000000"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="5dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/select_booking_date"/>
+                <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="300dp"
+                    android:layout_gravity="center"
+                    app:mcv_selectionMode="range"/>
+
+                <Button
+                    android:id="@+id/btnConfirm"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:text="@string/confirm" />
             </LinearLayout>
             <TextView
                 android:id="@+id/txvInfor"

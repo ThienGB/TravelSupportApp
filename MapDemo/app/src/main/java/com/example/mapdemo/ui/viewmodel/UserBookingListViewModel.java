@@ -15,14 +15,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import io.realm.RealmResults;
 
 public class UserBookingListViewModel extends ViewModel {
     private BookingRepository bookingRepo;
     private AccommodationRepository accomRepo;
-    public UserBookingListViewModel(RealmHelper realmHelper){
-        bookingRepo = new BookingRepositoryImpl(realmHelper);
-        accomRepo = new AccommodationRepositoryImpl(realmHelper);
+    @Inject
+    public UserBookingListViewModel(BookingRepository bookingRepo, AccommodationRepository accomRepo){
+        this.accomRepo = accomRepo;
+        this.bookingRepo = bookingRepo;
     }
     public void deleteBooking(String idBooking) {
         bookingRepo.deleteBooking(idBooking);

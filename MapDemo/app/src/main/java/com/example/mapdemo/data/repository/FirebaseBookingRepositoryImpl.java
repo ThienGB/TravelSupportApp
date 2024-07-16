@@ -21,14 +21,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class FirebaseBookingRepositoryImpl implements FirebaseBookingRepository {
 
-    public FirebaseBookingRepositoryImpl(){
+    String firebaseInstance;
+    @Inject
+    public FirebaseBookingRepositoryImpl(String firebaseInstance){
+        this.firebaseInstance = firebaseInstance;
 
     }
     @Override
     public void addFirebaseBooking(FirebaseBooking firebaseBooking) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://mapdemo-b04e7-default-rtdb.asia-southeast1.firebasedatabase.app");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(firebaseInstance);
         DatabaseReference databaseReference = database.getReference("bookings");
         databaseReference.child(firebaseBooking.getIdBooking()).setValue(firebaseBooking);
     }
@@ -36,7 +41,7 @@ public class FirebaseBookingRepositoryImpl implements FirebaseBookingRepository 
     @Override
     public void getBookedRoomByTime(String idAccom, Date startDate, Date endDate, CallbackHelper callback) {
         final int[] bookedRoom = {0};
-        FirebaseDatabase database = FirebaseDatabase.getInstance("https://mapdemo-b04e7-default-rtdb.asia-southeast1.firebasedatabase.app");
+        FirebaseDatabase database = FirebaseDatabase.getInstance(firebaseInstance);
         DatabaseReference databaseReference = database.getReference("bookings");
         databaseReference.orderByChild("idTarget").equalTo(idAccom).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

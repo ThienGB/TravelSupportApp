@@ -22,7 +22,9 @@ public class UserSelectCountryActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+               Intent intent = new Intent(UserSelectCountryActivity.this, UserHomeActivity.class);
+               startActivity(intent);
+               finish();
             }
         });
         binding.btnVietnamese.setOnClickListener(new View.OnClickListener() {
@@ -31,6 +33,7 @@ public class UserSelectCountryActivity extends AppCompatActivity {
                 Intent intent = new Intent(UserSelectCountryActivity.this, UserCityListActivity.class);
                 intent.putExtra("countryCode", 1);
                 startActivity(intent);
+                finish();
             }
         });
         binding.btnChinese.setOnClickListener(new View.OnClickListener() {
@@ -39,6 +42,7 @@ public class UserSelectCountryActivity extends AppCompatActivity {
                 Intent intent = new Intent(UserSelectCountryActivity.this, UserCityListActivity.class);
                 intent.putExtra("countryCode", 2);
                 startActivity(intent);
+                finish();
             }
         });
     }

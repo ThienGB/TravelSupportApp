@@ -4,8 +4,9 @@ import android.content.Context;
 
 import androidx.appcompat.app.AlertDialog;
 
-public class DialogHelper {
+import javax.inject.Inject;
 
+public class DialogHelper {
     public static void showErrorDialog(Context context, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Error");

@@ -33,7 +33,7 @@ import com.example.mapdemo.databinding.DialogEditCityBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.CityAdapter;
 import com.example.mapdemo.ui.viewmodel.AdminCityListViewModel;
-import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
+import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
 
 import java.util.UUID;
 
@@ -49,7 +49,7 @@ public class AdminCityListActivity extends AppCompatActivity {
     RealmHelper realmHelper;
     RealmResults<City> cities;
     @Inject
-    ViewModelFactory viewModelFactory;
+    MyViewModelFactory viewModelFactory;
     private AdminCityListViewModel adminCityListViewModel;
     private City currentCity = null;
     private Accommodation currentAccom = null;

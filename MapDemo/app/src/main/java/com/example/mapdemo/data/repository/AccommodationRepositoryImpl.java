@@ -1,41 +1,36 @@
 package com.example.mapdemo.data.repository;
 
-import static com.example.mapdemo.data.remote.RetrofitClient.ACCOM_BASE_URL;
+import static com.example.mapdemo.data.remote.api.RetrofitClient.ACCOM_BASE_URL;
 
 import android.annotation.SuppressLint;
 
 import com.example.mapdemo.data.model.api.ErrorResponse;
+import com.example.mapdemo.data.remote.firestore.FirestoreDataManager;
 import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.local.dao.AccommodationDao;
-import com.example.mapdemo.data.local.dao.AccommodationDaoImpl;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.api.AccommodationResponse;
-import com.example.mapdemo.data.remote.ApiService;
-import com.example.mapdemo.data.remote.RetrofitClient;
+import com.example.mapdemo.data.remote.api.ApiService;
+import com.example.mapdemo.data.remote.api.RetrofitClient;
 import com.example.mapdemo.helper.LoadingHelper;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.realm.RealmResults;
 
 public class AccommodationRepositoryImpl implements AccommodationRepository{
     private AccommodationDao accomDao;
-    public AccommodationRepositoryImpl(RealmHelper realmHelper) {
-        accomDao = new AccommodationDaoImpl(realmHelper);
+    @Inject
+    public AccommodationRepositoryImpl(AccommodationDao accomDao) {
+        this.accomDao = accomDao;
     }
     @Override
     public boolean addAccom(Accommodation accommodation) {
-        List<Accommodation> accommodations = accomDao.getAccomList();
-        for (Accommodation accom: accommodations){
-            if (accommodation.getAccommodationId().equals(accom.getAccommodationId())){
-                return false;
-            }
-        }
         accomDao.addOrUpdateAccom(accommodation);
         return true;
     }
@@ -105,6 +100,22 @@ public class AccommodationRepositoryImpl implements AccommodationRepository{
 
     public RealmResults<Accommodation> getAccomsByCity(String idCity) {
         return accomDao.getAccomListByCity(idCity);
+    }
+
+    @Override
+    public List<Accommodation> realmResultToList(RealmResults<Accommodation> accomRealm) {
+        List<Accommodation> accomList = accomDao.realmResultToList(accomRealm);
+        return accomList;
+    }
+
+    @Override
+    public void addOrUpdateAccomSyn(Accommodation accommodation, CallbackHelper callback) {
+        accomDao.addOrUpdateAccomCb(accommodation, new CallbackHelper() {
+            @Override
+            public void onComplete() {
+                callback.onComplete();
+            }
+        });
     }
 }
 

@@ -1,4 +1,6 @@
-package com.example.mapdemo.data.remote;
+package com.example.mapdemo.data.remote.api;
+
+import com.example.mapdemo.data.remote.api.ApiService;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;

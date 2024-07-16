@@ -112,11 +112,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/free_room"
+                            android:text="@string/total_rooms"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
                         <TextView
                             android:id="@+id/txvFreeRoom"
+                            android:layout_marginRight="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
@@ -135,6 +136,7 @@
                             android:textSize="18sp" />
                         <TextView
                             android:id="@+id/txvPrice"
+                            android:layout_marginRight="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="500000 "
@@ -156,6 +158,7 @@
                         <TextView
                             android:id="@+id/txvAddress"
                             android:layout_width="wrap_content"
+                            android:layout_marginRight="5dp"
                             android:layout_height="wrap_content"
                             android:text="View gần biển rất đẹp"
                             android:textColor="@color/black"
@@ -176,6 +179,7 @@
                             android:id="@+id/txvDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
                             android:text="View gần biển rất đẹp"
                             android:textColor="@color/black"
                             android:textSize="18sp" />

@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mapdemo.data.model.api.AccommodationResponse;
+import com.example.mapdemo.data.remote.firestore.FirestoreDataManager;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
@@ -27,24 +29,27 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 public class AccomInforViewModel extends ViewModel {
-    private AccommodationRepository accomRepo;
-
-    private FavoriteRepository favoriteRepo;
-    private BookingRepository bookingRepo;
+    private final AccommodationRepository accomRepo;
+    private final FavoriteRepository favoriteRepo;
+    private final BookingRepository bookingRepo;
+    private final FirebaseBookingRepository firebaseBookingRepo;
+    private final FirestoreDataManager firestoreDataManager;
     private MutableLiveData<Boolean> isFavorite = new MutableLiveData<>(false);
     @Inject
-    FirebaseBookingRepository firebaseBookingRepo;
-
+    public AccomInforViewModel(AccommodationRepository accomRepo, FavoriteRepository favoriteRepo,
+                               BookingRepository bookingRepo, FirebaseBookingRepository firebaseBookingRepo,
+                               FirestoreDataManager firestoreDataManager){
+        this.accomRepo = accomRepo;
+        this.favoriteRepo = favoriteRepo;
+        this.bookingRepo = bookingRepo;
+        this.firebaseBookingRepo = firebaseBookingRepo;
+        this.firestoreDataManager = firestoreDataManager;
+    }
     public LiveData<Boolean> getIsFavorite() {
         return isFavorite;
     }
     public void setFavorite(boolean isFavorite){
         this.isFavorite.setValue(isFavorite);
-    }
-    public AccomInforViewModel(RealmHelper realmHelper){
-        accomRepo = new AccommodationRepositoryImpl(realmHelper);
-        favoriteRepo = new FavoriteRepositoryImpl(realmHelper);
-        bookingRepo = new BookingRepositoryImpl(realmHelper);
     }
     public Accommodation getAccommodation(String idAccom){
        return accomRepo.getAccomnById(idAccom);
@@ -97,5 +102,33 @@ public class AccomInforViewModel extends ViewModel {
     }
     public void addFirebaseBooking(FirebaseBooking firebaseBooking) {
         firebaseBookingRepo.addFirebaseBooking(firebaseBooking);
+    }
+    public void addFavoriteFirestore(Favorite favorite){
+        firestoreDataManager.addFavorite(favorite);
+    }
+    public void deleteFavoriteFirestore(String favoriteId){
+        firestoreDataManager.deleteFavorite(favoriteId);
+    }
+    public void getAccommodationFirestore(String idAccommodation, CallbackHelper callback){
+        firestoreDataManager.getAccommodationById(idAccommodation, new CallbackHelper() {
+            @Override
+            public void onAccommodationResRecieved(AccommodationResponse acc) {
+                Accommodation accommodation = new Accommodation(
+                        acc.getAccommodationId(), acc.getName(), acc.getPrice(),
+                        acc.getFreeroom(), acc.getImage(), acc.getDescription(),
+                        acc.getAddress(), acc.getLongitude(), acc.getLatitude(),
+                        acc.getCityId());
+                accomRepo.addOrUpdateAccomSyn(accommodation, new CallbackHelper() {
+                    @Override
+                    public void onComplete() {
+                        callback.onAccommodationRecieved(accommodation);
+                    }
+                });
+
+            }
+        });
+    }
+    public void removeAllListeners() {
+        firestoreDataManager.removeAllListeners();
     }
 }

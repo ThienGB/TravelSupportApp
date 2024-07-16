@@ -12,6 +12,7 @@ import com.example.mapdemo.ui.activity.UserAccomListCityActivity;
 import com.example.mapdemo.ui.activity.UserBookingListActivity;
 import com.example.mapdemo.ui.activity.UserCityListActivity;
 import com.example.mapdemo.ui.activity.UserFavoriteListActivity;
+import com.example.mapdemo.ui.activity.UserHomeActivity;
 
 import javax.inject.Singleton;
 
@@ -36,4 +37,6 @@ public interface ActivityComponent {
     void inject(UserFavoriteListActivity userFavoriteListActivity);
 
     void inject(UserBookingListActivity userBookingListActivity);
+
+    void inject(UserHomeActivity userHomeActivity);
 }

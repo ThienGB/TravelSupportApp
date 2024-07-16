@@ -4,36 +4,41 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.databinding.ActivityLoginBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.viewmodel.LoginViewModel;
-import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
+import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final int RC_SIGN_IN = 9001;
     @Inject
-    RealmHelper realmHelper;
-    @Inject
-    ViewModelFactory viewModelFactory;
+    MyViewModelFactory viewModelFactory;
     private LoginViewModel loginViewModel;
     public static final String SHARED_PREFS="sharePrefs";
     private ActivityLoginBinding binding;
+    ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         initInjec();
         addEvents();
+        loginViewModel.signOut();
 
     }
     private void initInjec(){
@@ -43,6 +48,28 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, viewModelFactory).get(LoginViewModel.class);
     }
     private void addEvents(){
+        loginViewModel.userLiveData.observe(this, user -> {
+            if (user != null) {
+                updateUI(user);
+                progressDialog.dismiss();
+            } else {
+                updateUI(null);
+            }
+        });
+        loginViewModel.errorLiveData.observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signInIntent = loginViewModel.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
+
         binding.btnSignUpEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor= sharedPreferences.edit();
                             editor.putString("name","true");
                             editor.apply();
+                            finish();
                         }
                     });
                 }
@@ -95,5 +123,26 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Login...");
+        progressDialog.show();
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 9001) {
+            loginViewModel.handleSignInResult(data);
+        }
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            Intent intent = new Intent(this, UserHomeActivity.class);
+            startActivity(intent);
+            Toast.makeText(this,"Logged in successfully",Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(this, "Please sign in to continue.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

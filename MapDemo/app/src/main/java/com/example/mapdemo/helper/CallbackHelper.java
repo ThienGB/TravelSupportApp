@@ -1,5 +1,8 @@
 package com.example.mapdemo.helper;
 
+import com.example.mapdemo.data.model.Accommodation;
+import com.example.mapdemo.data.model.Favorite;
+import com.example.mapdemo.data.model.api.AccommodationResponse;
 import com.example.mapdemo.data.model.api.CityResponse;
 import com.example.mapdemo.data.model.api.ErrorResponse;
 
@@ -14,6 +17,10 @@ public interface CallbackHelper {
     }
     default void onComplete(){}
 
-    default void onSuccess(List<CityResponse> cities){}
     default void onError(ErrorResponse errorMessage){}
+    default void onFavoriteRecieved(Favorite favorite){}
+    default void onListFavoriteRecieved(List<Favorite> favorites){}
+    default void onAccommodationResRecieved(AccommodationResponse accommodation){}
+    default void onAccommodationRecieved(Accommodation accommodation){}
+    default void onListAccomRecieved(List<Accommodation> accommodations){}
 }

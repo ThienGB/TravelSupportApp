@@ -17,8 +17,8 @@ public class AdminCityListViewModel extends ViewModel {
     private AccommodationRepository accomRepo;
     private RealmResults<City> cities;
     public AdminCityListViewModel(RealmHelper realmHelper){
-        cityRepo = new CityRepositoryImpl(realmHelper);
-        accomRepo = new AccommodationRepositoryImpl(realmHelper);
+     //   cityRepo = new CityRepositoryImpl();
+      //  accomRepo = new AccommodationRepositoryImpl(realmHelper);
         loadCities();
     }
     private void loadCities(){

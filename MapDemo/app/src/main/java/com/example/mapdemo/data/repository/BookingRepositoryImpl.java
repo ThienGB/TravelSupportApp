@@ -8,15 +8,18 @@ import com.example.mapdemo.data.local.dao.BookingDaoImpl;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
 
+import javax.inject.Inject;
+
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class BookingRepositoryImpl implements BookingRepository {
     private BookingDao bookingDao;
     private AccommodationDao accommodationDao;
-    public BookingRepositoryImpl(RealmHelper realmHelper) {
-        bookingDao = new BookingDaoImpl(realmHelper);
-        accommodationDao = new AccommodationDaoImpl(realmHelper);
+    @Inject
+    public BookingRepositoryImpl(BookingDao bookingDao, AccommodationDao accommodationDao) {
+        this.bookingDao = bookingDao;
+        this.accommodationDao = accommodationDao;
     }
     @Override
     public void addOrUpdateBooking(Booking booking) {

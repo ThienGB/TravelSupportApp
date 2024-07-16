@@ -9,12 +9,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="default_web_client_id">1075618524277-kn22q1fibr8shv775nnf5dep12754fve.apps.googleusercontent.com</string>
+    <string name="default_web_client_id">137586477286-kdaaakliu9sudh19sujjufp5bdhp42i5.apps.googleusercontent.com</string>
     <string name="booking_list">Booking list</string>
-    <string name="free_room">Free room:</string>
-    <string name="price_per_night">Price per night:</string>
-    <string name="address">Address:</string>
-    <string name="description">Description:</string>
+    <string name="free_room">Free room: </string>
+    <string name="price_per_night">Price per night: </string>
+    <string name="address">Address: </string>
+    <string name="description">Description: </string>
     <string name="nearby_amenities">Nearby amenities</string>
     <string name="appname">Travel Support</string>
     <string name="wellcome">Wellcome</string>
@@ -38,11 +38,13 @@
     <string name="booked_room">Booked Room</string>
     <string name="research">Research</string>
     <string name="loading_data_please_wait">Loading data, please wait…</string>
-    <string name="select_number_of_rooms">Select number of rooms:</string>
+    <string name="select_number_of_rooms">Select number of rooms: </string>
     <string name="there_are_no_matching_results">There are no matching results</string>
     <string name="confirm_booking">Confirm booking</string>
     <string name="confirm">Confirm</string>
     <string name="vietnamese">vietnamese</string>
     <string name="chinese">chinese</string>
     <string name="choose_country">Choose Country</string>
+    <string name="select_booking_date">Select booking date</string>
+    <string name="total_rooms">Total rooms: </string>
 </resources>

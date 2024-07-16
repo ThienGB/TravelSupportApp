@@ -4,14 +4,15 @@ import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.model.Favorite;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class BookingDaoImpl implements BookingDao {
     private Realm realm;
-    private RealmHelper realmHelper;
+    @Inject
     public BookingDaoImpl(RealmHelper realmHelper){
-        this.realmHelper = realmHelper;
         this.realm = realmHelper.getRealm();
     }
     @Override

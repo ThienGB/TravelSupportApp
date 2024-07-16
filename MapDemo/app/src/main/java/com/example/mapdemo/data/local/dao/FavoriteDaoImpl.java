@@ -3,14 +3,15 @@ package com.example.mapdemo.data.local.dao;
 import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Favorite;
 
+import javax.inject.Inject;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class FavoriteDaoImpl implements FavoriteDao {
     private Realm realm;
-    private RealmHelper realmHelper;
+    @Inject
     public FavoriteDaoImpl(RealmHelper realmHelper){
-        this.realmHelper = realmHelper;
         this.realm = realmHelper.getRealm();
     }
     @Override

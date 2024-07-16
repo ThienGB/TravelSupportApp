@@ -1,16 +1,21 @@
 package com.example.mapdemo.data.local.dao;
 
+import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class AccommodationDaoImpl implements AccommodationDao {
     private Realm realm;
-    private RealmHelper realmHelper;
+
+    @Inject
     public AccommodationDaoImpl(RealmHelper realmHelper){
-        this.realmHelper = realmHelper;
         this.realm = realmHelper.getRealm();
     }
     @Override
@@ -19,7 +24,16 @@ public class AccommodationDaoImpl implements AccommodationDao {
             r.copyToRealmOrUpdate(accommodation);
         });
     }
-
+    public void addOrUpdateAccomCb(Accommodation accommodation, CallbackHelper callback){
+        realm.executeTransactionAsync(r -> {
+            r.copyToRealmOrUpdate(accommodation);
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+                callback.onComplete();
+            }
+        });
+    }
     @Override
     public void deleteAccom(String idAccom) {
         realm.executeTransactionAsync(r -> {
@@ -54,14 +68,24 @@ public class AccommodationDaoImpl implements AccommodationDao {
 
     @Override
     public RealmResults<Accommodation> getAccomListByCity(String idCity) {
-        RealmResults<Accommodation> realmResults = realm.where(Accommodation.class).equalTo("cityId", idCity).findAll();
+        RealmResults<Accommodation> realmResults = realm.where(Accommodation.class).equalTo("cityId", idCity).findAllAsync();
         return realmResults;
+    }
+
+    @Override
+    public RealmResults<Accommodation> getAccomListById(List<String> listIdAccom) {
+        return realm.where(Accommodation.class).in("accommodationId", listIdAccom.toArray(new String[0])).findAllAsync();
     }
 
     @Override
     public Accommodation getAccomnById(String idAccom) {
         Accommodation realmResults = realm.where(Accommodation.class).equalTo("accommodationId", idAccom).findFirst();
         return realmResults;
+    }
+
+    @Override
+    public List<Accommodation> realmResultToList(RealmResults<Accommodation> accomRealm) {
+        return realm.copyFromRealm(accomRealm);
     }
 
 }

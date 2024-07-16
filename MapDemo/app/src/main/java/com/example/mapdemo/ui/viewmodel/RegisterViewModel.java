@@ -19,48 +19,54 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import javax.inject.Inject;
+
 public class RegisterViewModel extends ViewModel {
-    FirebaseAuth firebaseAuth= FirebaseAuth.getInstance();
+    FirebaseAuth firebaseAuth;
+    @Inject
+    public RegisterViewModel(FirebaseAuth firebaseAuth){
+        this.firebaseAuth =firebaseAuth;
+    }
     public void handleSignUp(String email, String password, String ten, Context context){
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Create new account...");
         progressDialog.show();
         firebaseAuth.createUserWithEmailAndPassword(email,password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()) {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            if (user != null) {
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(ten)
-                                        .build();
+                .addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        if (user != null) {
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(ten)
+                                    .build();
 
-                                user.updateProfile(profileUpdates)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            progressDialog.dismiss();
-                                                            Toast.makeText(context, "Đã có email gửi về, hãy verify", Toast.LENGTH_SHORT).show();
-                                                            Intent intent = new Intent(context, LoginActivity.class);
-                                                            context.startActivity(intent);
-                                                        }
-                                                    });
-                                                } else {
-                                                    progressDialog.dismiss();
-                                                    Toast.makeText(context, "Cập nhật tên thất bại", Toast.LENGTH_SHORT).show();
-                                                }
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        progressDialog.dismiss();
+                                                        Toast.makeText(context, "Đã có email gửi về, hãy verify", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(context, LoginActivity.class);
+                                                        context.startActivity(intent);
+                                                    }
+                                                });
+                                            } else {
+                                                progressDialog.dismiss();
+                                                Toast.makeText(context, "Cập nhật tên thất bại", Toast.LENGTH_SHORT).show();
                                             }
-                                        });
-                            } else {
-                                Toast.makeText(context, "ĐK thất bại", Toast.LENGTH_SHORT).show();
-                                progressDialog.dismiss();
-                            }
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(context, "ĐK thất bại", Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                         }
+                    }else {
+                        Toast.makeText(context, "Địa chỉ email trùng", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 });
     }

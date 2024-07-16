@@ -59,13 +59,13 @@
             android:exported="false" />
         <activity
             android:name=".ui.activity.AdminAccomListActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ui.activity.AdminAccomListCityActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.AdminCityListActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="true" />

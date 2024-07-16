@@ -10,20 +10,17 @@ import android.view.View;
 
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.databinding.ActivityRegisterBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
+import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
 import com.example.mapdemo.ui.viewmodel.RegisterViewModel;
-import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 
 import javax.inject.Inject;
 
 public class RegisterActivity extends AppCompatActivity {
     ActivityRegisterBinding binding;
     @Inject
-    RealmHelper realmHelper;
-    @Inject
-    ViewModelFactory viewModelFactory;
+    MyViewModelFactory viewModelFactory;
     private RegisterViewModel registerViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -4,6 +4,8 @@ import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.helper.LoadingHelper;
 
+import java.util.List;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.realm.RealmResults;
 
@@ -14,4 +16,5 @@ public interface CityRepository {
     RealmResults<City> getCityList();
     City getCityById(String idCity);
     Completable fetchcities(int countryCode,LoadingHelper loadingHelper, CallbackHelper callback);
+    List<City> realmResultToList(RealmResults<City> cityRealm);
 }

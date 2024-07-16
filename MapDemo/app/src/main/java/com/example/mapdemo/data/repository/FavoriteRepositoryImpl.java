@@ -8,16 +8,21 @@ import com.example.mapdemo.data.local.dao.FavoriteDaoImpl;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Favorite;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class FavoriteRepositoryImpl implements FavoriteRepository {
     private FavoriteDao favoriteDao;
     private AccommodationDao accommodationDao;
-
-    public FavoriteRepositoryImpl(RealmHelper realmHelper) {
-        favoriteDao = new FavoriteDaoImpl(realmHelper);
-        accommodationDao = new AccommodationDaoImpl(realmHelper);
+    @Inject
+    public FavoriteRepositoryImpl(FavoriteDao favoriteDao, AccommodationDao accommodationDao) {
+        this.accommodationDao = accommodationDao;
+        this.favoriteDao = favoriteDao;
     }
 
     @Override
@@ -41,21 +46,25 @@ public class FavoriteRepositoryImpl implements FavoriteRepository {
     }
 
     @Override
-    public RealmList<Accommodation> getFavoriteByIdUser(String idUser) {
+    public RealmResults<Accommodation> getFavoriteByIdUser(String idUser) {
         RealmResults<Favorite> listFavorite = favoriteDao.getFavoriteByIdUser(idUser);
-        RealmList<Accommodation> listAccom = new RealmList<>();
         if (listFavorite == null || listFavorite.isEmpty()) {
-            return listAccom;
+            return accommodationDao.getAccomListByCity("");
         }
-        for (Favorite favorite: listFavorite) {
-            Accommodation accom = accommodationDao.getAccomnById(favorite.getIdTarget());
-            listAccom.add(accom);
+        List<String> idTargets = new ArrayList<>();
+        for (Favorite favorite : listFavorite) {
+            idTargets.add(favorite.getIdTarget());
         }
-        return listAccom;
+        return accommodationDao.getAccomListById(idTargets);
     }
 
     @Override
     public Favorite getFavoriteById(String idFavorite) {
         return favoriteDao.getFavoriteById(idFavorite);
+    }
+
+    @Override
+    public List<Accommodation> realmToList(RealmResults<Accommodation> realmAccom) {
+        return accommodationDao.realmResultToList(realmAccom);
     }
 }

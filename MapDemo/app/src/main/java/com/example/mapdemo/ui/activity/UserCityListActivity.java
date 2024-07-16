@@ -1,10 +1,10 @@
 package com.example.mapdemo.ui.activity;
 
-import static com.example.mapdemo.helper.ActionHelper.ACTION_EDIT;
 import static com.example.mapdemo.helper.DialogHelper.showErrorDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -19,14 +19,12 @@ import android.widget.Toast;
 import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
 import com.example.mapdemo.data.model.api.ErrorResponse;
-import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityUserCityListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.CityAdapter;
+import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
 import com.example.mapdemo.ui.viewmodel.UserCityListViewModel;
-import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 
 import java.util.List;
 
@@ -37,15 +35,13 @@ import io.realm.RealmResults;
 public class UserCityListActivity extends AppCompatActivity {
     private CityAdapter cityAdapter;
     private ActivityUserCityListBinding binding;
-    @Inject
-    RealmHelper realmHelper;
     RealmResults<City> cities;
     List<City> cityList;
     @Inject
-    ViewModelFactory viewModelFactory;
+    MyViewModelFactory viewModelFactory;
     private UserCityListViewModel userCityListViewModel;
-    private int currentAction = ACTION_EDIT;
     private int countryCode;
+    private Observer<ErrorResponse> errorObserver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +56,6 @@ public class UserCityListActivity extends AppCompatActivity {
         MainApplication mainApplication = (MainApplication) getApplication();
         ActivityComponent activityComponent =mainApplication.getActivityComponent();
         activityComponent.inject(this);
-        realmHelper.openRealm();
         userCityListViewModel = new ViewModelProvider(this, viewModelFactory).get(UserCityListViewModel.class);
         binding.setViewModel(userCityListViewModel);
         binding.setLifecycleOwner(this);
@@ -70,13 +65,12 @@ public class UserCityListActivity extends AppCompatActivity {
         countryCode = intent.getIntExtra("countryCode", 1);
     }
     private void fetchData(){
-        userCityListViewModel.setIsLoading(true);
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {
             userCityListViewModel.fetchCities(countryCode);
         } else {
-            Toast.makeText(this, "Không có kết nối mạng, dữ liệu có thể không chính xác", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No internet, data may be outdated", Toast.LENGTH_SHORT).show();
         }
     }
     private void setUpRecycleView(){
@@ -88,6 +82,7 @@ public class UserCityListActivity extends AppCompatActivity {
                 intent.putExtra("idCity", city.getIdCity());
                 intent.putExtra("name", city.getName());
                 startActivity(intent);
+                finish();
             }
         }, new CityAdapter.OnItemLongClickListener() {
             @Override
@@ -96,11 +91,12 @@ public class UserCityListActivity extends AppCompatActivity {
         });
         cities = userCityListViewModel.getCities();
         cities.addChangeListener(results -> {
-            cityList = realmHelper.getRealm().copyFromRealm(cities);
+            cityList = userCityListViewModel.realmResultToList(cities);
             cityAdapter.submitList(cityList);
             cityAdapter.notifyDataSetChanged();
         });
         binding.rcvCity.setAdapter(cityAdapter);
+        cityAdapter.notifyDataSetChanged();
         cityAdapter.submitList(cityList);
     }
     private void addEvents(){
@@ -108,8 +104,13 @@ public class UserCityListActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserCityListActivity.this, UserHomeActivity.class);
+                if (errorObserver != null) {
+                    userCityListViewModel.getErrorLiveData().removeObserver(errorObserver);
+                }
+                userCityListViewModel.clearErrorLiveData();
+                Intent intent = new Intent(UserCityListActivity.this, UserSelectCountryActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener(){
@@ -127,11 +128,18 @@ public class UserCityListActivity extends AppCompatActivity {
                 return true;
             }
         });
-        userCityListViewModel.getErrorLiveData().observe(this, error -> {
-            if (error != null) {
-                showErrorDialog(this, error.getMessage());
+        errorObserver = new Observer<ErrorResponse>() {
+            @Override
+            public void onChanged(ErrorResponse error) {
+                if (error != null) {
+                    showErrorDialog(UserCityListActivity.this, error.getMessage());
+                    cityList = null;
+                    cityAdapter.submitList(cityList);
+                    cityAdapter.notifyDataSetChanged();
+                }
             }
-        });
+        };
+        userCityListViewModel.getErrorLiveData().observeForever(errorObserver);
     }
     private void reLoad(List<City> filterCities ){
         cityAdapter.submitList(filterCities);
@@ -145,6 +153,9 @@ public class UserCityListActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realmHelper.closeRealm();
+        if (errorObserver != null) {
+            userCityListViewModel.getErrorLiveData().removeObserver(errorObserver);
+        }
+        userCityListViewModel.clearErrorLiveData();
     }
 }

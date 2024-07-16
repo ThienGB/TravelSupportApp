@@ -18,6 +18,11 @@ public class Favorite extends RealmObject {
         this.type = type;
     }
 
+    public Favorite(String idFavorite, String idTarget) {
+        this.idFavorite = idFavorite;
+        this.idTarget = idTarget;
+    }
+
     public Favorite() {
     }
 

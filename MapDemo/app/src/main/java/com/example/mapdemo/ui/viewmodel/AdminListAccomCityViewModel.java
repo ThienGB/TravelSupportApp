@@ -13,7 +13,7 @@ public class AdminListAccomCityViewModel extends ViewModel {
     private AccommodationRepository accomRepo;
     private RealmResults<Accommodation> accoms;
     public AdminListAccomCityViewModel(RealmHelper realmHelper){
-        accomRepo = new AccommodationRepositoryImpl(realmHelper);
+       // accomRepo = new AccommodationRepositoryImpl(realmHelper);
         loadAccomsAndService();
     }
     private void loadAccomsAndService(){

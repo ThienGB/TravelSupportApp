@@ -17,8 +17,8 @@ import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.databinding.ActivityUserBookingListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.BookingAdapter;
+import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
 import com.example.mapdemo.ui.viewmodel.UserBookingListViewModel;
-import com.example.mapdemo.ui.viewmodel.ViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public class UserBookingListActivity extends AppCompatActivity {
     RealmHelper realmHelper;
     RealmResults<Booking> bookings;
     @Inject
-    ViewModelFactory viewModelFactory;
+    MyViewModelFactory viewModelFactory;
     private UserBookingListViewModel userBookingListViewModel;
     private City currentCity = null;
     FirebaseAuth firebaseAuth;
@@ -86,6 +86,7 @@ public class UserBookingListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(UserBookingListActivity.this, UserHomeActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

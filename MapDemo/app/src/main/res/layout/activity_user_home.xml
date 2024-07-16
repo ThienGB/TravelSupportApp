@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_fullbutton"
                 android:elevation="10dp"
-                android:padding="10dp"
+                android:padding="5dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -33,6 +33,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
+                        android:layout_weight="1"
                         android:paddingStart="10dp">
 
                         <TextView
@@ -55,7 +56,13 @@
                             android:textStyle="bold" />
 
                     </LinearLayout>
-
+                    <ImageButton
+                        android:id="@+id/btnLogout"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:scaleType="fitCenter"
+                        android:background="@drawable/background_fullbutton"
+                        android:src="@drawable/icon_logout"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -67,9 +74,10 @@
                 android:elevation="10dp"
                 android:orientation="vertical">
 
-                <ImageView
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vwpImageHome"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="220dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/img_home" />
             </LinearLayout>
