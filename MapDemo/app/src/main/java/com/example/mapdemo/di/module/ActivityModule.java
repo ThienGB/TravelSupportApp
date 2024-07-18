@@ -1,7 +1,5 @@
 package com.example.mapdemo.di.module;
 
-import android.app.Application;
-
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,8 +9,7 @@ import com.example.mapdemo.data.repository.BookingRepository;
 import com.example.mapdemo.data.repository.CityRepository;
 import com.example.mapdemo.data.repository.FavoriteRepository;
 import com.example.mapdemo.data.repository.FirebaseBookingRepository;
-import com.example.mapdemo.helper.RealmHelper;
-import com.example.mapdemo.helper.ViewModelKey;
+import com.example.mapdemo.di.ViewModelKey;
 import com.example.mapdemo.ui.viewmodel.AccomInforViewModel;
 import com.example.mapdemo.ui.viewmodel.LoginViewModel;
 import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
@@ -21,6 +18,7 @@ import com.example.mapdemo.ui.viewmodel.UserAccomListCityViewModel;
 import com.example.mapdemo.ui.viewmodel.UserBookingListViewModel;
 import com.example.mapdemo.ui.viewmodel.UserCityListViewModel;
 import com.example.mapdemo.ui.viewmodel.UserFavoriteListViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Map;
@@ -65,8 +63,10 @@ public class ActivityModule {
     @Provides
     UserFavoriteListViewModel provideUserFavoriteListViewModelWithRepo(FavoriteRepository favoriteRepository,
                                                                        FirestoreDataManager firestoreDataManager,
-                                                                       AccommodationRepository accommodationRepo) {
-        return new UserFavoriteListViewModel(favoriteRepository, firestoreDataManager, accommodationRepo);
+                                                                       AccommodationRepository accommodationRepo,
+                                                                       FirebaseAuth firebaseAuth) {
+        return new UserFavoriteListViewModel(favoriteRepository,
+                firestoreDataManager, accommodationRepo, firebaseAuth);
     }
     @Provides
     @IntoMap
@@ -75,8 +75,9 @@ public class ActivityModule {
         return viewModel;
     }
     @Provides
-    UserBookingListViewModel provideUserBookingListViewModelWithRepo(BookingRepository bookingRepo, AccommodationRepository accomRepo) {
-        return new UserBookingListViewModel(bookingRepo, accomRepo);
+    UserBookingListViewModel provideUserBookingListViewModelWithRepo(BookingRepository bookingRepo
+            , AccommodationRepository accomRepo, FirebaseAuth firebaseAuth) {
+        return new UserBookingListViewModel(bookingRepo, accomRepo, firebaseAuth);
     }
     @Provides
     @IntoMap
@@ -89,9 +90,10 @@ public class ActivityModule {
                                                            FavoriteRepository favoriteRepo,
                                                            BookingRepository bookingRepo,
                                                            FirebaseBookingRepository firebaseBookingRepo,
-                                                           FirestoreDataManager firestoreDataManager) {
-        return new AccomInforViewModel(accomRepo, favoriteRepo
-                ,bookingRepo,firebaseBookingRepo,firestoreDataManager);
+                                                           FirestoreDataManager firestoreDataManager,
+                                                           FirebaseAuth firebaseAuth) {
+        return new AccomInforViewModel(accomRepo, favoriteRepo, bookingRepo
+                ,firebaseBookingRepo,firestoreDataManager, firebaseAuth);
     }
     @Provides
     @IntoMap
@@ -101,8 +103,8 @@ public class ActivityModule {
     }
 
     @Provides
-    LoginViewModel provideLoginViewModelWithRepo(FirebaseAuth firebaseAuth, Application application) {
-        return new LoginViewModel(firebaseAuth, application);
+    LoginViewModel provideLoginViewModelWithRepo(FirebaseAuth firebaseAuth, GoogleSignInClient googleSignInClient) {
+        return new LoginViewModel(firebaseAuth, googleSignInClient);
     }
     @Provides
     @IntoMap

@@ -1,5 +1,6 @@
 package com.example.mapdemo.data.local.dao;
 
+import com.example.mapdemo.data.model.api.AccommodationResponse;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
@@ -12,7 +13,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class AccommodationDaoImpl implements AccommodationDao {
-    private Realm realm;
+    private final Realm realm;
 
     @Inject
     public AccommodationDaoImpl(RealmHelper realmHelper){
@@ -20,19 +21,24 @@ public class AccommodationDaoImpl implements AccommodationDao {
     }
     @Override
     public void addOrUpdateAccom(Accommodation accommodation) {
+        realm.executeTransactionAsync(r -> r.copyToRealmOrUpdate(accommodation));
+    }
+
+    @Override
+    public void addOrUpdateListAccom(List<AccommodationResponse> accomRes, CallbackHelper callback) {
         realm.executeTransactionAsync(r -> {
-            r.copyToRealmOrUpdate(accommodation);
-        });
+            for (AccommodationResponse acc : accomRes) {
+                Accommodation accommodation = new Accommodation(
+                        acc.getAccommodationId(), acc.getName(), acc.getPrice(),
+                        acc.getFreeroom(), acc.getImage(), acc.getDescription(),
+                        acc.getAddress(), acc.getLongitude(), acc.getLatitude(),
+                        acc.getCityId());
+                r.copyToRealmOrUpdate(accommodation);
+            }
+        }, callback::onComplete);
     }
     public void addOrUpdateAccomCb(Accommodation accommodation, CallbackHelper callback){
-        realm.executeTransactionAsync(r -> {
-            r.copyToRealmOrUpdate(accommodation);
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                callback.onComplete();
-            }
-        });
+        realm.executeTransactionAsync(r -> r.copyToRealmOrUpdate(accommodation), callback::onComplete);
     }
     @Override
     public void deleteAccom(String idAccom) {
@@ -55,21 +61,17 @@ public class AccommodationDaoImpl implements AccommodationDao {
     }
 
     public void deleteAllAccom() {
-        realm.executeTransactionAsync(r -> {
-            r.delete(Accommodation.class);
-        });
+        realm.executeTransactionAsync(r -> r.delete(Accommodation.class));
     }
 
     @Override
     public RealmResults<Accommodation> getAccomList() {
-        RealmResults<Accommodation> realmResults = realm.where(Accommodation.class).findAll();
-        return realmResults;
+        return realm.where(Accommodation.class).findAll();
     }
 
     @Override
     public RealmResults<Accommodation> getAccomListByCity(String idCity) {
-        RealmResults<Accommodation> realmResults = realm.where(Accommodation.class).equalTo("cityId", idCity).findAllAsync();
-        return realmResults;
+        return realm.where(Accommodation.class).equalTo("cityId", idCity).findAll();
     }
 
     @Override
@@ -79,8 +81,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
 
     @Override
     public Accommodation getAccomnById(String idAccom) {
-        Accommodation realmResults = realm.where(Accommodation.class).equalTo("accommodationId", idAccom).findFirst();
-        return realmResults;
+        return realm.where(Accommodation.class).equalTo("accommodationId", idAccom).findFirst();
     }
 
     @Override

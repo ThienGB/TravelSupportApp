@@ -27,6 +27,24 @@ public class AccommodationResponse {
     public AccommodationResponse() {
     }
 
+    public AccommodationResponse(String accommodationId, String name) {
+        this.name = name;
+        this.accommodationId = accommodationId;
+    }
+
+    public AccommodationResponse(String accommodationId, String name, int price, int freeroom, String image, String description, String address, String longitude, String latitude, String cityId) {
+        this.accommodationId = accommodationId;
+        this.name = name;
+        this.price = price;
+        this.freeroom = freeroom;
+        this.image = image;
+        this.description = description;
+        this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.cityId = cityId;
+    }
+
     public String getName() {
         return name;
     }

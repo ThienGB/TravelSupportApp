@@ -2,8 +2,6 @@ package com.example.mapdemo.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,6 +14,8 @@ import com.example.mapdemo.R;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.databinding.LayoutItemGridFavoriteBinding;
 import com.squareup.picasso.Picasso;
+
+import java.util.Objects;
 
 
 public class FavoriteAdapter extends ListAdapter<Accommodation, FavoriteAdapter.MyViewHolder> {
@@ -68,41 +68,30 @@ public class FavoriteAdapter extends ListAdapter<Accommodation, FavoriteAdapter.
         public MyViewHolder(LayoutItemGridFavoriteBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            binding.btnFavorite.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getLayoutPosition();
-                    if (position != RecyclerView.NO_POSITION && FavoriteAdapter.this.listener != null) {
-                        Accommodation accommodation = getItem(position);
-                        boolean isFavorite;
-                        if (binding.btnFavorite.getDrawable().getConstantState().equals(
-                                ContextCompat.getDrawable(v.getContext(), R.drawable.icon_favorite).getConstantState())) {
-                            isFavorite = false;
-                            binding.btnFavorite.setImageResource(R.drawable.icon_not_favorite);
-                        } else {
-                            isFavorite = true;
-                            binding.btnFavorite.setImageResource(R.drawable.icon_favorite);
-                        }
-                        FavoriteAdapter.this.listener2.onFavoriteClick(accommodation, isFavorite);
+            binding.btnFavorite.setOnClickListener(v -> {
+                int position = getLayoutPosition();
+                if (position != RecyclerView.NO_POSITION && FavoriteAdapter.this.listener != null) {
+                    Accommodation accommodation = getItem(position);
+                    boolean isFavorite;
+                    if (Objects.equals(binding.btnFavorite.getDrawable().getConstantState(), Objects.requireNonNull(ContextCompat.getDrawable(v.getContext(), R.drawable.icon_favorite)).getConstantState())) {
+                        isFavorite = false;
+                        binding.btnFavorite.setImageResource(R.drawable.icon_not_favorite);
+                    } else {
+                        isFavorite = true;
+                        binding.btnFavorite.setImageResource(R.drawable.icon_favorite);
                     }
+                    FavoriteAdapter.this.listener2.onFavoriteClick(accommodation, isFavorite);
                 }
             });
-            binding.btnFavorite.setOnTouchListener(new View.OnTouchListener() {
-                @SuppressLint("ClickableViewAccessibility")
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    return false;  // false để sự kiện click vẫn được xử lý bởi OnClickListener
-                }
+            binding.btnFavorite.setOnTouchListener((v, event) -> {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
             });
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && FavoriteAdapter.this.listener != null) {
-                        Accommodation accommodation = getItem(position);
-                        FavoriteAdapter.this.listener.onItemClick(accommodation);
-                    }
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && FavoriteAdapter.this.listener != null) {
+                    Accommodation accommodation = getItem(position);
+                    FavoriteAdapter.this.listener.onItemClick(accommodation);
                 }
             });
 

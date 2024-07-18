@@ -8,33 +8,32 @@ import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.data.model.api.ErrorResponse;
 import com.example.mapdemo.data.remote.firestore.FirestoreDataManager;
 import com.example.mapdemo.data.repository.FirebaseBookingRepository;
-import com.example.mapdemo.data.repository.FirebaseBookingRepositoryImpl;
 import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.repository.AccommodationRepository;
-import com.example.mapdemo.data.repository.AccommodationRepositoryImpl;
 import com.example.mapdemo.helper.LoadingHelper;
-import com.google.firestore.v1.FirestoreProto;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import io.realm.RealmResults;
 
 public class UserAccomListCityViewModel extends ViewModel {
-    private AccommodationRepository accomRepo;
+    private final AccommodationRepository accomRepo;
+    private final FirebaseBookingRepository firebaseBookingRepo;
+    private final FirestoreDataManager firestoreDataManager;
+    private List<Accommodation> accomListOrigin;
+    List<Accommodation> accomListFilter;
     public MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-    private RealmResults<Accommodation> accoms;
-    private MutableLiveData<ErrorResponse> error = new MutableLiveData<>();
-    private FirebaseBookingRepository firebaseBookingRepo;
-    private FirestoreDataManager firestoreDataManager;
+    private final MutableLiveData<String> error = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
+    public City currentCity;
+
     @Inject
     public UserAccomListCityViewModel(AccommodationRepository accomRepo,
                                       FirebaseBookingRepository firebaseBookingRepo,
@@ -46,53 +45,56 @@ public class UserAccomListCityViewModel extends ViewModel {
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
     }
-    public RealmResults<Accommodation> getAccoms(){
-        accoms = accomRepo.getAccomList();
-        return accoms;
-    }
-    public void fetchAccommodations(String cityId){
-        isLoading.setValue(true);
-        accomRepo.fetchAccommodations(cityId, new LoadingHelper() {
+
+    public void fetchAccommodations(){
+        accomRepo.fetchAccommodations(currentCity.getIdCity(), new LoadingHelper() {
             @Override
             public void onLoadingStarted() {
-                isLoading.setValue(true);
+                loadAccomList();
+                if (getAccomList().size() == 0){
+                    isLoading.setValue(true);
+                }
             }
-
             @Override
             public void onLoadingFinished() {
                 isLoading.setValue(false);
+                loadAccomList();
             }
         }, new CallbackHelper() {
             @Override
             public void onError(ErrorResponse errorResponse) {
-                error.postValue(errorResponse);
+                error.postValue(errorResponse.getMessage());
             }
         }).subscribe();
     }
-    public RealmResults<Accommodation> getAccomsByCityId(String cityId){
-        accoms = accomRepo.getAccomsByCity(cityId);
-        return accoms;
+    public void loadAccomList(){
+        RealmResults<Accommodation> accoms = accomRepo.getAccomsByCity(currentCity.getIdCity());
+        accomListOrigin = realmResultToList(accoms);
+        accomListFilter = accomListOrigin;
+        onListChange.postValue(true);
     }
-    public List<Accommodation> filterAccoms(List<Accommodation> accomList, String newText, int minPrice, int maxPrice) {
-        List<Accommodation> filterAccoms= new ArrayList<>();
+    public List<Accommodation> getAccomList(){
+        return accomListFilter;
+    }
+    public void filterAccoms(String newText, int minPrice, int maxPrice) {
+        accomListFilter= new ArrayList<>();
         String query = newText.toLowerCase();
-        for (Accommodation accommodation: accomList){
+        for (Accommodation accommodation: accomListOrigin){
             String name = accommodation.getName().toLowerCase();
             String address = accommodation.getAddress().toLowerCase();
             if ((name.contains(query) || address.contains(query))
                     && accommodation.getPrice() > minPrice
                     && accommodation.getPrice() < maxPrice){
-                filterAccoms.add(accommodation);
+                accomListFilter.add(accommodation);
             }
         }
-        return filterAccoms;
+        onListChange.postValue(true);
     }
     public Date convertToDate(CalendarDay calendarDay) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendarDay.getYear(), calendarDay.getMonth() - 1, calendarDay.getDay()); // Chú ý tháng trong Calendar bắt đầu từ 0
         return calendar.getTime();
     }
-
 
     public void getFreeroom(String accommodationId, Date startDate, Date endDate, CallbackHelper callback) {
         Accommodation accommodation = accomRepo.getAccomnById(accommodationId);
@@ -105,13 +107,12 @@ public class UserAccomListCityViewModel extends ViewModel {
             }
         });
     }
-    public LiveData<ErrorResponse> getErrorLiveData() {
+    public LiveData<String> getErrorLiveData() {
         return error;
     }
 
     public List<Accommodation> realmResultToList(RealmResults<Accommodation> accomRealm){
-        List<Accommodation> accomList = accomRepo.realmResultToList(accomRealm);
-        return accomList;
+        return accomRepo.realmResultToList(accomRealm);
     }
     public void clearErrorLiveData() {
         error.setValue(null); // Gán giá trị null cho LiveData
@@ -119,5 +120,14 @@ public class UserAccomListCityViewModel extends ViewModel {
 
     public void addAccommodationFirestore(Accommodation accommodation) {
         firestoreDataManager.addAccommodation(accommodation);
+    }
+    public MutableLiveData<Boolean> getOnListChange(){
+        return onListChange;
+    }
+    public void setCurrentFreeRoom(int i, int freeRoom){
+        accomListFilter.get(i).setCurrentFreeroom(freeRoom);
+    }
+    public void setCurrentCity(City currentCity){
+        this.currentCity = currentCity;
     }
 }
