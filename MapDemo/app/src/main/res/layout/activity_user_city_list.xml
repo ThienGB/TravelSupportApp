@@ -60,11 +60,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:queryHint="Search..." />
+                    app:defaultQueryHint="Find by city name..." />
             </LinearLayout>
             <TextView
                 android:id="@+id/txvInfor"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:visibility="gone"
                 android:textStyle="italic"
                 android:textAlignment="center"

@@ -47,4 +47,7 @@
     <string name="choose_country">Choose Country</string>
     <string name="select_booking_date">Select booking date</string>
     <string name="total_rooms">Total rooms: </string>
+    <string name="booking_now">Booking now</string>
+    <string name="todo">TODO</string>
+    <string name="name">Name</string>
 </resources>

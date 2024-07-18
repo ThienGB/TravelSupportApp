@@ -1,7 +1,6 @@
 package com.example.mapdemo.ui.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -32,7 +31,10 @@ public class CityAdapter extends ListAdapter<City, CityAdapter.PBViewHolder> {
 
         @Override
         public boolean areContentsTheSame(@NonNull City oldItem, @NonNull City newItem) {
-            return oldItem.getIdCity().equals(newItem.getIdCity());
+            return (areItemsTheSame (oldItem, newItem)
+                    && (oldItem.getName().equals(newItem.getName())
+                    && oldItem.getImage().equals(newItem.getImage()))
+            );
         }
     };
 
@@ -58,33 +60,29 @@ public class CityAdapter extends ListAdapter<City, CityAdapter.PBViewHolder> {
     }
 
     class PBViewHolder extends RecyclerView.ViewHolder {
-        private LayoutItemGridBinding binding;
+        private final LayoutItemGridBinding binding;
 
         public PBViewHolder(LayoutItemGridBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && CityAdapter.this.listener != null) {
-                        City city = getItem(position);
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && CityAdapter.this.listener != null) {
+                    City city = getItem(position);
+                    if (city != null)
                         CityAdapter.this.listener.onItemClick(city);
-                    }
                 }
             });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && CityAdapter.this.listener != null) {
-                        City city = getItem(position);
+            itemView.setOnLongClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && CityAdapter.this.listener != null) {
+                    City city = getItem(position);
+                    if (city != null)
                         CityAdapter.this.listener2.onItemLongClick(city);
-                        return true;
-                    }
-                    return false;
+                    return true;
                 }
+                return false;
             });
         }
         public void bind(City city) {

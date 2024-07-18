@@ -1,4 +1,4 @@
-package com.example.mapdemo.helper;
+package com.example.mapdemo.di;
 
 import androidx.lifecycle.ViewModel;
 

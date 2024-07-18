@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.realm.RealmResults;
 
 public interface AccommodationRepository {
-    boolean addAccom(Accommodation accommodation);
+    void addAccom(Accommodation accommodation);
     void updateAccom(Accommodation accommodation);
     void deleteAccom(String idAccom);
     RealmResults<Accommodation> getAccomList();

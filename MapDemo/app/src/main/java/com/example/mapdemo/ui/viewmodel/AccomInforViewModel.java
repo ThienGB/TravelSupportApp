@@ -4,22 +4,17 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.mapdemo.data.model.api.AccommodationResponse;
-import com.example.mapdemo.data.remote.firestore.FirestoreDataManager;
-import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.model.Favorite;
 import com.example.mapdemo.data.model.FirebaseBooking;
+import com.example.mapdemo.data.model.api.AccommodationResponse;
+import com.example.mapdemo.data.remote.firestore.FirestoreDataManager;
 import com.example.mapdemo.data.repository.AccommodationRepository;
-import com.example.mapdemo.data.repository.AccommodationRepositoryImpl;
 import com.example.mapdemo.data.repository.BookingRepository;
-import com.example.mapdemo.data.repository.BookingRepositoryImpl;
 import com.example.mapdemo.data.repository.FavoriteRepository;
-import com.example.mapdemo.data.repository.FavoriteRepositoryImpl;
 import com.example.mapdemo.data.repository.FirebaseBookingRepository;
-import com.example.mapdemo.data.repository.FirebaseBookingRepositoryImpl;
+import com.example.mapdemo.helper.CallbackHelper;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.Calendar;
@@ -34,7 +29,8 @@ public class AccomInforViewModel extends ViewModel {
     private final BookingRepository bookingRepo;
     private final FirebaseBookingRepository firebaseBookingRepo;
     private final FirestoreDataManager firestoreDataManager;
-    private MutableLiveData<Boolean> isFavorite = new MutableLiveData<>(false);
+    private final MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
+    public MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     @Inject
     public AccomInforViewModel(AccommodationRepository accomRepo, FavoriteRepository favoriteRepo,
                                BookingRepository bookingRepo, FirebaseBookingRepository firebaseBookingRepo,
@@ -51,8 +47,14 @@ public class AccomInforViewModel extends ViewModel {
     public void setFavorite(boolean isFavorite){
         this.isFavorite.setValue(isFavorite);
     }
-    public Accommodation getAccommodation(String idAccom){
-       return accomRepo.getAccomnById(idAccom);
+    public AccommodationResponse getAccommodationRes(String idAccom){
+         Accommodation acc= accomRepo.getAccomnById(idAccom);
+         return new AccommodationResponse(
+                 acc.getAccommodationId(), acc.getName(), acc.getPrice(),
+                 acc.getFreeroom(), acc.getImage(), acc.getDescription(),
+                 acc.getAddress(), acc.getLongitude(), acc.getLatitude(),
+                 acc.getCityId());
+
     }
     public void onFavoriteClicked(){
         if (isFavorite.getValue() != null) {
@@ -66,9 +68,7 @@ public class AccomInforViewModel extends ViewModel {
         favoriteRepo.deleteFavorite(idFavorite);
     }
     public boolean findFavoriteById(String idFavorite){
-        if (favoriteRepo.getFavoriteById(idFavorite) != null)
-            return true;
-        return false;
+        return favoriteRepo.getFavoriteById(idFavorite) != null;
     }
     public void addBooking(Booking booking){
         bookingRepo.addOrUpdateBooking(booking);
@@ -78,7 +78,7 @@ public class AccomInforViewModel extends ViewModel {
         calendar.set(calendarDay.getYear(), calendarDay.getMonth() - 1, calendarDay.getDay());
         return calendar.getTime();
     }
-    public static int getDaysBetween(CalendarDay startDate, CalendarDay endDate) {
+    public int getDaysBetween(CalendarDay startDate, CalendarDay endDate) {
         Calendar startCal = Calendar.getInstance();
         startCal.set(startDate.getYear(), startDate.getMonth() - 1, startDate.getDay());
         Calendar endCal = Calendar.getInstance();
@@ -93,8 +93,8 @@ public class AccomInforViewModel extends ViewModel {
         Accommodation accommodation = accomRepo.getAccomnById(accommodationId);
         int freeRoom = accommodation.getFreeroom();
         firebaseBookingRepo.getBookedRoomByTime(accommodationId, startDate, endDate, new CallbackHelper() {
-            @Override
-            public void onDataReceived(int bookedRoom) {
+                    @Override
+                    public void onDataReceived(int bookedRoom) {
                 boolean isAvailable = (freeRoom - bookedRoom) >= numOfRooms;
                 callback.onRoomChecked(isAvailable);
             }
@@ -127,6 +127,9 @@ public class AccomInforViewModel extends ViewModel {
 
             }
         });
+    }
+    public void setIsLoading(boolean isLoading){
+        this.isLoading.setValue(isLoading);
     }
     public void removeAllListeners() {
         firestoreDataManager.removeAllListeners();

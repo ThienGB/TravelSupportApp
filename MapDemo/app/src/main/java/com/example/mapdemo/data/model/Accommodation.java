@@ -17,6 +17,7 @@ public class Accommodation extends RealmObject {
     private String latitude;
     private String cityId;
 
+
     public Accommodation(String accommodationId, String name, int price, int freeroom, String image, String description, String address, String longitude, String latitude, String cityId) {
         this.accommodationId = accommodationId;
         this.name = name;

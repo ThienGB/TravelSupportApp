@@ -57,7 +57,7 @@
                     android:id="@+id/searchView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:queryHint="Search..."
+                    app:defaultQueryHint="Find by name or address"
                     android:layout_weight="2" />
                 <ImageButton
                     android:id="@+id/btnFilter"
@@ -68,28 +68,30 @@
                     android:background="@drawable/background_fullbutton"
                     android:src="@drawable/img"
                     android:scaleType="fitCenter"/>
+
             </LinearLayout>
+            <TextView
+                android:id="@+id/txvRangePrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="VND 500.000 - VND 10.000.000"
+                android:textSize="14sp" />
+            <!-- SeekBar for Budget -->
+            <SeekBar
+                android:id="@+id/rsbPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10000000"
+                android:min="500000"
+                android:value="500000,10000000"
+                android:layout_marginBottom="5dp"/>
             <LinearLayout
                 android:id="@+id/layFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/txvRangePrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="VND 500.000 - VND 10.000.000"
-                    android:textSize="14sp" />
-                <!-- SeekBar for Budget -->
-                <SeekBar
-                    android:id="@+id/rsbPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="10000000"
-                    android:min="500000"
-                    android:value="500000,10000000"
-                    android:layout_marginBottom="5dp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -102,7 +104,6 @@
                     android:layout_height="300dp"
                     android:layout_gravity="center"
                     app:mcv_selectionMode="range"/>
-
                 <Button
                     android:id="@+id/btnConfirm"
                     android:layout_gravity="center"

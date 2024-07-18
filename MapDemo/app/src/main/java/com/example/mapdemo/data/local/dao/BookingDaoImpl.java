@@ -1,8 +1,10 @@
 package com.example.mapdemo.data.local.dao;
 
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.model.Favorite;
+import com.example.mapdemo.helper.RealmHelper;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -10,16 +12,14 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class BookingDaoImpl implements BookingDao {
-    private Realm realm;
+    private final Realm realm;
     @Inject
     public BookingDaoImpl(RealmHelper realmHelper){
         this.realm = realmHelper.getRealm();
     }
     @Override
     public void addOrUpdateBooking(Booking booking) {
-        realm.executeTransactionAsync(r -> {
-            r.copyToRealmOrUpdate(booking);
-        });
+        realm.executeTransactionAsync(r -> r.copyToRealmOrUpdate(booking));
     }
 
     @Override
@@ -34,19 +34,20 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public RealmResults<Booking> getBookingList() {
-        RealmResults<Booking> realmResults = realm.where(Booking.class).findAll();
-        return realmResults;
+        return realm.where(Booking.class).findAll();
     }
 
     @Override
     public Booking getBookingById(String idBooking) {
-        Booking realmResults = realm.where(Booking.class).equalTo("idBooking", idBooking).findFirst();
-        return realmResults;
+        return realm.where(Booking.class).equalTo("idBooking", idBooking).findFirst();
     }
 
     @Override
     public RealmResults<Booking> getBookingByIdUser(String idUser) {
-        RealmResults<Booking> realmResults = realm.where(Booking.class).equalTo("idUser", idUser).findAll();
-        return realmResults;
+        return realm.where(Booking.class).equalTo("idUser", idUser).findAll();
+    }
+    @Override
+    public List<Booking> realmToList(RealmResults<Booking> bookedRealmResult) {
+        return realm.copyFromRealm(bookedRealmResult);
     }
 }

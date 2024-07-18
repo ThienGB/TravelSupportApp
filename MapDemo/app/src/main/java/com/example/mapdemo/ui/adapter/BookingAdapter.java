@@ -1,26 +1,20 @@
 package com.example.mapdemo.ui.adapter;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
-import com.example.mapdemo.databinding.LayoutItemGridAccomBinding;
 import com.example.mapdemo.databinding.LayoutItemGridBookingBinding;
-import com.example.mapdemo.ui.viewmodel.UserAccomListCityViewModel;
 import com.example.mapdemo.ui.viewmodel.UserBookingListViewModel;
 import com.squareup.picasso.Picasso;
 
-
 public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHolder> {
-    private OnItemClickListener listener;
-    private OnItemLongClickListener listener2;
+    private final OnItemClickListener listener;
+    private final OnItemLongClickListener listener2;
     UserBookingListViewModel userBookingListViewModel;
 
     public BookingAdapter(OnItemClickListener listener, OnItemLongClickListener listener2,
@@ -58,47 +52,39 @@ public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHo
     }
 
     public interface OnItemClickListener {
-        void onItemClick(Booking booking);
+        default void onItemClick(){}
     }
     public interface OnItemLongClickListener {
-        void onItemLongClick(Booking booking);
+        default void onItemLongClick(){}
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        private LayoutItemGridBookingBinding binding;
+        private final LayoutItemGridBookingBinding binding;
 
         public MyViewHolder(LayoutItemGridBookingBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && BookingAdapter.this.listener != null) {
-                        Booking booking = getItem(position);
-                        BookingAdapter.this.listener.onItemClick(booking);
-                    }
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && BookingAdapter.this.listener != null) {
+                    BookingAdapter.this.listener.onItemClick();
                 }
             });
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && BookingAdapter.this.listener != null) {
-                        Booking booking = getItem(position);
-                        BookingAdapter.this.listener2.onItemLongClick(booking);
-                        return true;
-                    }
-                    return false;
+            itemView.setOnLongClickListener(v -> {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION && BookingAdapter.this.listener != null) {
+                    BookingAdapter.this.listener2.onItemLongClick();
+                    return true;
                 }
+                return false;
             });
         }
         public void bind(Booking booking) {
             String target = booking.getIdTarget();
             Accommodation accommodation = userBookingListViewModel.getAccomById(target);
             binding.txvAccomName.setText(accommodation.getName());
-            String numOfRoom="";
+            String numOfRoom;
             if (booking.getNumOfRooms()>1) {
                 numOfRoom= booking.getNumOfRooms() + " rooms";
             } else {

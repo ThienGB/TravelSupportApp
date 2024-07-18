@@ -84,7 +84,6 @@ public class AdminCityListActivity extends AppCompatActivity {
     private void initInjec(){
         MainApplication mainApplication = (MainApplication) getApplication();
         ActivityComponent activityComponent =mainApplication.getActivityComponent();
-        activityComponent.inject(this);
         realmHelper.openRealm();
       //  adminCityListViewModel = new ViewModelProvider(this, viewModelFactory).get(AdminCityListViewModel.class);
     }

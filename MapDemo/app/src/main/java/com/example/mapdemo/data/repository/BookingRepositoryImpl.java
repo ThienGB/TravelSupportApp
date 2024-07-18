@@ -1,12 +1,11 @@
 package com.example.mapdemo.data.repository;
 
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.local.dao.AccommodationDao;
-import com.example.mapdemo.data.local.dao.AccommodationDaoImpl;
 import com.example.mapdemo.data.local.dao.BookingDao;
-import com.example.mapdemo.data.local.dao.BookingDaoImpl;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,8 +13,8 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class BookingRepositoryImpl implements BookingRepository {
-    private BookingDao bookingDao;
-    private AccommodationDao accommodationDao;
+    private final BookingDao bookingDao;
+    private final AccommodationDao accommodationDao;
     @Inject
     public BookingRepositoryImpl(BookingDao bookingDao, AccommodationDao accommodationDao) {
         this.bookingDao = bookingDao;
@@ -54,6 +53,12 @@ public class BookingRepositoryImpl implements BookingRepository {
         }
         return listAccom;
     }
+
+    @Override
+    public List<Booking> realmToList(RealmResults<Booking> bookedRealmResult) {
+        return bookingDao.realmToList(bookedRealmResult);
+    }
+
     @Override
     public RealmResults<Booking> getBookingByIdUser(String idUser){
         return bookingDao.getBookingByIdUser(idUser);

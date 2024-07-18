@@ -10,26 +10,20 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.mapdemo.MainApplication;
 import com.example.mapdemo.R;
-import com.example.mapdemo.data.model.Favorite;
-import com.example.mapdemo.data.model.api.AccommodationResponse;
-import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
+import com.example.mapdemo.data.model.Favorite;
 import com.example.mapdemo.data.model.FirebaseBooking;
+import com.example.mapdemo.data.model.api.AccommodationResponse;
 import com.example.mapdemo.databinding.ActivityAccomInforBinding;
-import com.example.mapdemo.di.component.ActivityComponent;
+import com.example.mapdemo.helper.CallbackHelper;
+import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.AccomInforViewModel;
-import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -38,29 +32,27 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-import javax.inject.Inject;
-
-public class AccomInforActivity extends AppCompatActivity {
+public class AccomInforActivity extends BaseActivity {
     private ActivityAccomInforBinding binding;
-    @Inject
-    MyViewModelFactory viewModelFactory;
     private AccomInforViewModel accInforVm;
-    private Accommodation currentAccom = null;
+    private AccommodationResponse currentAccom = null;
     private FirebaseAuth firebaseAuth;
     private int currentAction;
-    int countChange = 0;
+    private boolean isFirstTime = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_accom_infor);
         getDataFromIntent();
-        initInjec();
+        accInforVm = getViewModel(AccomInforViewModel.class);
+        binding.setViewModel(accInforVm);
+        binding.setLifecycleOwner(this);
         loadRemoteData();
         addEvents();
     }
-
     private void getDataFromIntent(){
         Intent i = getIntent();
         String idAccom = i.getStringExtra("idAccom");
@@ -68,82 +60,65 @@ public class AccomInforActivity extends AppCompatActivity {
         currentAction = i.getIntExtra("action", ACTION_RESEARCH_VIEW);
         firebaseAuth= FirebaseAuth.getInstance();
         if (idAccom != null) {
-            currentAccom = new Accommodation(idAccom, nameAccom, 0);
+            currentAccom = new AccommodationResponse(idAccom, nameAccom);
         }
     }
     private void addEvents(){
-        accInforVm.getIsFavorite().observe(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isFavorite) {
-                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                countChange++;
-                if (networkInfo != null) {
-                    if (countChange > 2)
-                        handleFavorite(isFavorite);
-                } else {
-                    Toast.makeText(AccomInforActivity.this, "No internet", Toast.LENGTH_SHORT).show();
-                }
-
+        accInforVm.getIsFavorite().observe(this, isFavorite -> {
+            if (isNetworkAvailable()) {
+                if (!isFirstTime)
+                    handleFavorite(isFavorite);
+            } else {
+                showToast("No internet");
             }
+            isFirstTime = false;
         });
         binding.btnBooking.setOnClickListener(v -> showCalendarDialog());
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeEvents();
-                if (currentAction == ACTION_RESEARCH_VIEW){
-                    Intent intent = new Intent(AccomInforActivity.this, UserAccomListCityActivity.class);
-                    intent.putExtra("idCity", currentAccom.getCityId());
-                    intent.putExtra("nameAccom", currentAccom.getName());
-                    startActivity(intent);
-                }else if (currentAction == ACTION_FAVORITE_VIEW) {
-                    Intent intent = new Intent(AccomInforActivity.this, UserFavoriteListActivity.class);
-                    startActivity(intent);
-                }
-
+        binding.btnBack.setOnClickListener(v -> {
+            removeEvents();
+            if (currentAction == ACTION_RESEARCH_VIEW){
+                Intent intent = new Intent(AccomInforActivity.this, UserAccomListCityActivity.class);
+                intent.putExtra("idCity", currentAccom.getCityId());
+                intent.putExtra("nameAccom", currentAccom.getName());
+                startActivity(intent);
+            }else if (currentAction == ACTION_FAVORITE_VIEW) {
+                Intent intent = new Intent(AccomInforActivity.this, UserFavoriteListActivity.class);
+                startActivity(intent);
             }
         });
-
-    }
-    private void initInjec(){
-        MainApplication mainApplication = (MainApplication) getApplication();
-        ActivityComponent activityComponent =mainApplication.getActivityComponent();
-        activityComponent.inject(this);
-        accInforVm = new ViewModelProvider(this, viewModelFactory).get(AccomInforViewModel.class);
-        binding.setViewModel(accInforVm);
-        binding.setLifecycleOwner(this);
     }
     private void loadRemoteData(){
+        accInforVm.setIsLoading(false);
         loadFavoriteStatus();
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null) {
+            accInforVm.setIsLoading(true);
             accInforVm.getAccommodationFirestore(currentAccom.getAccommodationId(), new CallbackHelper() {
                 @Override
                 public void onAccommodationRecieved(Accommodation accommodation) {
                     loadLocalData();
+                    accInforVm.setIsLoading(false);
                 }
             });
         } else {
             loadLocalData();
-            Toast.makeText(this, "No internet, data may be outdated", Toast.LENGTH_SHORT).show();
+            showToast("No internet, data may be outdated");
         }
-
     }
     private void loadFavoriteStatus(){
-        boolean isFavorite = accInforVm.findFavoriteById(firebaseAuth.getCurrentUser().getEmail()+currentAccom.getAccommodationId());
+        boolean isFavorite = accInforVm.findFavoriteById(Objects.requireNonNull(
+                firebaseAuth.getCurrentUser()).getEmail()+currentAccom.getAccommodationId());
         accInforVm.setFavorite(isFavorite);
     }
     private void loadLocalData(){
-        currentAccom = accInforVm.getAccommodation(currentAccom.getAccommodationId());
+        currentAccom = accInforVm.getAccommodationRes(currentAccom.getAccommodationId());
         binding.txvAccomName.setText(currentAccom.getName());
         binding.txvFreeRoom.setText(String.valueOf(currentAccom.getFreeroom()));
         binding.txvDescription.setText(currentAccom.getDescription());
         binding.txvPrice.setText(String.valueOf(currentAccom.getPrice()));
         binding.txvAddress.setText(currentAccom.getAddress());
         Picasso.get().load(currentAccom.getImage()).into(binding.imgAccom);
-
     }
     private void showCalendarDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -154,51 +129,48 @@ public class AccomInforActivity extends AppCompatActivity {
         NumberPicker numberPicker = dialogView.findViewById(R.id.npkNumOfRoom);
         final Button btnConfirm = dialogView.findViewById(R.id.btnOk);
         AlertDialog dialog = builder.create();
-        btnConfirm.setOnClickListener(v -> {
-            new AlertDialog.Builder(AccomInforActivity.this)
-                    .setTitle("Confirm Booking")
-                    .setMessage("Are you sure you want to book a room?")
-                    .setPositiveButton("Yes", (dialogmini, which) -> {
-                        List<CalendarDay> selectedDates = calendarView.getSelectedDates();
-                        if (selectedDates.size() >= 2) {
-                            Date startDate = accInforVm.convertToDate(selectedDates.get(0));
-                            Date endDate = accInforVm.convertToDate(selectedDates.get(selectedDates.size() - 1));
-                            int numOfRooms = numberPicker.getValue();
-                            accInforVm.checkFreeRoom(currentAccom.getAccommodationId(), startDate, endDate, numOfRooms, new CallbackHelper() {
-                                @Override
-                                public void onRoomChecked(boolean isAvailable) {
-                                    if (isAvailable) {
-                                        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-                                        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-                                        if (networkInfo != null) {
-                                            handleBooking(selectedDates, startDate, endDate, numOfRooms);
-                                            startActivity(new Intent(AccomInforActivity.this,
-                                                    UserBookingListActivity.class));
-                                        } else {
-                                            Toast.makeText(AccomInforActivity.this, "No internet, can not booking", Toast.LENGTH_SHORT).show();
-                                        }
-                                        dialog.dismiss();
-                                    }else {
-                                        Toast.makeText(AccomInforActivity.this, "There are no available rooms.", Toast.LENGTH_SHORT).show();
+        btnConfirm.setOnClickListener(v -> new AlertDialog.Builder(AccomInforActivity.this)
+                .setTitle("Confirm Booking")
+                .setMessage("Are you sure you want to book a room?")
+                .setPositiveButton("Yes", (dialogmini, which) -> {
+                    List<CalendarDay> selectedDates = calendarView.getSelectedDates();
+                    if (selectedDates.size() >= 2) {
+                        Date startDate = accInforVm.convertToDate(selectedDates.get(0));
+                        Date endDate = accInforVm.convertToDate(selectedDates.get(selectedDates.size() - 1));
+                        int numOfRooms = numberPicker.getValue();
+                        accInforVm.checkFreeRoom(currentAccom.getAccommodationId(), startDate, endDate, numOfRooms, new CallbackHelper() {
+                            @Override
+                            public void onRoomChecked(boolean isAvailable) {
+                                if (isAvailable) {
+                                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                                    if (networkInfo != null) {
+                                        handleBooking(selectedDates, startDate, endDate, numOfRooms);
+                                        startActivity(new Intent(AccomInforActivity.this,
+                                                UserBookingListActivity.class));
+                                    } else {
+                                        showToast("No internet, can not booking");
                                     }
+                                    dialog.dismiss();
+                                }else {
+                                    showToast("There are no available rooms.");
                                 }
-                            });
-                        }else {
-                            Toast.makeText(AccomInforActivity.this, "Please select a range of dates.", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton("No", (dialog1, which) -> dialog1.dismiss())
-                    .create()
-                    .show();
-        });
-
+                            }
+                        });
+                    }else {
+                        showToast("Please select a range of dates.");
+                    }
+                })
+                .setNegativeButton("No", (dialog1, which) -> dialog1.dismiss())
+                .create()
+                .show());
         dialog.show();
     }
     private void handleBooking(List<CalendarDay> selectedDates, Date startDate, Date endDate, int numOfRooms){
         String idBooking = UUID.randomUUID().toString();
         int price = currentAccom.getPrice() * accInforVm.getDaysBetween(selectedDates.get(0),
-                selectedDates.get(selectedDates.size() - 1));
-        String idUser = firebaseAuth.getCurrentUser().getEmail();
+                selectedDates.get(selectedDates.size() - 1)) * numOfRooms;
+        String idUser = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
         FirebaseBooking firebaseBooking = new FirebaseBooking(idBooking,
                 currentAccom.getAccommodationId(), idUser, startDate.getTime(),
                 endDate.getTime(), price, numOfRooms);
@@ -206,10 +178,11 @@ public class AccomInforActivity extends AppCompatActivity {
         Booking booking = new Booking(idBooking, currentAccom.getAccommodationId(),
                 idUser, startDate, endDate, price, numOfRooms);
         accInforVm.addBooking(booking);
-        Toast.makeText(AccomInforActivity.this, "Booking Succesfully.", Toast.LENGTH_SHORT).show();
+        showToast("Booking Succesfully.");
     }
     private void handleFavorite(Boolean isFavorite){
-        String idFavorite = firebaseAuth.getCurrentUser().getEmail() + currentAccom.getAccommodationId();
+        String idFavorite = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()
+                + currentAccom.getAccommodationId();
         if (isFavorite) {
             Favorite favorite = new Favorite(idFavorite,
                     currentAccom.getAccommodationId(),
@@ -217,17 +190,20 @@ public class AccomInforActivity extends AppCompatActivity {
                     "accommodation");
             accInforVm.addFavorite(favorite);
             accInforVm.addFavoriteFirestore(favorite);
-            Toast.makeText(AccomInforActivity.this, "Add "+ currentAccom.getName()+
-                            " to favorite list successfully.", Toast.LENGTH_SHORT).show();
+            showToast("Add "+ currentAccom.getName()+ " to favorite list successfully.");
         } else {
             accInforVm.deleteFavorite(idFavorite);
             accInforVm.deleteFavoriteFirestore(idFavorite);
-            Toast.makeText(AccomInforActivity.this, "Remove "+ currentAccom.getName()+
-                            " from favorite list successfully.", Toast.LENGTH_SHORT).show();
+            showToast("Remove "+ currentAccom.getName()+ " from favorite list successfully.");
         }
     }
     private void removeEvents(){
         accInforVm.getIsFavorite().removeObservers(this);
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        binding.btnBack.callOnClick();
     }
     @Override
     protected void onDestroy() {

@@ -1,9 +1,9 @@
 package com.example.mapdemo.data.local.dao;
 
-import androidx.annotation.NonNull;
-
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.City;
+import com.example.mapdemo.data.model.api.CityResponse;
+import com.example.mapdemo.helper.CallbackHelper;
+import com.example.mapdemo.helper.RealmHelper;
 
 import java.util.List;
 
@@ -13,16 +13,23 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class CitiyDaoImpl implements CityDao{
-    private Realm realm;
+    private final Realm realm;
     @Inject
     public CitiyDaoImpl(RealmHelper realmHelper){
         this.realm = realmHelper.getRealm();
     }
     @Override
     public void addOrUpdateCity(City city) {
+        realm.executeTransactionAsync(r -> r.copyToRealmOrUpdate(city));
+    }
+    @Override
+    public void addOrUpdateListCity(List<CityResponse> cityRespon, CallbackHelper callback) {
         realm.executeTransactionAsync(r -> {
-            r.copyToRealmOrUpdate(city);
-        });
+            for (CityResponse cityRes : cityRespon) {
+                City city = new City(cityRes.getId(), cityRes.getName(), cityRes.getImage());
+                r.copyToRealmOrUpdate(city);
+            }
+        }, callback::onComplete);
     }
     @Override
     public void deleteCity(String idCity) {
@@ -35,20 +42,16 @@ public class CitiyDaoImpl implements CityDao{
     }
     @Override
     public void deleteAllCity() {
-        realm.executeTransactionAsync(r -> {
-            r.delete(City.class);
-        });
+        realm.executeTransactionAsync(r -> r.delete(City.class));
     }
     @Override
     public RealmResults<City> getCityList() {
-        RealmResults<City> realmResults = realm.where(City.class).findAllAsync();
-        return realmResults;
+        return realm.where(City.class).findAllAsync();
     }
 
     @Override
     public City getCityById(String idCity) {
-        City realmResults = realm.where(City.class).equalTo("idCity", idCity).findFirst();
-        return realmResults;
+        return realm.where(City.class).equalTo("idCity", idCity).findFirst();
     }
 
     @Override

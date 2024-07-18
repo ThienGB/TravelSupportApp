@@ -1,5 +1,6 @@
 package com.example.mapdemo.ui.viewmodel;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.mapdemo.data.model.Accommodation;
@@ -21,7 +22,8 @@ public class UserFavoriteListViewModel extends ViewModel {
     private final FavoriteRepository favoriteRepo;
     private final AccommodationRepository accommodationRepo;
     private final FirestoreDataManager firestoreDataManager;
-    public RealmResults<Accommodation> favoriteAccom;
+    public List<Accommodation> favoriteAccomList;
+    private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
 
     @Inject
     public UserFavoriteListViewModel(FavoriteRepository favoriteRepo,
@@ -40,11 +42,12 @@ public class UserFavoriteListViewModel extends ViewModel {
     public RealmResults<Accommodation> getFavoriteByIdUser(String idUser) {
         return favoriteRepo.getFavoriteByIdUser(idUser);
     }
-    public void loadFavoriteAccom(String idUser){
-        this.favoriteAccom = getFavoriteByIdUser(idUser);
+    public void loadFavoriteAccomList(String idUser){
+        this.favoriteAccomList = realmToList(getFavoriteByIdUser(idUser));
+        onListChange.postValue(true);
     }
-    public RealmResults<Accommodation> getFavoriteAccom(){
-        return this.favoriteAccom;
+    public List<Accommodation> getFavoriteAccomList(){
+        return favoriteAccomList;
     }
     public List<Accommodation> realmToList(RealmResults<Accommodation> realmAccom){
         return favoriteRepo.realmToList(realmAccom);
@@ -80,5 +83,8 @@ public class UserFavoriteListViewModel extends ViewModel {
     }
     public void deleteFavoriteFirestore(String favoriteId){
         firestoreDataManager.deleteFavorite(favoriteId);
+    }
+    public MutableLiveData<Boolean> getOnListChange(){
+        return onListChange;
     }
 }
