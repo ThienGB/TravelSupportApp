@@ -1,12 +1,11 @@
 package com.example.mapdemo.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
+import static com.example.mapdemo.helper.DialogHelper.showErrorDialog;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityUserSelectCountryBinding;
 
@@ -16,34 +15,37 @@ public class UserSelectCountryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding= DataBindingUtil.setContentView(this, R.layout.activity_user_select_country);
+        getDataFormIntent();
         addEvents();
     }
+    private void getDataFormIntent(){
+        Intent intent = getIntent();
+        if (intent.getStringExtra("error") != null){
+            showErrorDialog(this, intent.getStringExtra("error"));
+        }
+    }
     private void addEvents(){
-        binding.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               Intent intent = new Intent(UserSelectCountryActivity.this, UserHomeActivity.class);
-               startActivity(intent);
-               finish();
-            }
+        binding.btnBack.setOnClickListener(v -> {
+           Intent intent = new Intent(UserSelectCountryActivity.this, UserHomeActivity.class);
+           startActivity(intent);
+           finish();
         });
-        binding.btnVietnamese.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UserSelectCountryActivity.this, UserCityListActivity.class);
-                intent.putExtra("countryCode", 1);
-                startActivity(intent);
-                finish();
-            }
+        binding.btnVietnamese.setOnClickListener(v -> {
+            Intent intent = new Intent(UserSelectCountryActivity.this, UserCityListActivity.class);
+            intent.putExtra("countryCode", 1);
+            startActivity(intent);
+            finish();
         });
-        binding.btnChinese.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UserSelectCountryActivity.this, UserCityListActivity.class);
-                intent.putExtra("countryCode", 2);
-                startActivity(intent);
-                finish();
-            }
+        binding.btnChinese.setOnClickListener(v -> {
+            Intent intent = new Intent(UserSelectCountryActivity.this, UserCityListActivity.class);
+            intent.putExtra("countryCode", 2);
+            startActivity(intent);
+            finish();
         });
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        binding.btnBack.callOnClick();
     }
 }

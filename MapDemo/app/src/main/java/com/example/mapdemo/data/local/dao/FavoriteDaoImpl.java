@@ -9,16 +9,14 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class FavoriteDaoImpl implements FavoriteDao {
-    private Realm realm;
+    private final Realm realm;
     @Inject
     public FavoriteDaoImpl(RealmHelper realmHelper){
         this.realm = realmHelper.getRealm();
     }
     @Override
     public void addOrUpdateFavorite(Favorite favorite) {
-        realm.executeTransactionAsync(r -> {
-            r.copyToRealmOrUpdate(favorite);
-        });
+        realm.executeTransactionAsync(r -> r.copyToRealmOrUpdate(favorite));
     }
 
     @Override
@@ -33,26 +31,21 @@ public class FavoriteDaoImpl implements FavoriteDao {
 
     @Override
     public void deleteAllFavorite() {
-        realm.executeTransactionAsync(r -> {
-            r.delete(Favorite.class);
-        });
+        realm.executeTransactionAsync(r -> r.delete(Favorite.class));
     }
 
     @Override
     public RealmResults<Favorite> getFavoriteList() {
-        RealmResults<Favorite> realmResults = realm.where(Favorite.class).findAll();
-        return realmResults;
+        return realm.where(Favorite.class).findAll();
     }
 
     @Override
     public RealmResults<Favorite> getFavoriteByIdUser(String idUser) {
-        RealmResults<Favorite> realmResults = realm.where(Favorite.class).equalTo("idUser", idUser).findAll();
-        return realmResults;
+        return realm.where(Favorite.class).equalTo("idUser", idUser).findAll();
     }
 
     @Override
     public Favorite getFavoriteById(String idFavorite) {
-        Favorite realmResults = realm.where(Favorite.class).equalTo("idFavorite", idFavorite).findFirst();
-        return realmResults;
+        return realm.where(Favorite.class).equalTo("idFavorite", idFavorite).findFirst();
     }
 }

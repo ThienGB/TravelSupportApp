@@ -4,8 +4,6 @@ import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Favorite;
 import com.example.mapdemo.helper.CallbackHelper;
 
-import java.util.List;
-
 public interface FirestoreDataManager {
     void getAccommodationById(String idAccom, CallbackHelper callback);
     void addAccommodation(Accommodation accom);

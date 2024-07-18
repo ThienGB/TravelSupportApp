@@ -1,84 +1,66 @@
 package com.example.mapdemo.ui.activity;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
+import android.os.Handler;
 
-import com.example.mapdemo.MainApplication;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityUserHomeBinding;
-import com.example.mapdemo.di.component.ActivityComponent;
-import com.example.mapdemo.generated.callback.OnClickListener;
 import com.example.mapdemo.ui.adapter.ImageHomeAdapter;
+import com.example.mapdemo.ui.adapter.IndicatorAdapter;
+import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.LoginViewModel;
-import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import javax.inject.Inject;
-
-public class UserHomeActivity extends AppCompatActivity {
+public class UserHomeActivity extends BaseActivity {
     ActivityUserHomeBinding binding;
     FirebaseAuth firebaseAuth;
-    @Inject
-    MyViewModelFactory viewModelFactory;
+    private static final String SHARED_PREFS="sharePrefs";
     private LoginViewModel loginViewModel;
+    private SharedPreferences sharedPreferences;
+    private Handler handler;
+    private Runnable runnable;
+    private int currentPage = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding= DataBindingUtil.setContentView(this, R.layout.activity_user_home);
-        initInjec();
+        loginViewModel = getViewModel(LoginViewModel.class);
+        sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         loadData();
+        setUpSlideImage();
         addEvents();
-
-    }
-    private void initInjec(){
-        MainApplication mainApplication = (MainApplication) getApplication();
-        ActivityComponent activityComponent =mainApplication.getActivityComponent();
-        activityComponent.inject(this);
-        loginViewModel = new ViewModelProvider(this, viewModelFactory).get(LoginViewModel.class);
     }
     private void addEvents(){
-        binding.btnBooking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UserHomeActivity.this, UserBookingListActivity.class);
-                startActivity(intent);
-            }
+        binding.btnBooking.setOnClickListener(v -> {
+            Intent intent = new Intent(UserHomeActivity.this, UserBookingListActivity.class);
+            startActivity(intent);
         });
-        binding.btnResearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UserHomeActivity.this, UserSelectCountryActivity.class);
-                startActivity(intent);
-            }
+        binding.btnResearch.setOnClickListener(v -> {
+            Intent intent = new Intent(UserHomeActivity.this, UserSelectCountryActivity.class);
+            startActivity(intent);
         });
-        binding.btnFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(UserHomeActivity.this, UserFavoriteListActivity.class);
-                startActivity(intent);
-            }
+        binding.btnFavorite.setOnClickListener(v -> {
+            Intent intent = new Intent(UserHomeActivity.this, UserFavoriteListActivity.class);
+            startActivity(intent);
         });
-        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLogoutDialog();
-            }
-        });
+        binding.btnLogout.setOnClickListener(v -> showLogoutDialog());
     }
-    private void loadData(){
-        firebaseAuth = FirebaseAuth.getInstance();
-        binding.txvTenHS.setText(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getDisplayName());
+
+    private void setUpSlideImage(){
+        handler = new Handler();
+
+
 
         List<String> imageUrls = Arrays.asList(
                 "https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/07/anh-phong-canh-dep-22.jpg",
@@ -88,32 +70,54 @@ public class UserHomeActivity extends AppCompatActivity {
         );
         ImageHomeAdapter adapter = new ImageHomeAdapter(this, imageUrls);
         binding.vwpImageHome.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        binding.rvIndicator.setLayoutManager(layoutManager);
+        IndicatorAdapter indicatorAdapter = new IndicatorAdapter(this, imageUrls.size());
+        binding.rvIndicator.setAdapter(indicatorAdapter);
+        binding.vwpImageHome.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                currentPage = position;
+                indicatorAdapter.setCurrentPosition(position);
+            }
+        });
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (currentPage == adapter.getItemCount() - 1) {
+                    currentPage = 0;
+                } else {
+                    currentPage++;
+                }
+                binding.vwpImageHome.setCurrentItem(currentPage, true);
+                handler.postDelayed(this, 3000);
+            }
+        };
+        handler.postDelayed(runnable, 3000);
+    }
+    private void loadData(){
+        firebaseAuth = FirebaseAuth.getInstance();
+        binding.txvTenHS.setText(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getDisplayName());
     }
     private void showLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Logout");
         builder.setMessage("Are you sure you want to logout?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                logout();
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        builder.setPositiveButton("Yes", (dialog, which) -> logout());
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     private void logout() {
-        loginViewModel.signOut();
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        loginViewModel.signOut(sharedPreferences, this);
+        showToast("Log out successfully");
         finish();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(runnable);
     }
 }

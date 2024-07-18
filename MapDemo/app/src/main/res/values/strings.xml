@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">MapDeMo</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="app_name">TravlerSupport</string>
+    <string name="title_activity_login">TravlerSupport</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -47,4 +47,7 @@
     <string name="choose_country">Choose Country</string>
     <string name="select_booking_date">Select booking date</string>
     <string name="total_rooms">Total rooms: </string>
+    <string name="booking_now">Booking now</string>
+    <string name="todo">TODO</string>
+    <string name="name">Name</string>
 </resources>

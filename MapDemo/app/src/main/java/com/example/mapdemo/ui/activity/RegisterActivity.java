@@ -1,55 +1,38 @@
 package com.example.mapdemo.ui.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProvider;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
-import android.view.View;
 
-import com.example.mapdemo.MainApplication;
+import androidx.databinding.DataBindingUtil;
+
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityRegisterBinding;
-import com.example.mapdemo.di.component.ActivityComponent;
-import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
+import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.RegisterViewModel;
 
-import javax.inject.Inject;
+import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends BaseActivity {
     ActivityRegisterBinding binding;
-    @Inject
-    MyViewModelFactory viewModelFactory;
     private RegisterViewModel registerViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding= DataBindingUtil.setContentView(this, R.layout.activity_register);
-        initInjec();
+        registerViewModel = getViewModel(RegisterViewModel.class);
         addEvents();
     }
-    private void initInjec(){
-        MainApplication mainApplication = (MainApplication) getApplication();
-        ActivityComponent activityComponent =mainApplication.getActivityComponent();
-        activityComponent.inject(this);
-        registerViewModel = new ViewModelProvider(this, viewModelFactory).get(RegisterViewModel.class);
-    }
     private void addEvents(){
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
+        binding.btnLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
         });
-        binding.btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (CheckAllFields()){
-                    registerViewModel.handleSignUp(binding.edtEmail.getText().toString(),
-                            binding.edtPassword.getText().toString(),
-                            binding.edtName.getText().toString(),RegisterActivity.this);
-                }
+        binding.btnSignUp.setOnClickListener(v -> {
+            if (CheckAllFields()){
+                registerViewModel.handleSignUp(Objects.requireNonNull(binding.edtEmail.getText()).toString(),
+                        Objects.requireNonNull(binding.edtPassword.getText()).toString(),
+                        Objects.requireNonNull(binding.edtName.getText()).toString(),RegisterActivity.this);
             }
         });
     }
@@ -68,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
             binding.edtPassword.setError("Password must be minimum 6 characters");
             return false;
         }
-        if (binding.edtEmail.getText().toString().contains(" ")) {
+        if (Objects.requireNonNull(binding.edtEmail.getText()).toString().contains(" ")) {
             binding.edtEmail.setError("Spaces are not allowed");
             return false;
         }

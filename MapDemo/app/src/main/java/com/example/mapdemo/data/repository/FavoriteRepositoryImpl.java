@@ -1,10 +1,7 @@
 package com.example.mapdemo.data.repository;
 
-import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.local.dao.AccommodationDao;
-import com.example.mapdemo.data.local.dao.AccommodationDaoImpl;
 import com.example.mapdemo.data.local.dao.FavoriteDao;
-import com.example.mapdemo.data.local.dao.FavoriteDaoImpl;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Favorite;
 
@@ -13,12 +10,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class FavoriteRepositoryImpl implements FavoriteRepository {
-    private FavoriteDao favoriteDao;
-    private AccommodationDao accommodationDao;
+    private final FavoriteDao favoriteDao;
+    private final AccommodationDao accommodationDao;
     @Inject
     public FavoriteRepositoryImpl(FavoriteDao favoriteDao, AccommodationDao accommodationDao) {
         this.accommodationDao = accommodationDao;

@@ -15,8 +15,8 @@ import com.example.mapdemo.R;
 import java.util.List;
 
 public class ImageHomeAdapter extends RecyclerView.Adapter<ImageHomeAdapter.ViewHolder> {
-    private List<String> imageUrls;
-    private Context context;
+    private final List<String> imageUrls;
+    private final Context context;
 
     public ImageHomeAdapter(Context context, List<String> imageUrls) {
         this.context = context;

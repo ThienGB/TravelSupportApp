@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.di.component.DaggerActivityComponent;
-import com.example.mapdemo.di.module.ActivityModule;
 import com.example.mapdemo.di.module.AppModule;
 
 

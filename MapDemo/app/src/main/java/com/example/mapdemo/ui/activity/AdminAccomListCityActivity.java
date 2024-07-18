@@ -70,7 +70,6 @@ public class AdminAccomListCityActivity extends AppCompatActivity {
     private void initInjec(){
         MainApplication mainApplication = (MainApplication) getApplication();
         ActivityComponent activityComponent =mainApplication.getActivityComponent();
-        activityComponent.inject(this);
         realmHelper.openRealm();
         adminAccomViewModel = new ViewModelProvider(this, viewModelFactory).get(AdminListAccomCityViewModel.class);
     }

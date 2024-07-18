@@ -1,4 +1,4 @@
-package com.example.mapdemo.ui;
+package com.example.mapdemo.ui.adapter;
 
 import android.view.View;
 
