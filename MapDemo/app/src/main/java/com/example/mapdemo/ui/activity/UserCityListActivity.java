@@ -40,6 +40,7 @@ public class UserCityListActivity extends BaseActivity {
         countryCode = intent.getIntExtra("countryCode", 1);
     }
     private void fetchData(){
+        userCityLstVm.clearErrorLiveData();
         if (isNetworkAvailable()) {
             userCityLstVm.fetchCities(countryCode);
         } else {
@@ -69,6 +70,7 @@ public class UserCityListActivity extends BaseActivity {
             startActivity(intent);
             finish();
         });
+        binding.srlReload.setOnRefreshListener(this::fetchData);
         binding.searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener(){
             private final Handler handler = new Handler();
             private Runnable runnable;
@@ -92,10 +94,14 @@ public class UserCityListActivity extends BaseActivity {
         errorObserver = error -> {
             if (error != null) {
                 showErrorDialog(this, error);
+                binding.srlReload.setRefreshing(false);
             }
         };
         userCityLstVm.getErrorLiveData().observeForever(errorObserver);
-        userCityLstVm.getOnListChange().observe(this, onListChange-> cityAdapter.submitList(userCityLstVm.getCitiList()));
+        userCityLstVm.getOnListChange().observe(this, onListChange-> {
+            cityAdapter.submitList(userCityLstVm.getCitiList());
+            binding.srlReload.setRefreshing(false);
+        });
     }
     private void updateStatus(){
         if (userCityLstVm.getCitiList().size() == 0){
