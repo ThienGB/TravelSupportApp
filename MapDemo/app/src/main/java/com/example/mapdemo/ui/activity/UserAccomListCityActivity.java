@@ -51,6 +51,7 @@ public class UserAccomListCityActivity extends BaseActivity {
         userAccCityVm.setCurrentCity(currentCity);
     }
     private void fetchData(){
+        userAccCityVm.clearErrorLiveData();
         if (isNetworkAvailable()) {
             userAccCityVm.fetchAccommodations();
         } else {
@@ -75,12 +76,16 @@ public class UserAccomListCityActivity extends BaseActivity {
         errorObserver = error -> {
             if (error != null) {
                 showErrorDialog(UserAccomListCityActivity.this, error);
+                binding.srlReload.setRefreshing(false);
                 accomAdapter.submitList(null);
             }
         };
+        binding.srlReload.setOnRefreshListener(this::fetchData);
         userAccCityVm.getErrorLiveData().observeForever(errorObserver);
-        userAccCityVm.getOnListChange().observe(this, onListChange->
-                accomAdapter.submitList(userAccCityVm.getAccomList()));
+        userAccCityVm.getOnListChange().observe(this, onListChange->{
+                    binding.srlReload.setRefreshing(false);
+                    accomAdapter.submitList(userAccCityVm.getAccomList());
+                });
         binding.searchView.setQueryHint("Find by name or address");
         binding.btnBack.setOnClickListener(v -> {
             if (errorObserver != null) {
