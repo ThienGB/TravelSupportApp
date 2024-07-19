@@ -31,7 +31,8 @@ public class UserCityListViewModel extends ViewModel {
         cityRepo.fetchcities(countryCode, new LoadingHelper() {
             @Override
             public void onLoadingStarted() {
-                loadCityList();
+                if (countryCode != 2)
+                    loadCityList();
                 if (getCitiList().size() == 0){
                     isLoading.setValue(true);
                 }
@@ -39,7 +40,8 @@ public class UserCityListViewModel extends ViewModel {
             @Override
             public void onLoadingFinished() {
                 isLoading.setValue(false);
-                loadCityList();
+                if (countryCode != 2)
+                    loadCityList();
             }
         }, new CallbackHelper() {
             @Override

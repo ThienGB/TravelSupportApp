@@ -90,16 +90,22 @@ public class LoginViewModel extends ViewModel {
                 });
     }
     public boolean checkIsLogin(SharedPreferences sharedPreferences, Context context){
-        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
-        if (isLoggedIn) {
+        long loginTime = sharedPreferences.getLong("login_time", 0);
+        long currentTime = System.currentTimeMillis();
+        long oneHourInMillis = 10 * 1000;
+        if ((currentTime - loginTime) < oneHourInMillis) {
+            SharedPreferences.Editor editor= sharedPreferences.edit();
+            editor.putLong("login_time", System.currentTimeMillis());
+            editor.apply();
             Intent intent = new Intent(context, UserHomeActivity.class);
             context.startActivity(intent);
+            return true;
         }
-        return isLoggedIn;
+        return false;
     }
     public void setIsLogin(SharedPreferences sharedPreferences, Context context){
         SharedPreferences.Editor editor= sharedPreferences.edit();
-        editor.putBoolean("isLoggedIn", true);
+        editor.putLong("login_time", System.currentTimeMillis());
         editor.apply();
         Intent intent= new Intent(context, UserHomeActivity.class);
         context.startActivity(intent);
@@ -108,7 +114,7 @@ public class LoginViewModel extends ViewModel {
         firebaseAuth.signOut();
         mGoogleSignInClient.signOut().addOnCompleteListener(task -> isLogin.postValue(false));
         SharedPreferences.Editor editor= sharedPreferences.edit();
-        editor.putBoolean("isLoggedIn", false);
+        editor.putLong("login_time", 0);
         editor.apply();
         Intent intent = new Intent(context, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

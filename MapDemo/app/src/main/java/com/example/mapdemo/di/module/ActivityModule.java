@@ -63,8 +63,10 @@ public class ActivityModule {
     @Provides
     UserFavoriteListViewModel provideUserFavoriteListViewModelWithRepo(FavoriteRepository favoriteRepository,
                                                                        FirestoreDataManager firestoreDataManager,
-                                                                       AccommodationRepository accommodationRepo) {
-        return new UserFavoriteListViewModel(favoriteRepository, firestoreDataManager, accommodationRepo);
+                                                                       AccommodationRepository accommodationRepo,
+                                                                       FirebaseAuth firebaseAuth) {
+        return new UserFavoriteListViewModel(favoriteRepository,
+                firestoreDataManager, accommodationRepo, firebaseAuth);
     }
     @Provides
     @IntoMap
@@ -73,8 +75,9 @@ public class ActivityModule {
         return viewModel;
     }
     @Provides
-    UserBookingListViewModel provideUserBookingListViewModelWithRepo(BookingRepository bookingRepo, AccommodationRepository accomRepo) {
-        return new UserBookingListViewModel(bookingRepo, accomRepo);
+    UserBookingListViewModel provideUserBookingListViewModelWithRepo(BookingRepository bookingRepo
+            , AccommodationRepository accomRepo, FirebaseAuth firebaseAuth) {
+        return new UserBookingListViewModel(bookingRepo, accomRepo, firebaseAuth);
     }
     @Provides
     @IntoMap
@@ -87,9 +90,10 @@ public class ActivityModule {
                                                            FavoriteRepository favoriteRepo,
                                                            BookingRepository bookingRepo,
                                                            FirebaseBookingRepository firebaseBookingRepo,
-                                                           FirestoreDataManager firestoreDataManager) {
-        return new AccomInforViewModel(accomRepo, favoriteRepo
-                ,bookingRepo,firebaseBookingRepo,firestoreDataManager);
+                                                           FirestoreDataManager firestoreDataManager,
+                                                           FirebaseAuth firebaseAuth) {
+        return new AccomInforViewModel(accomRepo, favoriteRepo, bookingRepo
+                ,firebaseBookingRepo,firestoreDataManager, firebaseAuth);
     }
     @Provides
     @IntoMap

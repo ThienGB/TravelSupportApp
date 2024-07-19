@@ -23,13 +23,11 @@ public class UserFavoriteListActivity extends BaseActivity {
     private FavoriteAdapter favoriteAdapter;
     private ActivityUserFavoriteListBinding binding;
     private UserFavoriteListViewModel userFavoriteLstVm;
-    FirebaseAuth firebaseAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_favorite_list);
         userFavoriteLstVm = getViewModel(UserFavoriteListViewModel.class);
-        firebaseAuth = FirebaseAuth.getInstance();
         setUpRecycleView();
         addEvents();
     }
@@ -55,8 +53,7 @@ public class UserFavoriteListActivity extends BaseActivity {
     }
     private void loadRemoteData(){
         if (isNetworkAvailable()) {
-            userFavoriteLstVm.loadFavoriteAccomFirestore(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail(),
-                    new CallbackHelper() {
+            userFavoriteLstVm.loadFavoriteAccomFirestore(new CallbackHelper() {
                         @Override
                         public void onListAccomRecieved(List<Accommodation> accommodations) {
                             loadLocalData();
@@ -83,12 +80,12 @@ public class UserFavoriteListActivity extends BaseActivity {
         });
     }
     private void handleUnFavorite(Accommodation accommodation, boolean isFavorite){
-        String idFavorite = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()
+        String idFavorite = Objects.requireNonNull(userFavoriteLstVm.firebaseAuth.getCurrentUser()).getEmail()
                 + accommodation.getAccommodationId();
         if (isFavorite) {
             Favorite favorite = new Favorite(idFavorite,
                     accommodation.getAccommodationId(),
-                    firebaseAuth.getCurrentUser().getEmail(),
+                    userFavoriteLstVm.firebaseAuth.getCurrentUser().getEmail(),
                     "accommodation");
             userFavoriteLstVm.addFavorite(favorite);
             userFavoriteLstVm.addFavoriteFirestore(favorite);
@@ -99,7 +96,7 @@ public class UserFavoriteListActivity extends BaseActivity {
     }
     private void loadLocalData(){
         new Handler(Looper.getMainLooper()).post(() -> {
-            userFavoriteLstVm.loadFavoriteAccomList(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail());
+            userFavoriteLstVm.loadFavoriteAccomList();
             binding.srlReload.setRefreshing(false);
         });
     }

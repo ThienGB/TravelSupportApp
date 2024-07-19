@@ -9,9 +9,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/city"
+        android:icon="@drawable/img_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/city"
+        android:roundIcon="@drawable/img_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MapDeMo"
         tools:targetApi="31">

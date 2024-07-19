@@ -1,13 +1,16 @@
 package com.example.mapdemo.ui.activity;
 
 import static com.example.mapdemo.helper.DialogHelper.showErrorDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
+
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityUserCityListBinding;
 import com.example.mapdemo.ui.adapter.CityAdapter;
@@ -88,10 +91,7 @@ public class UserCityListActivity extends BaseActivity {
         });
         errorObserver = error -> {
             if (error != null) {
-                Intent intent = new Intent(UserCityListActivity.this, UserSelectCountryActivity.class);
-                intent.putExtra("error", error);
-                startActivity(intent);
-                finish();
+                showErrorDialog(this, error);
             }
         };
         userCityLstVm.getErrorLiveData().observeForever(errorObserver);

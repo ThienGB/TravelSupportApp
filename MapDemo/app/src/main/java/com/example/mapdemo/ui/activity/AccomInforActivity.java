@@ -24,7 +24,6 @@ import com.example.mapdemo.databinding.ActivityAccomInforBinding;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.AccomInforViewModel;
-import com.google.firebase.auth.FirebaseAuth;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.shawnlin.numberpicker.NumberPicker;
@@ -39,7 +38,6 @@ public class AccomInforActivity extends BaseActivity {
     private ActivityAccomInforBinding binding;
     private AccomInforViewModel accInforVm;
     private AccommodationResponse currentAccom = null;
-    private FirebaseAuth firebaseAuth;
     private int currentAction;
     private boolean isFirstTime = true;
     @Override
@@ -58,7 +56,6 @@ public class AccomInforActivity extends BaseActivity {
         String idAccom = i.getStringExtra("idAccom");
         String nameAccom = i.getStringExtra("nameAccom");
         currentAction = i.getIntExtra("action", ACTION_RESEARCH_VIEW);
-        firebaseAuth= FirebaseAuth.getInstance();
         if (idAccom != null) {
             currentAccom = new AccommodationResponse(idAccom, nameAccom);
         }
@@ -107,8 +104,7 @@ public class AccomInforActivity extends BaseActivity {
         }
     }
     private void loadFavoriteStatus(){
-        boolean isFavorite = accInforVm.findFavoriteById(Objects.requireNonNull(
-                firebaseAuth.getCurrentUser()).getEmail()+currentAccom.getAccommodationId());
+        boolean isFavorite = accInforVm.findFavoriteById(currentAccom.getAccommodationId());
         accInforVm.setFavorite(isFavorite);
     }
     private void loadLocalData(){
@@ -170,7 +166,7 @@ public class AccomInforActivity extends BaseActivity {
         String idBooking = UUID.randomUUID().toString();
         int price = currentAccom.getPrice() * accInforVm.getDaysBetween(selectedDates.get(0),
                 selectedDates.get(selectedDates.size() - 1)) * numOfRooms;
-        String idUser = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail();
+        String idUser = Objects.requireNonNull(accInforVm.firebaseAuth.getCurrentUser()).getEmail();
         FirebaseBooking firebaseBooking = new FirebaseBooking(idBooking,
                 currentAccom.getAccommodationId(), idUser, startDate.getTime(),
                 endDate.getTime(), price, numOfRooms);
@@ -181,12 +177,12 @@ public class AccomInforActivity extends BaseActivity {
         showToast("Booking Succesfully.");
     }
     private void handleFavorite(Boolean isFavorite){
-        String idFavorite = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()
+        String idFavorite = Objects.requireNonNull(accInforVm.firebaseAuth.getCurrentUser()).getEmail()
                 + currentAccom.getAccommodationId();
         if (isFavorite) {
             Favorite favorite = new Favorite(idFavorite,
                     currentAccom.getAccommodationId(),
-                    firebaseAuth.getCurrentUser().getEmail(),
+                    accInforVm.firebaseAuth.getCurrentUser().getEmail(),
                     "accommodation");
             accInforVm.addFavorite(favorite);
             accInforVm.addFavoriteFirestore(favorite);

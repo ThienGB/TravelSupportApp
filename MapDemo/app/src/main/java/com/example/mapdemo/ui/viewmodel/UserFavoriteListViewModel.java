@@ -10,9 +10,11 @@ import com.example.mapdemo.data.remote.firestore.FirestoreDataManager;
 import com.example.mapdemo.data.repository.AccommodationRepository;
 import com.example.mapdemo.data.repository.FavoriteRepository;
 import com.example.mapdemo.helper.CallbackHelper;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -22,16 +24,19 @@ public class UserFavoriteListViewModel extends ViewModel {
     private final FavoriteRepository favoriteRepo;
     private final AccommodationRepository accommodationRepo;
     private final FirestoreDataManager firestoreDataManager;
+    public FirebaseAuth firebaseAuth;
     public List<Accommodation> favoriteAccomList;
     private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
 
     @Inject
     public UserFavoriteListViewModel(FavoriteRepository favoriteRepo,
                                      FirestoreDataManager firestoreDataManager,
-                                     AccommodationRepository accommodationRepo){
+                                     AccommodationRepository accommodationRepo,
+                                     FirebaseAuth firebaseAuth){
         this.favoriteRepo = favoriteRepo;
         this.firestoreDataManager = firestoreDataManager;
         this.accommodationRepo = accommodationRepo;
+        this.firebaseAuth = firebaseAuth;
     }
     public void deleteFavorite(String idFavorite) {
         favoriteRepo.deleteFavorite(idFavorite);
@@ -42,8 +47,9 @@ public class UserFavoriteListViewModel extends ViewModel {
     public RealmResults<Accommodation> getFavoriteByIdUser(String idUser) {
         return favoriteRepo.getFavoriteByIdUser(idUser);
     }
-    public void loadFavoriteAccomList(String idUser){
-        this.favoriteAccomList = realmToList(getFavoriteByIdUser(idUser));
+    public void loadFavoriteAccomList(){
+        this.favoriteAccomList = realmToList(getFavoriteByIdUser(
+                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()));
         onListChange.postValue(true);
     }
     public List<Accommodation> getFavoriteAccomList(){
@@ -52,9 +58,11 @@ public class UserFavoriteListViewModel extends ViewModel {
     public List<Accommodation> realmToList(RealmResults<Accommodation> realmAccom){
         return favoriteRepo.realmToList(realmAccom);
     }
-    public void loadFavoriteAccomFirestore(String idUser, CallbackHelper callback){
+    public void loadFavoriteAccomFirestore(CallbackHelper callback){
         List<Accommodation> favoriteList = new ArrayList<>();
-        firestoreDataManager.getFavoriteByUserId(idUser, new CallbackHelper() {
+        firestoreDataManager.getFavoriteByUserId(
+                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail(),
+                new CallbackHelper() {
             @Override
             public void onListFavoriteRecieved(List<Favorite> favorites) {
                 for (Favorite favorite: favorites){

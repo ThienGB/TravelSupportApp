@@ -15,6 +15,7 @@ import com.example.mapdemo.data.repository.BookingRepository;
 import com.example.mapdemo.data.repository.FavoriteRepository;
 import com.example.mapdemo.data.repository.FirebaseBookingRepository;
 import com.example.mapdemo.helper.CallbackHelper;
+import com.google.firebase.auth.FirebaseAuth;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.util.Calendar;
@@ -29,17 +30,19 @@ public class AccomInforViewModel extends ViewModel {
     private final BookingRepository bookingRepo;
     private final FirebaseBookingRepository firebaseBookingRepo;
     private final FirestoreDataManager firestoreDataManager;
+    public FirebaseAuth firebaseAuth;
     private final MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
     public MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     @Inject
     public AccomInforViewModel(AccommodationRepository accomRepo, FavoriteRepository favoriteRepo,
                                BookingRepository bookingRepo, FirebaseBookingRepository firebaseBookingRepo,
-                               FirestoreDataManager firestoreDataManager){
+                               FirestoreDataManager firestoreDataManager, FirebaseAuth firebaseAuth){
         this.accomRepo = accomRepo;
         this.favoriteRepo = favoriteRepo;
         this.bookingRepo = bookingRepo;
         this.firebaseBookingRepo = firebaseBookingRepo;
         this.firestoreDataManager = firestoreDataManager;
+        this.firebaseAuth = firebaseAuth;
     }
     public LiveData<Boolean> getIsFavorite() {
         return isFavorite;
@@ -67,7 +70,8 @@ public class AccomInforViewModel extends ViewModel {
     public void deleteFavorite(String idFavorite){
         favoriteRepo.deleteFavorite(idFavorite);
     }
-    public boolean findFavoriteById(String idFavorite){
+    public boolean findFavoriteById(String idAccom){
+        String idFavorite =firebaseAuth.getCurrentUser().getEmail()+idAccom;
         return favoriteRepo.getFavoriteById(idFavorite) != null;
     }
     public void addBooking(Booking booking){

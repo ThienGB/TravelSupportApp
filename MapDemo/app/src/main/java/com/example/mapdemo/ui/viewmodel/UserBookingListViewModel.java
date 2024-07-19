@@ -7,8 +7,10 @@ import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Booking;
 import com.example.mapdemo.data.repository.AccommodationRepository;
 import com.example.mapdemo.data.repository.BookingRepository;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -18,14 +20,18 @@ public class UserBookingListViewModel extends ViewModel {
     private final BookingRepository bookingRepo;
     private final AccommodationRepository accomRepo;
     private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
+    FirebaseAuth firebaseAuth;
     public List<Booking> bookedList;
     @Inject
-    public UserBookingListViewModel(BookingRepository bookingRepo, AccommodationRepository accomRepo){
+    public UserBookingListViewModel(BookingRepository bookingRepo, AccommodationRepository accomRepo,
+                                    FirebaseAuth firebaseAuth){
         this.accomRepo = accomRepo;
         this.bookingRepo = bookingRepo;
+        this.firebaseAuth = firebaseAuth;
     }
-    public void loadBookingByIdUser(String idUser) {
-        bookedList = realToList(bookingRepo.getBookingByIdUser(idUser));
+    public void loadBookingByIdUser() {
+        bookedList = realToList(bookingRepo.getBookingByIdUser(
+                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()));
         onListChange.postValue(true);
     }
     public Accommodation getAccomById(String idAccom){
