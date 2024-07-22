@@ -14,7 +14,8 @@
         android:roundIcon="@drawable/img_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MapDeMo"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:networkSecurityConfig="@xml/network_security_config">
         <activity
             android:name=".ui.activity.UserSelectCountryActivity"
             android:exported="false" />
@@ -52,19 +53,7 @@
             android:name=".ui.activity.UserAccomListCityActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.AdminHomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.activity.AccomInforActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activity.AdminAccomListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activity.AdminAccomListCityActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activity.AdminCityListActivity"
             android:exported="false" />
         <activity
             android:name=".ui.activity.MainActivity"

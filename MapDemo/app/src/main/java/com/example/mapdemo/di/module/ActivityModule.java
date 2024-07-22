@@ -10,6 +10,7 @@ import com.example.mapdemo.data.repository.CityRepository;
 import com.example.mapdemo.data.repository.FavoriteRepository;
 import com.example.mapdemo.data.repository.FirebaseBookingRepository;
 import com.example.mapdemo.di.ViewModelKey;
+import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.AccomInforViewModel;
 import com.example.mapdemo.ui.viewmodel.LoginViewModel;
 import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;
@@ -32,6 +33,7 @@ import dagger.multibindings.IntoMap;
 
 @Module
 public class ActivityModule {
+
     @Provides
     @Singleton
     ViewModelProvider.Factory provideMyViewModelFactory(Map<Class<? extends ViewModel>, Provider<ViewModel>> providerMap) {

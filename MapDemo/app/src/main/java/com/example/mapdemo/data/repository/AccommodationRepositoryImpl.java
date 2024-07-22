@@ -1,20 +1,15 @@
 package com.example.mapdemo.data.repository;
 
 import android.annotation.SuppressLint;
-
 import com.example.mapdemo.data.local.dao.AccommodationDao;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.api.AccommodationResponse;
 import com.example.mapdemo.data.model.api.ErrorResponse;
 import com.example.mapdemo.data.remote.api.ApiService;
 import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.LoadingHelper;
-
 import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -54,12 +49,12 @@ public class AccommodationRepositoryImpl implements AccommodationRepository{
     }
 
     @SuppressLint("CheckResult")
-    public Completable fetchAccommodations(String cityId, LoadingHelper loadingHelper, CallbackHelper callback) {
+    public Completable fetchAccommodations(String cityId, CallbackHelper callback) {
         return Completable.create(emitter -> apiService.getAccommodations(cityId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {
-                    if (loadingHelper != null) loadingHelper.onLoadingStarted();
+                    if (callback != null) callback.onStart();
                 })
                 .flatMapCompletable(accommodationResponses -> {
                     if (accommodationResponses != null && !accommodationResponses.isEmpty()) {
@@ -69,7 +64,7 @@ public class AccommodationRepositoryImpl implements AccommodationRepository{
                     }
                 })
                 .doFinally(() -> {
-                    if (loadingHelper != null) loadingHelper.onLoadingFinished();
+                    if (callback != null) callback.onComplete();
                 })
                 .subscribe(emitter::onComplete, throwable -> {
                     accomDao.deleteAccomByCityId(cityId);

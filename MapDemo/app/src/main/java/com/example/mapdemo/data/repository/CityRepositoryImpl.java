@@ -8,7 +8,6 @@ import com.example.mapdemo.data.model.api.CityResponse;
 import com.example.mapdemo.data.model.api.ErrorResponse;
 import com.example.mapdemo.data.remote.api.ApiService;
 import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.LoadingHelper;
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -69,7 +68,7 @@ public class CityRepositoryImpl implements CityRepository{
         return cityDao.getCityById(idCity);
     }
     @SuppressLint("CheckResult")
-    public Completable fetchcities(int countryCode,LoadingHelper loadingHelper, CallbackHelper callback) {
+    public Completable fetchcities(int countryCode, CallbackHelper callback) {
         return Completable.create(emitter -> apiService.getCities(countryCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -106,10 +105,10 @@ public class CityRepositoryImpl implements CityRepository{
                 })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> {
-                    if (loadingHelper != null) loadingHelper.onLoadingStarted();
+                    if (callback != null) callback.onStart();
                 })
                 .doFinally(() -> {
-                    if (loadingHelper != null) loadingHelper.onLoadingFinished();
+                    if (callback != null) callback.onComplete();
                 })
                 .subscribe(emitter::onComplete, emitter::onError));
     }

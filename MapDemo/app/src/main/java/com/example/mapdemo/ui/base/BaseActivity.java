@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -18,22 +20,32 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<T extends ViewModel, V extends ViewDataBinding> extends AppCompatActivity{
     @Inject
     protected MyViewModelFactory viewModelFactory;
+    protected T viewModel;
+    protected V binding;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initInject();
+        getViewModel();
+        binding = DataBindingUtil.setContentView(this, getLayoutId());
+        binding.setVariable(getBindingVariable(), viewModel);
+        binding.setLifecycleOwner(this);
     }
     private void initInject() {
         MainApplication mainApplication = (MainApplication) getApplication();
         ActivityComponent activityComponent = mainApplication.getActivityComponent();
-        activityComponent.inject(this);
+        injectActivity(activityComponent);
     }
-    protected <T extends ViewModel> T getViewModel(Class<T> modelClass) {
-        return new ViewModelProvider(this, viewModelFactory).get(modelClass);
+    private void getViewModel() {
+        this.viewModel = new ViewModelProvider(this, viewModelFactory).get(getViewModelClass());
     }
+    protected abstract Class<T> getViewModelClass();
+    protected abstract int getLayoutId();
+    protected abstract int getBindingVariable();
+    protected abstract void injectActivity(ActivityComponent activityComponent);
     protected boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();

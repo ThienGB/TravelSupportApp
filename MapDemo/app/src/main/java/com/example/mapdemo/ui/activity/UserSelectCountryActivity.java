@@ -1,7 +1,6 @@
 package com.example.mapdemo.ui.activity;
 
 import static com.example.mapdemo.helper.DialogHelper.showErrorDialog;
-
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;

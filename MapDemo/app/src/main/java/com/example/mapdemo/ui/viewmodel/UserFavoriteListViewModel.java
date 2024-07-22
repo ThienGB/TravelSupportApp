@@ -27,7 +27,6 @@ public class UserFavoriteListViewModel extends ViewModel {
     public FirebaseAuth firebaseAuth;
     public List<Accommodation> favoriteAccomList;
     private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
-
     @Inject
     public UserFavoriteListViewModel(FavoriteRepository favoriteRepo,
                                      FirestoreDataManager firestoreDataManager,
@@ -38,61 +37,104 @@ public class UserFavoriteListViewModel extends ViewModel {
         this.accommodationRepo = accommodationRepo;
         this.firebaseAuth = firebaseAuth;
     }
-    public void deleteFavorite(String idFavorite) {
-        favoriteRepo.deleteFavorite(idFavorite);
-    }
-    public void addFavorite(Favorite favorite){
-        favoriteRepo.addOrUpdateFavorite(favorite);
-    }
-    public RealmResults<Accommodation> getFavoriteByIdUser(String idUser) {
-        return favoriteRepo.getFavoriteByIdUser(idUser);
-    }
-    public void loadFavoriteAccomList(){
-        this.favoriteAccomList = realmToList(getFavoriteByIdUser(
-                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()));
-        onListChange.postValue(true);
-    }
-    public List<Accommodation> getFavoriteAccomList(){
-        return favoriteAccomList;
-    }
-    public List<Accommodation> realmToList(RealmResults<Accommodation> realmAccom){
-        return favoriteRepo.realmToList(realmAccom);
-    }
-    public void loadFavoriteAccomFirestore(CallbackHelper callback){
-        List<Accommodation> favoriteList = new ArrayList<>();
-        firestoreDataManager.getFavoriteByUserId(
-                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail(),
-                new CallbackHelper() {
-            @Override
-            public void onListFavoriteRecieved(List<Favorite> favorites) {
-                for (Favorite favorite: favorites){
-                    favoriteRepo.addOrUpdateFavorite(favorite);
-                    firestoreDataManager.getAccommodationById(favorite.getIdTarget(), new CallbackHelper() {
-                        @Override
-                        public void onAccommodationResRecieved(AccommodationResponse acc) {
-                            Accommodation accommodation = new Accommodation(
-                                    acc.getAccommodationId(), acc.getName(), acc.getPrice(),
-                                    acc.getFreeroom(), acc.getImage(), acc.getDescription(),
-                                    acc.getAddress(), acc.getLongitude(), acc.getLatitude(),
-                                    acc.getCityId());
-                            accommodationRepo.addAccom(accommodation);
-                            favoriteList.add(accommodation);
-                            if (favoriteList.size() == favorites.size())
-                                callback.onListAccomRecieved(favoriteList);
-                        }
-                    });
+    public void loadData(boolean isNetworkAvailable, CallbackHelper callback){
+        if (isNetworkAvailable) {
+            loadFavoriteAccomFirestore(new CallbackHelper() {
+                @Override
+                public void onListAccomRecieved(List<Accommodation> accommodations) {
+                    loadFavoriteAccomList();
+                    callback.onComplete();
                 }
-
-            }
-        });
-    }
-    public void addFavoriteFirestore(Favorite favorite){
-        firestoreDataManager.addFavorite(favorite);
-    }
-    public void deleteFavoriteFirestore(String favoriteId){
-        firestoreDataManager.deleteFavorite(favoriteId);
+                @Override
+                public void onListEmpty(){
+                    loadFavoriteAccomList();
+                    callback.onListEmpty();
+                }
+            });
+        }else {
+            loadFavoriteAccomList();
+            callback.onNetworkError();
+        }
     }
     public MutableLiveData<Boolean> getOnListChange(){
         return onListChange;
     }
+    public void handleFavorite(Accommodation accom, boolean isFavorite, boolean isNetworkAvail, CallbackHelper callback){
+        if (isNetworkAvail){
+            String idFavorite = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()
+                    + accom.getAccommodationId();
+            if (isFavorite) {
+                Favorite favorite = new Favorite(idFavorite,
+                        accom.getAccommodationId(),
+                        firebaseAuth.getCurrentUser().getEmail(),
+                        "accommodation");
+                addFavorite(favorite);
+                addFavoriteFirestore(favorite);
+            } else {
+                deleteFavorite(idFavorite);
+                deleteFavoriteFirestore(idFavorite);
+            }
+        }else {
+            callback.onNetworkError();
+        }
+    }
+    public List<Accommodation> getFavoriteAccomList(){
+        return favoriteAccomList;
+    }
+    private void loadFavoriteAccomList(){
+        this.favoriteAccomList = realmToList(getFavoriteByIdUser(
+                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail()));
+        onListChange.postValue(true);
+    }
+    private void loadFavoriteAccomFirestore(CallbackHelper callback){
+        List<Accommodation> favoriteList = new ArrayList<>();
+        firestoreDataManager.getFavoriteByUserId(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail(),
+                new CallbackHelper() {
+                    @Override
+                    public void onListFavoriteRecieved(List<Favorite> favorites) {
+                        for (Favorite favorite: favorites){
+                            favoriteRepo.addOrUpdateFavorite(favorite);
+                            firestoreDataManager.getAccommodationById(favorite.getIdTarget(), new CallbackHelper() {
+                                @Override
+                                public void onAccommodationResRecieved(AccommodationResponse acc) {
+                                    Accommodation accommodation = new Accommodation(
+                                            acc.getAccommodationId(), acc.getName(), acc.getPrice(),
+                                            acc.getFreeroom(), acc.getImage(), acc.getDescription(),
+                                            acc.getAddress(), acc.getLongitude(), acc.getLatitude(),
+                                            acc.getCityId());
+                                    accommodationRepo.addAccom(accommodation);
+                                    favoriteList.add(accommodation);
+                                    if (favoriteList.size() == favorites.size())
+                                        callback.onListAccomRecieved(favoriteList);
+                                }
+                            });
+                        }
+
+                    }
+                    @Override
+                    public void onListEmpty(){
+                        callback.onListEmpty();
+                    }
+                });
+    }
+    private void deleteFavorite(String idFavorite) {
+        favoriteRepo.deleteFavorite(idFavorite);
+    }
+    private void addFavorite(Favorite favorite){
+        favoriteRepo.addOrUpdateFavorite(favorite);
+    }
+    private RealmResults<Accommodation> getFavoriteByIdUser(String idUser) {
+        return favoriteRepo.getFavoriteByIdUser(idUser);
+    }
+    private List<Accommodation> realmToList(RealmResults<Accommodation> realmAccom){
+        return favoriteRepo.realmToList(realmAccom);
+    }
+
+    private void addFavoriteFirestore(Favorite favorite){
+        firestoreDataManager.addFavorite(favorite);
+    }
+    private void deleteFavoriteFirestore(String favoriteId){
+        firestoreDataManager.deleteFavorite(favoriteId);
+    }
+
 }

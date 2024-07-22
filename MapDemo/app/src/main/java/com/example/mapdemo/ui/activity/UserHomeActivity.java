@@ -6,12 +6,13 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityUserHomeBinding;
+import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.ui.adapter.ImageHomeAdapter;
 import com.example.mapdemo.ui.adapter.IndicatorAdapter;
 import com.example.mapdemo.ui.base.BaseActivity;
@@ -22,11 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class UserHomeActivity extends BaseActivity {
-    ActivityUserHomeBinding binding;
+public class UserHomeActivity extends BaseActivity<LoginViewModel, ActivityUserHomeBinding> {
     FirebaseAuth firebaseAuth;
     private static final String SHARED_PREFS="sharePrefs";
-    private LoginViewModel loginViewModel;
     private SharedPreferences sharedPreferences;
     private Handler handler;
     private Runnable runnable;
@@ -34,34 +33,52 @@ public class UserHomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding= DataBindingUtil.setContentView(this, R.layout.activity_user_home);
-        loginViewModel = getViewModel(LoginViewModel.class);
         sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         loadData();
         setUpSlideImage();
         addEvents();
     }
+
+    @Override
+    protected Class<LoginViewModel> getViewModelClass() {
+        return LoginViewModel.class;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_user_home;
+    }
+
+    @Override
+    protected int getBindingVariable() {
+        return BR.viewModel;
+    }
+
+    @Override
+    protected void injectActivity(ActivityComponent activityComponent) {
+        activityComponent.inject(this);
+    }
+
     private void addEvents(){
         binding.btnBooking.setOnClickListener(v -> {
             Intent intent = new Intent(UserHomeActivity.this, UserBookingListActivity.class);
             startActivity(intent);
+            finish();
         });
         binding.btnResearch.setOnClickListener(v -> {
             Intent intent = new Intent(UserHomeActivity.this, UserSelectCountryActivity.class);
             startActivity(intent);
+            finish();
         });
         binding.btnFavorite.setOnClickListener(v -> {
             Intent intent = new Intent(UserHomeActivity.this, UserFavoriteListActivity.class);
             startActivity(intent);
+            finish();
         });
         binding.btnLogout.setOnClickListener(v -> showLogoutDialog());
     }
-
     private void setUpSlideImage(){
         handler = new Handler();
-
-
-
         List<String> imageUrls = Arrays.asList(
                 "https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/07/anh-phong-canh-dep-22.jpg",
                 "https://gcs.tripi.vn/public-tripi/tripi-feed/img/474103DrA/anh-phong-canh-dep-va-nen-tho_093817387.jpg",
@@ -109,9 +126,8 @@ public class UserHomeActivity extends BaseActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
     private void logout() {
-        loginViewModel.signOut(sharedPreferences, this);
+        viewModel.signOut(sharedPreferences, this);
         showToast("Log out successfully");
         finish();
     }

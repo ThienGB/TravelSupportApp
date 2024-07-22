@@ -3,33 +3,41 @@ package com.example.mapdemo.ui.activity;
 import static com.example.mapdemo.helper.ActionHelper.ACTION_FAVORITE_VIEW;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import androidx.databinding.DataBindingUtil;
+import android.view.View;
+
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.GridLayoutManager;
 import com.example.mapdemo.R;
-import com.example.mapdemo.data.model.Accommodation;
-import com.example.mapdemo.data.model.Favorite;
 import com.example.mapdemo.databinding.ActivityUserFavoriteListBinding;
+import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.ui.adapter.FavoriteAdapter;
 import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.UserFavoriteListViewModel;
-import com.google.firebase.auth.FirebaseAuth;
-import java.util.List;
-import java.util.Objects;
 
-public class UserFavoriteListActivity extends BaseActivity {
+public class UserFavoriteListActivity extends BaseActivity<UserFavoriteListViewModel, ActivityUserFavoriteListBinding> {
     private FavoriteAdapter favoriteAdapter;
-    private ActivityUserFavoriteListBinding binding;
-    private UserFavoriteListViewModel userFavoriteLstVm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_favorite_list);
-        userFavoriteLstVm = getViewModel(UserFavoriteListViewModel.class);
         setUpRecycleView();
         addEvents();
+    }
+    @Override
+    protected Class<UserFavoriteListViewModel> getViewModelClass() {
+        return UserFavoriteListViewModel.class;
+    }
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_user_favorite_list;
+    }
+    @Override
+    protected int getBindingVariable() {
+        return BR.viewModel;
+    }
+    @Override
+    protected void injectActivity(ActivityComponent activityComponent) {
+        activityComponent.inject(this);
     }
     private void setUpRecycleView(){
         binding.srlReload.setRefreshing(true);
@@ -40,29 +48,34 @@ public class UserFavoriteListActivity extends BaseActivity {
             intent.putExtra("nameAccom", accommodation.getName());
             intent.putExtra("action", ACTION_FAVORITE_VIEW);
             startActivity(intent);
-            finish();
-        }, (accommodation, isFavorite) -> {
-            if (isNetworkAvailable()) {
-                handleUnFavorite(accommodation, isFavorite);
-            } else {
+        }, (accommodation, isFavorite) -> viewModel.handleFavorite(accommodation, isFavorite, isNetworkAvailable(), new CallbackHelper() {
+            @Override
+            public void onNetworkError() {
                 showToast("No internet, can not unfavorite");
             }
-        });
-        loadRemoteData();
+        }));
+        loadData();
         binding.rcvFavorite.setAdapter(favoriteAdapter);
     }
-    private void loadRemoteData(){
-        if (isNetworkAvailable()) {
-            userFavoriteLstVm.loadFavoriteAccomFirestore(new CallbackHelper() {
-                        @Override
-                        public void onListAccomRecieved(List<Accommodation> accommodations) {
-                            loadLocalData();
-                        }
-                    });
-        }else {
-            loadLocalData();
-            showToast("No internet, data may be outdated");
-        }
+    private void loadData(){
+        viewModel.loadData(isNetworkAvailable(), new CallbackHelper() {
+            @Override
+            public void onNetworkError() {
+                showToast("No internet, data may be outdated");
+                binding.srlReload.setRefreshing(false);
+                binding.txvInfor.setVisibility(View.GONE);
+            }
+            @Override
+            public void onComplete() {
+                binding.srlReload.setRefreshing(false);
+                binding.txvInfor.setVisibility(View.GONE);
+            }
+            @Override
+            public void onListEmpty(){
+                binding.srlReload.setRefreshing(false);
+                binding.txvInfor.setVisibility(View.VISIBLE);
+            }
+        });
     }
     private void addEvents(){
         binding.btnBack.setOnClickListener(v -> {
@@ -70,35 +83,8 @@ public class UserFavoriteListActivity extends BaseActivity {
             startActivity(intent);
             finish();
         });
-        binding.srlReload.setOnRefreshListener(this::loadRemoteData);
-        userFavoriteLstVm.getOnListChange().observe(this, onChange -> {
-            if (userFavoriteLstVm.getFavoriteAccomList().size() == 0){
-                String str = "There are no favorites yet";
-                binding.txvInfor.setText(str);
-            }
-            favoriteAdapter.submitList(userFavoriteLstVm.getFavoriteAccomList());
-        });
-    }
-    private void handleUnFavorite(Accommodation accommodation, boolean isFavorite){
-        String idFavorite = Objects.requireNonNull(userFavoriteLstVm.firebaseAuth.getCurrentUser()).getEmail()
-                + accommodation.getAccommodationId();
-        if (isFavorite) {
-            Favorite favorite = new Favorite(idFavorite,
-                    accommodation.getAccommodationId(),
-                    userFavoriteLstVm.firebaseAuth.getCurrentUser().getEmail(),
-                    "accommodation");
-            userFavoriteLstVm.addFavorite(favorite);
-            userFavoriteLstVm.addFavoriteFirestore(favorite);
-        } else {
-            userFavoriteLstVm.deleteFavorite(idFavorite);
-            userFavoriteLstVm.deleteFavoriteFirestore(idFavorite);
-        }
-    }
-    private void loadLocalData(){
-        new Handler(Looper.getMainLooper()).post(() -> {
-            userFavoriteLstVm.loadFavoriteAccomList();
-            binding.srlReload.setRefreshing(false);
-        });
+        binding.srlReload.setOnRefreshListener(this::loadData);
+        viewModel.getOnListChange().observe(this, onChange -> favoriteAdapter.submitList(viewModel.getFavoriteAccomList()));
     }
     @Override
     public void onBackPressed() {
@@ -107,6 +93,7 @@ public class UserFavoriteListActivity extends BaseActivity {
     }
     @Override
     protected void onDestroy() {
+        viewModel.getOnListChange().removeObservers(this);
         super.onDestroy();
     }
 }

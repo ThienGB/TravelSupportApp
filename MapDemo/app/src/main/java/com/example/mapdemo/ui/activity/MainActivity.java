@@ -16,22 +16,5 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        addEvents();
-    }
-    private void addEvents(){
-        binding.btnUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, UserHomeActivity.class);
-                startActivity(intent);
-            }
-        });
-        binding.btnAdmin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AdminHomeActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 }

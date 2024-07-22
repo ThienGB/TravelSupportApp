@@ -2,7 +2,6 @@ package com.example.mapdemo.data.repository;
 
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.LoadingHelper;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface AccommodationRepository {
     void deleteAccom(String idAccom);
     RealmResults<Accommodation> getAccomList();
     Accommodation getAccomnById(String idAccom);
-    Completable fetchAccommodations(String cityId, LoadingHelper loadingHelper, CallbackHelper callback);
+    Completable fetchAccommodations(String cityId, CallbackHelper callback);
     RealmResults<Accommodation> getAccomsByCity(String idCity);
     List<Accommodation> realmResultToList(RealmResults<Accommodation> accomRealm);
     void addOrUpdateAccomSyn(Accommodation accommodation, CallbackHelper callback);

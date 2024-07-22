@@ -20,8 +20,8 @@ public class UserBookingListViewModel extends ViewModel {
     private final BookingRepository bookingRepo;
     private final AccommodationRepository accomRepo;
     private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
-    FirebaseAuth firebaseAuth;
-    public List<Booking> bookedList;
+    private final FirebaseAuth firebaseAuth;
+    private List<Booking> bookedList;
     @Inject
     public UserBookingListViewModel(BookingRepository bookingRepo, AccommodationRepository accomRepo,
                                     FirebaseAuth firebaseAuth){
@@ -37,13 +37,13 @@ public class UserBookingListViewModel extends ViewModel {
     public Accommodation getAccomById(String idAccom){
         return accomRepo.getAccomnById(idAccom);
     }
-    private List<Booking> realToList(RealmResults<Booking> bookedRealmResult){
-        return bookingRepo.realmToList(bookedRealmResult);
-    }
     public List<Booking> getBookedList(){
         return bookedList;
     }
     public MutableLiveData<Boolean> getOnListChange(){
         return onListChange;
+    }
+    private List<Booking> realToList(RealmResults<Booking> bookedRealmResult){
+        return bookingRepo.realmToList(bookedRealmResult);
     }
 }

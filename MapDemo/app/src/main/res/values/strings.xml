@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TravlerSupport</string>
+    <string name="app_name">TravelerSupport</string>
     <string name="title_activity_login">TravlerSupport</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -50,4 +50,6 @@
     <string name="booking_now">Booking now</string>
     <string name="todo">TODO</string>
     <string name="name">Name</string>
+    <string name="this_city_has_no_accommodation_yet">This city has no Accommodation yet</string>
+    <string name="there_are_no_favorites_yet">There are no favorites yet</string>
 </resources>

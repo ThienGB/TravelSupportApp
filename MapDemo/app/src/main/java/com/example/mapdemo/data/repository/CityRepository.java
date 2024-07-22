@@ -2,7 +2,6 @@ package com.example.mapdemo.data.repository;
 
 import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.LoadingHelper;
 
 import java.util.List;
 
@@ -15,6 +14,6 @@ public interface CityRepository {
     void deleteCity(String idCity);
     RealmResults<City> getCityList();
     City getCityById(String idCity);
-    Completable fetchcities(int countryCode,LoadingHelper loadingHelper, CallbackHelper callback);
+    Completable fetchcities(int countryCode, CallbackHelper callback);
     List<City> realmResultToList(RealmResults<City> cityRealm);
 }

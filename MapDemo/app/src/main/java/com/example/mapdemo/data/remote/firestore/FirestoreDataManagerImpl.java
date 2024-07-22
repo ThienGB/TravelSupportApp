@@ -93,7 +93,12 @@ public class FirestoreDataManagerImpl implements FirestoreDataManager {
                             Favorite favorite = new Favorite(document.getId(), idTarget, idUser1, type);
                             favorites.add(favorite);
                         }
-                        callback.onListFavoriteRecieved(favorites);
+                        if (favorites.size() == 0){
+                            callback.onListEmpty();
+                        }else {
+                            callback.onListFavoriteRecieved(favorites);
+                        }
+
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }

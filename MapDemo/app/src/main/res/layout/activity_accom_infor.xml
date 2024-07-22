@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <import type="android.view.View" />
@@ -39,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Khách sạn Trường Tình" />
+                    android:text="@{viewModel.name}" />
             </LinearLayout>
             <View
                 android:layout_width="0dp"
@@ -111,9 +112,8 @@
                         android:layout_width="300dp"
                         android:layout_height="200dp"
                         android:scaleType="fitCenter"
-                        android:clipToOutline="true"
-                        android:src="@drawable/img_accom" />
-
+                        android:src="@drawable/img_accom"
+                        app:imageUrl="@{viewModel.image}"/>
                 </LinearLayout>
 
 
@@ -137,11 +137,12 @@
                             android:textSize="18sp" />
                         <TextView
                             android:id="@+id/txvFreeRoom"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:text="@{viewModel.freeRoom}"/>
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -156,10 +157,10 @@
                             android:textSize="18sp" />
                         <TextView
                             android:id="@+id/txvPrice"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="500000 "
+                            android:text="@{viewModel.price}"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -178,9 +179,9 @@
                         <TextView
                             android:id="@+id/txvAddress"
                             android:layout_width="wrap_content"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
                             android:layout_height="wrap_content"
-                            android:text="View gần biển rất đẹp"
+                            android:text="@{viewModel.address}"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -199,8 +200,8 @@
                             android:id="@+id/txvDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
-                            android:text="View gần biển rất đẹp"
+                            android:layout_marginEnd="5dp"
+                            android:text="@{viewModel.description}"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
                     </LinearLayout>

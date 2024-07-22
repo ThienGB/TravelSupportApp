@@ -7,7 +7,7 @@ import com.example.mapdemo.data.model.City;
 import com.example.mapdemo.data.model.api.ErrorResponse;
 import com.example.mapdemo.data.repository.CityRepository;
 import com.example.mapdemo.helper.CallbackHelper;
-import com.example.mapdemo.helper.LoadingHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -27,34 +27,14 @@ public class UserCityListViewModel extends ViewModel {
         cityListFilter = new ArrayList<>();
         cityListOrigin = new ArrayList<>();
     }
-    public void fetchCities(int countryCode) {
-        cityRepo.fetchcities(countryCode, new LoadingHelper() {
-            @Override
-            public void onLoadingStarted() {
-                if (countryCode != 2)
-                    loadCityList();
-                if (getCitiList().size() == 0){
-                    isLoading.setValue(true);
-                }
-            }
-            @Override
-            public void onLoadingFinished() {
-                isLoading.setValue(false);
-                if (countryCode != 2)
-                    loadCityList();
-            }
-        }, new CallbackHelper() {
-            @Override
-            public void onError(ErrorResponse errorResponse) {
-                error.postValue(errorResponse.getMessage());
-            }
-        }).subscribe();
-    }
-    public void loadCityList(){
-        cityRealmResults = cityRepo.getCityList();
-        cityListOrigin = realmToList(cityRealmResults);
-        cityListFilter = cityListOrigin;
-        onListChange.postValue(true);
+    public void fetchData(boolean isNetworkAvailable, int countryCode, CallbackHelper callback){
+        clearErrorLiveData();
+        if (isNetworkAvailable) {
+            fetchCities(countryCode);
+        } else {
+            loadCityList();
+            callback.onNetworkError();
+        }
     }
     public List<City> getCitiList(){
         return cityListFilter;
@@ -70,9 +50,6 @@ public class UserCityListViewModel extends ViewModel {
         }
         onListChange.postValue(true);
     }
-    public List<City> realmToList(RealmResults<City> cityRealm){
-        return cityRepo.realmResultToList(cityRealm);
-    }
     public LiveData<Boolean> getIsLoading() {
         return isLoading;
     }
@@ -80,12 +57,42 @@ public class UserCityListViewModel extends ViewModel {
         return error;
     }
     public void clearErrorLiveData() {
-        error.setValue(null); // Gán giá trị null cho LiveData
+        error.setValue(null);
     }
     public MutableLiveData<Boolean> getOnListChange(){
         return onListChange;
     }
-
+    private List<City> realmToList(RealmResults<City> cityRealm){
+        return cityRepo.realmResultToList(cityRealm);
+    }
+    private void fetchCities(int countryCode) {
+        cityRepo.fetchcities(countryCode, new CallbackHelper() {
+            @Override
+            public void onStart() {
+                if (countryCode != 2)
+                    loadCityList();
+                if (getCitiList().size() == 0){
+                    isLoading.setValue(true);
+                }
+            }
+            @Override
+            public void onComplete() {
+                isLoading.setValue(false);
+                if (countryCode != 2)
+                    loadCityList();
+            }
+            @Override
+            public void onError(ErrorResponse errorResponse) {
+                error.postValue(errorResponse.getMessage());
+            }
+        }).subscribe();
+    }
+    private void loadCityList(){
+        cityRealmResults = cityRepo.getCityList();
+        cityListOrigin = realmToList(cityRealmResults);
+        cityListFilter = cityListOrigin;
+        onListChange.postValue(true);
+    }
     @Override
     protected void onCleared() {
         super.onCleared();

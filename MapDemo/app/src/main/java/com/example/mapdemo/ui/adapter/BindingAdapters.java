@@ -1,13 +1,18 @@
 package com.example.mapdemo.ui.adapter;
 
-import android.view.View;
+import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
 
-public class BindingAdapters {
+import com.squareup.picasso.Picasso;
 
-    @BindingAdapter("app:isVisible")
-    public static void setVisibility(View view, boolean visible) {
-        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+public class BindingAdapters {
+    @BindingAdapter("imageUrl")
+    public static void loadImage(ImageView view, String url) {
+        if (url != null && !url.isEmpty()) {
+            Picasso.get().load(url).into(view);
+        } else {
+            view.setImageDrawable(null);
+        }
     }
 }

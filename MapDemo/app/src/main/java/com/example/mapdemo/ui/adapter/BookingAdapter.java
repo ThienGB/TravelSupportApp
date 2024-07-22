@@ -13,15 +13,10 @@ import com.example.mapdemo.ui.viewmodel.UserBookingListViewModel;
 import com.squareup.picasso.Picasso;
 
 public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHolder> {
-    private final OnItemClickListener listener;
-    private final OnItemLongClickListener listener2;
     UserBookingListViewModel userBookingListViewModel;
 
-    public BookingAdapter(OnItemClickListener listener, OnItemLongClickListener listener2,
-                          UserBookingListViewModel userBookingListViewModel) {
+    public BookingAdapter(UserBookingListViewModel userBookingListViewModel) {
         super(diffCallback);
-        this.listener = listener;
-        this.listener2 = listener2;
         this.userBookingListViewModel = userBookingListViewModel;
     }
 
@@ -51,34 +46,12 @@ public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHo
         holder.bind(currentItem);
     }
 
-    public interface OnItemClickListener {
-        default void onItemClick(){}
-    }
-    public interface OnItemLongClickListener {
-        default void onItemLongClick(){}
-    }
-
     class MyViewHolder extends RecyclerView.ViewHolder {
         private final LayoutItemGridBookingBinding binding;
 
         public MyViewHolder(LayoutItemGridBookingBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-
-            itemView.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && BookingAdapter.this.listener != null) {
-                    BookingAdapter.this.listener.onItemClick();
-                }
-            });
-            itemView.setOnLongClickListener(v -> {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION && BookingAdapter.this.listener != null) {
-                    BookingAdapter.this.listener2.onItemLongClick();
-                    return true;
-                }
-                return false;
-            });
         }
         public void bind(Booking booking) {
             String target = booking.getIdTarget();
