@@ -20,7 +20,7 @@ import javax.inject.Inject;
 
 public class FirebaseBookingRepositoryImpl implements FirebaseBookingRepository {
 
-    String firebaseInstance;
+    private final String firebaseInstance;
     @Inject
     public FirebaseBookingRepositoryImpl(String firebaseInstance){
         this.firebaseInstance = firebaseInstance;

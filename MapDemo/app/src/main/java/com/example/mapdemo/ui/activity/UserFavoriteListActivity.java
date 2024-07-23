@@ -5,8 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.databinding.library.baseAdapters.BR;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityUserFavoriteListBinding;
 import com.example.mapdemo.di.component.ActivityComponent;
@@ -41,7 +45,10 @@ public class UserFavoriteListActivity extends BaseActivity<UserFavoriteListViewM
     }
     private void setUpRecycleView(){
         binding.srlReload.setRefreshing(true);
-        binding.rcvFavorite.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.rcvFavorite.setLayoutManager(new GridLayoutManager(this, 1));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.rcvFavorite.getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(this,R.drawable.divider));
+        binding.rcvFavorite.addItemDecoration(dividerItemDecoration);
         favoriteAdapter = new FavoriteAdapter(accommodation -> {
             Intent intent = new Intent(UserFavoriteListActivity.this, AccomInforActivity.class);
             intent.putExtra("idAccom", accommodation.getAccommodationId());

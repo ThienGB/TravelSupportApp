@@ -42,7 +42,7 @@ public class ImageHomeAdapter extends RecyclerView.Adapter<ImageHomeAdapter.View
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        final ImageView imageView;
 
         ViewHolder(View itemView) {
             super(itemView);

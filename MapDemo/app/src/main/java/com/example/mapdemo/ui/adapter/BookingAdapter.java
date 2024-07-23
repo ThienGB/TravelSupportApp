@@ -13,7 +13,7 @@ import com.example.mapdemo.ui.viewmodel.UserBookingListViewModel;
 import com.squareup.picasso.Picasso;
 
 public class BookingAdapter extends ListAdapter<Booking, BookingAdapter.MyViewHolder> {
-    UserBookingListViewModel userBookingListViewModel;
+    private final UserBookingListViewModel userBookingListViewModel;
 
     public BookingAdapter(UserBookingListViewModel userBookingListViewModel) {
         super(diffCallback);

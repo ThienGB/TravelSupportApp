@@ -1,35 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.activity.UserHomeActivity"
         android:background="@color/white"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="5dp">
-
+            android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_fullbutton"
-                android:elevation="10dp"
+                android:layout_height="60dp"
+                android:background="@drawable/img_background_login"
                 android:padding="5dp"
                 android:orientation="vertical">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp">
-
+                    android:layout_margin="5dp">
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
@@ -43,7 +35,7 @@
                             android:layout_marginBottom="1dp"
                             android:text="@string/hello"
                             android:textColor="@color/black_high_emp"
-                            android:textSize="10dp" />
+                            android:textSize="10sp" />
 
                         <TextView
                             android:id="@+id/txvTenHS"
@@ -51,8 +43,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
                             android:text="USER"
+                            android:layout_marginTop="5dp"
                             android:textColor="@color/black"
-                            android:textSize="15dp"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -61,8 +54,9 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:scaleType="fitCenter"
-                        android:background="@drawable/background_fullbutton"
-                        android:src="@drawable/icon_logout"/>
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/icon_logout"
+                        android:contentDescription="TODO" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -101,8 +95,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
                     <LinearLayout
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
@@ -117,14 +111,14 @@
                             android:background="@color/white"
                             android:scaleType="fitCenter"
                             android:src="@drawable/icon_accom"
-                            />
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:paddingTop="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:textSize="10dp"
+                            android:textSize="10sp"
                             android:text="@string/booked_room" />
                     </LinearLayout>
                     <LinearLayout
@@ -141,14 +135,14 @@
                             android:background="@color/white"
                             android:scaleType="fitCenter"
                             android:src="@drawable/icon_research"
-                            />
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:paddingTop="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:textSize="10dp"
+                            android:textSize="10sp"
                             android:text="@string/research" />
                     </LinearLayout>
                     <LinearLayout
@@ -165,14 +159,14 @@
                             android:background="@color/white"
                             android:scaleType="fitCenter"
                             android:src="@drawable/icon_menu_favorite"
-                            />
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:paddingTop="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:textSize="10dp"
+                            android:textSize="10sp"
                             android:text="@string/favorite_list"
                      />
                     </LinearLayout>

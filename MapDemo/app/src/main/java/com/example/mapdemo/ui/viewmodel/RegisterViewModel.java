@@ -14,7 +14,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import javax.inject.Inject;
 
 public class RegisterViewModel extends ViewModel {
-    FirebaseAuth firebaseAuth;
+    private final FirebaseAuth firebaseAuth;
     @Inject
     public RegisterViewModel(FirebaseAuth firebaseAuth){
         this.firebaseAuth =firebaseAuth;

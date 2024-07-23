@@ -23,7 +23,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 public class LoginViewModel extends ViewModel {
-    FirebaseAuth firebaseAuth;
+    private final FirebaseAuth firebaseAuth;
     private final GoogleSignInClient mGoogleSignInClient;
     public final MutableLiveData<Boolean> isLogin = new MutableLiveData<>();
     public final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
@@ -81,7 +81,7 @@ public class LoginViewModel extends ViewModel {
     public boolean checkIsLogin(SharedPreferences sharedPreferences, Context context){
         long loginTime = sharedPreferences.getLong("login_time", 0);
         long currentTime = System.currentTimeMillis();
-        long oneHourInMillis = 10 * 1000;
+        long oneHourInMillis = 60 * 60 * 1000;
         if ((currentTime - loginTime) < oneHourInMillis) {
             SharedPreferences.Editor editor= sharedPreferences.edit();
             editor.putLong("login_time", System.currentTimeMillis());

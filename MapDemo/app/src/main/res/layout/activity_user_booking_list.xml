@@ -20,21 +20,24 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="@drawable/img_background_login"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp">
-
                     <ImageButton
                         android:id="@+id/btnBack"
+                        android:layout_marginStart="5dp"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/background_fullbutton"
                         android:padding="10dp"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/back_icon" />
+                        android:src="@drawable/back_icon"
+                        android:contentDescription="TODO" />
 
                     <TextView
                         android:id="@+id/txvTitle"
+                        android:layout_marginStart="10dp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
@@ -42,17 +45,6 @@
                         android:text="@string/booking_list" />
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:queryHint="Search..."
-                    android:layout_weight="2" />
             </LinearLayout>
             <RelativeLayout
                 android:layout_width="match_parent"

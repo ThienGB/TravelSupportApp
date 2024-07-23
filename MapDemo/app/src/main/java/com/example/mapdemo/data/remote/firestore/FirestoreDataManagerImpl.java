@@ -37,7 +37,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 public class FirestoreDataManagerImpl implements FirestoreDataManager {
-    FirebaseFirestore db;
+    private final FirebaseFirestore db;
     private final List<ListenerRegistration> listenerRegistrations;
     @Inject
     public FirestoreDataManagerImpl(FirebaseFirestore db,List<ListenerRegistration> listenerRegistrations){

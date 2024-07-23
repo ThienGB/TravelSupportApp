@@ -155,7 +155,7 @@ public class AppModule {
     @Named("city")
     public Retrofit provideRetrofitCity() {
         return new Retrofit.Builder()
-                .baseUrl(RetrofitClient.CITY_BASE_URL)
+                .baseUrl(RetrofitClient.ACCOM_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build();

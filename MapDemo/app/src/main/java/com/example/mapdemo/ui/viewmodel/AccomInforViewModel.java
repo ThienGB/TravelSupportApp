@@ -31,7 +31,7 @@ public class AccomInforViewModel extends ViewModel {
     private final BookingRepository bookingRepo;
     private final FirebaseBookingRepository firebaseBookingRepo;
     private final FirestoreDataManager firestoreDataManager;
-    public FirebaseAuth firebaseAuth;
+    public final FirebaseAuth firebaseAuth;
     private final MutableLiveData<Boolean> isFavorite = new MutableLiveData<>();
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 

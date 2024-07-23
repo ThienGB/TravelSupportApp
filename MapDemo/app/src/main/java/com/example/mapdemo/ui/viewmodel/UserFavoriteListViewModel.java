@@ -24,7 +24,7 @@ public class UserFavoriteListViewModel extends ViewModel {
     private final FavoriteRepository favoriteRepo;
     private final AccommodationRepository accommodationRepo;
     private final FirestoreDataManager firestoreDataManager;
-    public FirebaseAuth firebaseAuth;
+    public final FirebaseAuth firebaseAuth;
     public List<Accommodation> favoriteAccomList;
     private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
     @Inject

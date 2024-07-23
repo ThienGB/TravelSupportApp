@@ -92,6 +92,23 @@
                     android:background="@drawable/background_fullbutton"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:hint="@string/confirm_password"
+                android:padding="10dp"
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:background="@drawable/background_fullbutton"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,14 +119,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13dp"
+                    android:textSize="13sp"
                     android:text="@string/hava_account"/>
                 <TextView
                     android:id="@+id/btnLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textStyle="bold"
-                    android:textSize="13dp"
+                    android:textSize="13sp"
                     android:textColor="@color/main_blue"
                     android:text="@string/sign_in_now"/>
             </LinearLayout>
@@ -123,7 +140,7 @@
                 android:layout_marginBottom="20dp"
                 android:padding="10dp"
                 android:text="@string/sign_up"
-                android:textSize="15dp"
+                android:textSize="15sp"
                 android:backgroundTint="@color/main_darker_blue"
                 />
         </LinearLayout>

@@ -5,14 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mapdemo.R;
-
-import java.util.List;
 
 public class IndicatorAdapter extends RecyclerView.Adapter<IndicatorAdapter.ViewHolder> {
     private final Context context;
@@ -46,7 +43,7 @@ public class IndicatorAdapter extends RecyclerView.Adapter<IndicatorAdapter.View
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout layout;
+        final LinearLayout layout;
         ViewHolder(View itemView) {
             super(itemView);
             layout = itemView.findViewById(R.id.layIndicator);

@@ -10,7 +10,6 @@ import com.example.mapdemo.ui.activity.UserBookingListActivity;
 import com.example.mapdemo.ui.activity.UserCityListActivity;
 import com.example.mapdemo.ui.activity.UserFavoriteListActivity;
 import com.example.mapdemo.ui.activity.UserHomeActivity;
-import com.example.mapdemo.ui.base.BaseActivity;
 
 import javax.inject.Singleton;
 

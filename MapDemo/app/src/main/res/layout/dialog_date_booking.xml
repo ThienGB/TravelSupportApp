@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:background="@drawable/background_fullbutton"
     android:padding="16dp">
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -14,7 +15,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:text="@string/select_number_of_rooms"/>
 
     <com.shawnlin.numberpicker.NumberPicker
@@ -32,7 +32,6 @@
         app:np_textColor="@color/main_blue"
         app:np_value="1"
         app:np_width="150dp" />
-
     <Button
         android:id="@+id/btnOk"
         android:layout_gravity="center"

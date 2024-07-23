@@ -59,7 +59,7 @@ public class UserCityListActivity extends BaseActivity<UserCityListViewModel, Ac
         });
     }
     private void setUpRecycleView(){
-        binding.rcvCity.setLayoutManager(new GridLayoutManager(this, 3));
+        binding.rcvCity.setLayoutManager(new GridLayoutManager(this, 2));
         cityAdapter = new CityAdapter(city -> {
             Intent intent = new Intent(UserCityListActivity.this, UserAccomListCityActivity.class);
             intent.putExtra("idCity", city.getIdCity());

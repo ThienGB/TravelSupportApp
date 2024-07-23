@@ -10,7 +10,6 @@ import com.example.mapdemo.data.repository.CityRepository;
 import com.example.mapdemo.data.repository.FavoriteRepository;
 import com.example.mapdemo.data.repository.FirebaseBookingRepository;
 import com.example.mapdemo.di.ViewModelKey;
-import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.AccomInforViewModel;
 import com.example.mapdemo.ui.viewmodel.LoginViewModel;
 import com.example.mapdemo.ui.viewmodel.MyViewModelFactory;

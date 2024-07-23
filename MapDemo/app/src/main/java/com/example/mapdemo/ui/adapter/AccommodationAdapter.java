@@ -10,6 +10,8 @@ import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.databinding.LayoutItemGridAccomBinding;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
+
 public class AccommodationAdapter extends ListAdapter<Accommodation, AccommodationAdapter.MyViewHolder> {
     private final OnItemClickListener listener;
     private final OnItemLongClickListener listener2;
@@ -97,6 +99,8 @@ public class AccommodationAdapter extends ListAdapter<Accommodation, Accommodati
             }
             binding.txvAddress.setText(accommodation.getAddress());
             binding.txvFreeRoom.setText(freeRoomStr);
+            String budgetText = " VND " + NumberFormat.getInstance().format(accommodation.getPrice());
+            binding.txvPrice.setText(budgetText);
             Picasso.get().load(accommodation.getImage()).into(binding.imgAccom);
         }
     }

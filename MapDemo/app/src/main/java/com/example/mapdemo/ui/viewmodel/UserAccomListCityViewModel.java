@@ -29,7 +29,7 @@ public class UserAccomListCityViewModel extends ViewModel {
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
     private City currentCity;
-    public ObservableField<String> price = new ObservableField<>();
+    public final ObservableField<String> price = new ObservableField<>();
 
     @Inject
     public UserAccomListCityViewModel(AccommodationRepository accomRepo,
@@ -143,7 +143,7 @@ public class UserAccomListCityViewModel extends ViewModel {
     }
     private Date convertToDate(CalendarDay calendarDay) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(calendarDay.getYear(), calendarDay.getMonth() - 1, calendarDay.getDay()); // Chú ý tháng trong Calendar bắt đầu từ 0
+        calendar.set(calendarDay.getYear(), calendarDay.getMonth() - 1, calendarDay.getDay());
         return calendar.getTime();
     }
 

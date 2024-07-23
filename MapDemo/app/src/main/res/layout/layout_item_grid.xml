@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="100dp"
-            android:layout_margin="10dp"
-            android:layout_height="140dp"
-            android:background="@drawable/background_city"
-            android:orientation="vertical">
-            <ImageView
-                android:id="@+id/imgCity"
-                android:layout_width="100dp"
-                android:layout_height="90dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/city">
-            </ImageView>
-            <TextView
-                android:id="@+id/tvxName"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="220dp"
+        android:background="@drawable/background_fullbutton"
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="8dp"
+            android:padding="8dp"
+            app:cardBackgroundColor="@color/white">
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Kỹ thuật"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:layout_marginRight ="10dp"
-                android:layout_marginLeft="10dp"/>
-        </LinearLayout>
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/imgCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_chinese"
+                    android:contentDescription="TODO"/>
+                <TextView
+                    android:id="@+id/tvxName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="15dp"
+                    android:text="Kỹ thuật"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"/>
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
-
 </layout>

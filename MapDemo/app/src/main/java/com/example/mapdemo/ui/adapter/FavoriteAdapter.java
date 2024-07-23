@@ -15,6 +15,7 @@ import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.databinding.LayoutItemGridFavoriteBinding;
 import com.squareup.picasso.Picasso;
 
+import java.text.NumberFormat;
 import java.util.Objects;
 
 
@@ -101,6 +102,8 @@ public class FavoriteAdapter extends ListAdapter<Accommodation, FavoriteAdapter.
             binding.txvAddress.setText(accommodation.getAddress());
             Picasso.get().load(accommodation.getImage()).into(binding.imgAccom);
             binding.btnFavorite.setImageResource(R.drawable.icon_favorite);
+            String budgetText = " VND " + NumberFormat.getInstance().format(accommodation.getPrice());
+            binding.txvPrice.setText(budgetText);
         }
     }
 }

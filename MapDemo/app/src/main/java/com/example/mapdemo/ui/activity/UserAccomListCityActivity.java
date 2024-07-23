@@ -7,9 +7,12 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.SeekBar;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.databinding.library.baseAdapters.BR;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mapdemo.R;
 import com.example.mapdemo.data.model.City;
@@ -68,7 +71,10 @@ public class UserAccomListCityActivity extends BaseActivity<UserAccomListCityVie
         });
     }
     private void setUpRecycleView(){
-        binding.rcvCity.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.rcvCity.setLayoutManager(new GridLayoutManager(this, 1));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(binding.rcvCity.getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(this,R.drawable.divider));
+        binding.rcvCity.addItemDecoration(dividerItemDecoration);
         accomAdapter = new AccommodationAdapter(accommodation -> {
             Intent intent = new Intent(UserAccomListCityActivity.this, AccomInforActivity.class);
             intent.putExtra("idAccom", accommodation.getAccommodationId());
