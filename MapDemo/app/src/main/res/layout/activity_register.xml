@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.mapdemo.ui.viewmodel.RegisterViewModel"/>
+    </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -9,9 +14,8 @@
         android:orientation="vertical"
         android:layout_gravity="center"
         android:gravity="center"
-
         android:background="@drawable/img_background_login"
-        tools:context=".activity.RegisterAccount">
+        tools:context=".ui.activity.RegisterActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,15 +58,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
+                    app:text="@={viewModel.name}"
                     android:background="@drawable/background_fullbutton"/>
 
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:padding="10dp">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -70,6 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
+                    app:text="@={viewModel.email}"
                     android:background="@drawable/background_fullbutton"
                     />
 
@@ -89,6 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
+                    app:text="@={viewModel.password}"
                     android:background="@drawable/background_fullbutton"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -106,6 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
+                    app:text="@={viewModel.confirmPassword}"
                     android:background="@drawable/background_fullbutton"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -120,8 +129,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="13sp"
-                    android:text="@string/hava_account"/>
+                    android:text="@string/have_account"/>
                 <TextView
+                    android:layout_marginStart="5dp"
                     android:id="@+id/btnLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -130,19 +140,22 @@
                     android:textColor="@color/main_blue"
                     android:text="@string/sign_in_now"/>
             </LinearLayout>
-
-            <Button
+            <LinearLayout
                 android:id="@+id/btnSignUp"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:padding="10dp"
-                android:text="@string/sign_up"
-                android:textSize="15sp"
                 android:backgroundTint="@color/main_darker_blue"
-                />
+                android:background="@drawable/button_boder">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/sign_up"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:textSize="15sp" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </layout>

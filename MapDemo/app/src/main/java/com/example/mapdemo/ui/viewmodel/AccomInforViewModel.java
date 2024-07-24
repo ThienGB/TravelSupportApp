@@ -17,6 +17,8 @@ import com.example.mapdemo.data.repository.FirebaseBookingRepository;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +78,10 @@ public class AccomInforViewModel extends ViewModel {
                 public void onAccommodationRecieved(Accommodation accommodation) {
                     loadLocalData();
                     setIsLoading(false);
+                }
+                @Override
+                public void onAccommodationDeleted(){
+                    callback.onAccommodationDeleted();
                 }
             });
         } else {
@@ -190,6 +196,10 @@ public class AccomInforViewModel extends ViewModel {
                     }
                 });
             }
+            @Override
+            public void onAccommodationDeleted(){
+                callback.onAccommodationDeleted();
+            }
         });
     }
     private void setIsLoading(boolean isLoading){
@@ -212,7 +222,7 @@ public class AccomInforViewModel extends ViewModel {
         name.set(currentAccom.getName());
         freeRoom.set(String.valueOf(currentAccom.getFreeroom()));
         description.set(currentAccom.getDescription());
-        price.set(String.valueOf(currentAccom.getPrice()));
+        price.set("VND " + NumberFormat.getInstance().format(currentAccom.getPrice()));
         address.set(currentAccom.getAddress());
         image.set(currentAccom.getImage());
     }

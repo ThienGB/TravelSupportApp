@@ -17,6 +17,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
+
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.realm.RealmResults;
 
 public class UserAccomListCityViewModel extends ViewModel {
@@ -24,6 +26,7 @@ public class UserAccomListCityViewModel extends ViewModel {
     private final FirebaseBookingRepository firebaseBookingRepo;
     private final FirestoreDataManager firestoreDataManager;
     private List<Accommodation> accomListOrigin;
+    private Disposable disposable;
     private List<Accommodation> accomListFilter;
     public final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
@@ -70,9 +73,6 @@ public class UserAccomListCityViewModel extends ViewModel {
         onListChange.postValue(true);
     }
     public void handleSearchByDay(List<CalendarDay> selectedDates, CallbackHelper callback){
-        for (Accommodation accommodation: getAccomList()){
-            addAccommodationFirestore(accommodation);
-        }
         if (selectedDates.size() >= 2) {
             isLoading.setValue(true);
             Date startDate = convertToDate(selectedDates.get(0));
@@ -107,7 +107,7 @@ public class UserAccomListCityViewModel extends ViewModel {
         accomListFilter.get(i).setCurrentFreeroom(freeRoom);
     }
     private void fetchAccommodations(){
-        accomRepo.fetchAccommodations(currentCity.getIdCity(), new CallbackHelper() {
+        disposable = accomRepo.fetchAccommodations(currentCity.getIdCity(), new CallbackHelper() {
             @Override
             public void onStart() {
                 loadAccomList();
@@ -119,6 +119,9 @@ public class UserAccomListCityViewModel extends ViewModel {
             public void onComplete() {
                 isLoading.setValue(false);
                 loadAccomList();
+                for (Accommodation accommodation: getAccomList()){
+                    addAccommodationFirestore(accommodation);
+                }
             }
             @Override
             public void onError(ErrorResponse errorResponse) {
@@ -162,5 +165,7 @@ public class UserAccomListCityViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
         clearErrorLiveData();
+        if (disposable != null)
+            disposable.dispose();
     }
 }

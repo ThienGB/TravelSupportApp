@@ -1,7 +1,12 @@
 package com.example.mapdemo.data.local.dao;
 
+import com.example.mapdemo.data.model.Accommodation;
+import com.example.mapdemo.data.model.api.AccommodationResponse;
+import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.helper.RealmHelper;
 import com.example.mapdemo.data.model.Favorite;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -18,7 +23,14 @@ public class FavoriteDaoImpl implements FavoriteDao {
     public void addOrUpdateFavorite(Favorite favorite) {
         realm.executeTransactionAsync(r -> r.copyToRealmOrUpdate(favorite));
     }
-
+    @Override
+    public void addOrUpdateListFavorite(List<Favorite> favorites, CallbackHelper callback) {
+        realm.executeTransactionAsync(r -> {
+            for (Favorite favorite : favorites) {
+                r.copyToRealmOrUpdate(favorite);
+            }
+        }, callback::onComplete);
+    }
     @Override
     public void deleteFavorite(String idFavorite) {
         realm.executeTransactionAsync(r -> {

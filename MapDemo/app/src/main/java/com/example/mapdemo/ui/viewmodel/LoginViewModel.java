@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Patterns;
 import android.widget.Toast;
+
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.mapdemo.helper.CallbackHelper;
@@ -27,27 +29,21 @@ public class LoginViewModel extends ViewModel {
     private final GoogleSignInClient mGoogleSignInClient;
     public final MutableLiveData<Boolean> isLogin = new MutableLiveData<>();
     public final MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    public final ObservableField<String> email = new ObservableField<>();
+    public final ObservableField<String> password = new ObservableField<>();
     @Inject
     public LoginViewModel(FirebaseAuth firebaseAuth, GoogleSignInClient mGoogleSignInClient){
         this.firebaseAuth = firebaseAuth;
         this.mGoogleSignInClient = mGoogleSignInClient;
     }
 
-    public void handleLogin(String email, String password, Context context, CallbackHelper callback){
-        if (checkAllFields(email, password, new CallbackHelper() {
-            @Override
-            public void onEmailError(String message) {
-                callback.onEmailError(message);
-            }
-            @Override
-            public void onPasswordError(String message) {
-                callback.onPasswordError(message);
-            }
-        })){
+    public void handleLogin(Context context, CallbackHelper callback){
+        if (checkAllFields(context)){
             ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setMessage("Login...");
             progressDialog.show();
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            firebaseAuth.signInWithEmailAndPassword(Objects.requireNonNull(email.get()),
+                    Objects.requireNonNull(password.get())).addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     progressDialog.dismiss();
                     if(Objects.requireNonNull(firebaseAuth.getCurrentUser()).isEmailVerified()){
@@ -109,25 +105,19 @@ public class LoginViewModel extends ViewModel {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
     }
-    private boolean checkAllFields(String email, String password, CallbackHelper callback) {
-        if (email.length() == 0) {
-            callback.onEmailError("This field is required");
+    private boolean checkAllFields(Context context) {
+        if (email.get() == null || password.get() == null
+                || Objects.requireNonNull(email.get()).length() == 0
+                || Objects.requireNonNull(password.get()).length() == 0) {
+            Toast.makeText(context, "Please complete all information", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (password.length() == 0) {
-            callback.onPasswordError("This field is required");
+        if (!Patterns.EMAIL_ADDRESS.matcher(Objects.requireNonNull(email.get())).matches()) {
+            Toast.makeText(context, "Invalid email address", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (password.length() < 6) {
-            callback.onPasswordError("Password must be minimum 6 characters");
-            return false;
-        }
-        if (email.contains(" ")){
-            callback.onEmailError("Spaces are not allowed");
-            return false;
-        }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            callback.onEmailError("Invalid email address");
+        if (Objects.requireNonNull(password.get()).length() < 6) {
+            Toast.makeText(context, "Password must be minimum 6 characters", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -137,15 +127,14 @@ public class LoginViewModel extends ViewModel {
         progressDialog.setMessage("Login...");
         progressDialog.show();
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        isLogin.postValue(true);
-                        progressDialog.dismiss();
-                    } else {
-                        errorLiveData.postValue("Authentication Failed.");
-                        progressDialog.dismiss();
-                    }
-                });
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                isLogin.postValue(true);
+                progressDialog.dismiss();
+            } else {
+                errorLiveData.postValue("Authentication Failed.");
+                progressDialog.dismiss();
+            }
+        });
     }
 }

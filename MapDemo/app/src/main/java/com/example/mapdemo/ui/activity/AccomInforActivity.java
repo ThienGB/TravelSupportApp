@@ -91,6 +91,11 @@ public class AccomInforActivity extends BaseActivity<AccomInforViewModel, Activi
             public void onNetworkError() {
                 showToast("No internet, data may be outdated");
             }
+            @Override
+            public void onAccommodationDeleted(){
+                showToast("This accommodation does not exist");
+                onBackPressed();
+            }
         });
     }
     private void showCalendarDialog() {

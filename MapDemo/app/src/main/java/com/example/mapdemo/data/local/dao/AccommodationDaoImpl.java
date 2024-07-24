@@ -76,7 +76,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
 
     @Override
     public RealmResults<Accommodation> getAccomListById(List<String> listIdAccom) {
-        return realm.where(Accommodation.class).in("accommodationId", listIdAccom.toArray(new String[0])).findAllAsync();
+        return realm.where(Accommodation.class).in("accommodationId", listIdAccom.toArray(new String[0])).findAll();
     }
 
     @Override

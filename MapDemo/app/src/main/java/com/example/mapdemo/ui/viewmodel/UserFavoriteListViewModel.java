@@ -88,27 +88,33 @@ public class UserFavoriteListViewModel extends ViewModel {
     }
     private void loadFavoriteAccomFirestore(CallbackHelper callback){
         List<Accommodation> favoriteList = new ArrayList<>();
+        favoriteRepo.deleteAllFavorite();
         firestoreDataManager.getFavoriteByUserId(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getEmail(),
                 new CallbackHelper() {
                     @Override
                     public void onListFavoriteRecieved(List<Favorite> favorites) {
-                        for (Favorite favorite: favorites){
-                            favoriteRepo.addOrUpdateFavorite(favorite);
-                            firestoreDataManager.getAccommodationById(favorite.getIdTarget(), new CallbackHelper() {
-                                @Override
-                                public void onAccommodationResRecieved(AccommodationResponse acc) {
-                                    Accommodation accommodation = new Accommodation(
-                                            acc.getAccommodationId(), acc.getName(), acc.getPrice(),
-                                            acc.getFreeroom(), acc.getImage(), acc.getDescription(),
-                                            acc.getAddress(), acc.getLongitude(), acc.getLatitude(),
-                                            acc.getCityId());
-                                    accommodationRepo.addAccom(accommodation);
-                                    favoriteList.add(accommodation);
-                                    if (favoriteList.size() == favorites.size())
-                                        callback.onListAccomRecieved(favoriteList);
+                        favoriteRepo.addOrUpdateListFavorite(favorites, new CallbackHelper() {
+                            @Override
+                            public void onComplete() {
+                                for (Favorite favorite: favorites){
+                                    firestoreDataManager.getAccommodationById(favorite.getIdTarget(), new CallbackHelper() {
+                                        @Override
+                                        public void onAccommodationResRecieved(AccommodationResponse acc) {
+                                            Accommodation accommodation = new Accommodation(
+                                                    acc.getAccommodationId(), acc.getName(), acc.getPrice(),
+                                                    acc.getFreeroom(), acc.getImage(), acc.getDescription(),
+                                                    acc.getAddress(), acc.getLongitude(), acc.getLatitude(),
+                                                    acc.getCityId());
+                                            accommodationRepo.addAccom(accommodation);
+                                            favoriteList.add(accommodation);
+                                            if (favoriteList.size() == favorites.size())
+                                                callback.onListAccomRecieved(favoriteList);
+                                        }
+                                    });
                                 }
-                            });
-                        }
+                            }
+                        });
+
 
                     }
                     @Override
@@ -135,6 +141,10 @@ public class UserFavoriteListViewModel extends ViewModel {
     }
     private void deleteFavoriteFirestore(String favoriteId){
         firestoreDataManager.deleteFavorite(favoriteId);
+    }
+    @Override
+    protected void onCleared(){
+        firestoreDataManager.removeAllListeners();
     }
 
 }

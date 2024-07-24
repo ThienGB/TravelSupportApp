@@ -5,40 +5,38 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Patterns;
 import android.widget.Toast;
+import androidx.databinding.ObservableField;
 import androidx.lifecycle.ViewModel;
-import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.ui.activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 public class RegisterViewModel extends ViewModel {
     private final FirebaseAuth firebaseAuth;
+    public final ObservableField<String> name = new ObservableField<>();
+    public final ObservableField<String> email = new ObservableField<>();
+    public final ObservableField<String> password = new ObservableField<>();
+    public final ObservableField<String> confirmPassword = new ObservableField<>();
     @Inject
     public RegisterViewModel(FirebaseAuth firebaseAuth){
         this.firebaseAuth =firebaseAuth;
     }
-    public void handleSignUp(String email, String password, String ten, Context context, CallbackHelper callback){
-        if (checkAllFields(email, password, new CallbackHelper() {
-            @Override
-            public void onEmailError(String message) {
-                callback.onEmailError(message);
-            }
-            @Override
-            public void onPasswordError(String message) {
-                callback.onPasswordError(message);
-            }
-        })){
+    public void handleSignUp(Context context){
+        if (checkAllFields(context)){
             ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setMessage("Create new account...");
             progressDialog.show();
-            firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+            firebaseAuth.createUserWithEmailAndPassword(Objects.requireNonNull(email.get()),
+                    Objects.requireNonNull(password.get())).addOnCompleteListener(task -> {
                 if(task.isSuccessful()) {
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     if (user != null) {
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(ten).build();
+                                .setDisplayName(name.get()).build();
                         user.updateProfile(profileUpdates).addOnCompleteListener(task1 -> {
                             if (task1.isSuccessful()) {
                                 user.sendEmailVerification().addOnCompleteListener(task11 -> {
@@ -64,27 +62,28 @@ public class RegisterViewModel extends ViewModel {
         }
     }
 
-    private boolean checkAllFields(String email, String password, CallbackHelper callback) {
-        if (email.length() == 0) {
-            callback.onEmailError("This field is required");
+    private boolean checkAllFields(Context context) {
+        if (email.get() == null || name.get() == null
+                || password.get() == null ||confirmPassword.get() == null
+                || Objects.requireNonNull(email.get()).length() == 0
+                || Objects.requireNonNull(password.get()).length() == 0
+                || Objects.requireNonNull(name.get()).length() == 0) {
+            Toast.makeText(context, "Please complete all information", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (password.length() == 0) {
-            callback.onPasswordError("This field is required");
+        if (!Patterns.EMAIL_ADDRESS.matcher(Objects.requireNonNull(email.get())).matches()) {
+            Toast.makeText(context, "Invalid email address", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (password.length() < 6) {
-            callback.onPasswordError("Password must be minimum 6 characters");
+        if (Objects.requireNonNull(password.get()).length() < 6) {
+            Toast.makeText(context, "Password must be minimum 6 characters", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (email.contains(" ")){
-            callback.onEmailError("Spaces are not allowed");
+        if (!Objects.equals(password.get(), confirmPassword.get())) {
+            Toast.makeText(context, "Confirm password does not match", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            callback.onEmailError("Invalid email address");
-            return false;
-        }
+
         return true;
     }
 }

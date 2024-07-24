@@ -3,6 +3,7 @@ package com.example.mapdemo.ui.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import com.example.mapdemo.BR;
 import com.example.mapdemo.R;
 import com.example.mapdemo.databinding.ActivityLoginBinding;
@@ -10,8 +11,8 @@ import com.example.mapdemo.di.component.ActivityComponent;
 import com.example.mapdemo.helper.CallbackHelper;
 import com.example.mapdemo.ui.base.BaseActivity;
 import com.example.mapdemo.ui.viewmodel.LoginViewModel;
+
 import org.jetbrains.annotations.Nullable;
-import java.util.Objects;
 
 public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBinding> {
     private static final int RC_SIGN_IN = 9001;
@@ -63,25 +64,13 @@ public class LoginActivity extends BaseActivity<LoginViewModel, ActivityLoginBin
             Intent intent= new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
-        binding.btnLogin.setOnClickListener(v -> {
-            String email = Objects.requireNonNull(binding.edtEmail.getText()).toString();
-            String password = Objects.requireNonNull(binding.edtPassword.getText()).toString();
-            viewModel.handleLogin(email, password, LoginActivity.this, new CallbackHelper() {
-                @Override
-                public void onComplete() {
-                    viewModel.setIsLogin(sharedPreferences, LoginActivity.this);
-                    finish();
-                }
-                @Override
-                public void onEmailError(String message) {
-                    binding.edtEmail.setError(message);
-                }
-                @Override
-                public void onPasswordError(String message) {
-                    binding.edtPassword.setError(message);
-                }
-            });
-        });
+        binding.btnLogin.setOnClickListener(v -> viewModel.handleLogin(LoginActivity.this, new CallbackHelper() {
+            @Override
+            public void onComplete() {
+                viewModel.setIsLogin(sharedPreferences, LoginActivity.this);
+                finish();
+            }
+        }));
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

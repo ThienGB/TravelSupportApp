@@ -15,13 +15,12 @@ public interface CallbackHelper {
     default void onError(ErrorResponse errorMessage){}
     default void onListFavoriteRecieved(List<Favorite> favorites){}
     default void onAccommodationResRecieved(AccommodationResponse accommodation){}
+    default void onAccommodationDeleted(){};
     default void onAccommodationRecieved(Accommodation accommodation){}
     default void onListAccomRecieved(List<Accommodation> accommodations){}
     default void onNetworkError(){}
     default void onFavorite(String message){}
     default void onOutOfRoom(){}
-    default void onEmailError(String message){}
-    default void onPasswordError(String message){}
     default void onListEmpty(){}
     default void onDateError(){}
 }

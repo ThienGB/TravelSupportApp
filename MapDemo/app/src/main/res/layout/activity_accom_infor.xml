@@ -35,7 +35,7 @@
                     android:src="@drawable/back_icon"
                     android:contentDescription="TODO" />
                 <TextView
-                    android:id="@+id/txvAccomName"
+                    android:id="@+id/txvAccomNameTitle"
                     android:layout_marginStart="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,24 +90,32 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/white_low_emp"
+                        android:background="#FDFBFB"
                         android:orientation="vertical"
-                        android:padding="10dp">
-
+                        android:padding="5dp">
+                        <TextView
+                            android:id="@+id/txvAccomName"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="25sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="@{viewModel.name}"/>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
                             android:layout_margin="10dp"
                             android:gravity="center"
                             android:orientation="vertical">
-
                             <ImageView
                                 android:id="@+id/imgAccom"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:contentDescription="TODO"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/img_accom"
+                                android:src="@drawable/img_vietnamese"
                                 app:imageUrl="@{viewModel.image}" />
                         </LinearLayout>
 
@@ -116,100 +124,27 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:background="@drawable/general_boder"
                             android:orientation="vertical">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/general_boder"
                                 android:orientation="horizontal"
-                                android:padding="10dp">
-
+                                android:layout_marginBottom="30dp">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/total_rooms"
                                     android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
+                                    android:textSize="18sp"
+                                    android:layout_marginEnd="20dp"/>
                                 <TextView
                                     android:id="@+id/txvFreeRoom"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginEnd="5dp"
                                     android:text="@{viewModel.freeRoom}"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:padding="10dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/price_per_night"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txvPrice"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="5dp"
-                                    android:text="@{viewModel.price}"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/general_boder"
-                                android:orientation="horizontal"
-                                android:padding="10dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/address"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txvAddress"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="5dp"
-                                    android:text="@{viewModel.address}"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:padding="10dp">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txvDescription"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="5dp"
-                                    android:text="@{viewModel.description}"
-                                    android:textColor="@color/black"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/main_dark_blue"
                                     android:textSize="18sp" />
                             </LinearLayout>
 
@@ -217,107 +152,77 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:padding="10dp">
+                                android:layout_marginBottom="30dp">
 
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/price_per_night"
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp"
+                                    android:layout_marginBottom="5dp"/>
+                                <TextView
+                                    android:id="@+id/txvPrice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{viewModel.price}"
+                                    android:textColor="@color/main_dark_blue"
+                                    android:textStyle="bold"
+                                    android:textSize="28sp"
+                                    android:layout_marginBottom="5dp"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/taxes_and_fees_included"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/white_mid_emp"/>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginBottom="30dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/address"
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp"
+                                    android:layout_marginBottom="10dp"/>
+
+                                <TextView
+                                    android:id="@+id/txvAddress"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{viewModel.address}"
+                                    android:textColor="@color/main_dark_blue"
+                                    android:textSize="18sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_marginBottom="10dp">
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/description"
                                     android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
+                                    android:textSize="18sp"
+                                    android:layout_marginBottom="10dp"/>
                                 <TextView
+                                    android:id="@+id/txvDescription"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
+                                    android:text="@{viewModel.description}"
+                                    android:textColor="@color/main_dark_blue"
                                     android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/description"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -326,18 +231,18 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_gravity="bottom|center"
-                    android:background="@color/endColor"
+                    android:background="@drawable/background_fullbutton"
                     android:gravity="center"
                     android:layout_height="70dp">
                     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
                         android:id="@+id/btnBooking"
-                        android:layout_width="200dp"
+                        android:layout_width="350dp"
                         android:layout_height="50dp"
                         android:layout_margin="5dp"
                         android:layout_gravity="center"
                         android:text="@string/booking_now"
                         android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textFontWeight="500" />
                 </LinearLayout>
             </FrameLayout>
     </LinearLayout>

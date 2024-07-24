@@ -53,9 +53,13 @@ public class FirestoreDataManagerImpl implements FirestoreDataManager {
                 Log.w(TAG, "Listen failed.", error);
                 return;
             }
-            if (value != null && value.exists()) {
-                AccommodationResponse accommodation = value.toObject(AccommodationResponse.class);
-                callback.onAccommodationResRecieved(accommodation);
+            if (value != null) {
+                if (value.exists()) {
+                    AccommodationResponse accommodation = value.toObject(AccommodationResponse.class);
+                    callback.onAccommodationResRecieved(accommodation);
+                } else {
+                    callback.onAccommodationDeleted();
+                }
             }
         });
         listenerRegistrations.add(registration);
@@ -98,7 +102,6 @@ public class FirestoreDataManagerImpl implements FirestoreDataManager {
                         }else {
                             callback.onListFavoriteRecieved(favorites);
                         }
-
                     } else {
                         Log.d(TAG, "Error getting documents: ", task.getException());
                     }

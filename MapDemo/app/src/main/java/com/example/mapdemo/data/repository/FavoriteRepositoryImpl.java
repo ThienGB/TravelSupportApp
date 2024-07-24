@@ -4,6 +4,7 @@ import com.example.mapdemo.data.local.dao.AccommodationDao;
 import com.example.mapdemo.data.local.dao.FavoriteDao;
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Favorite;
+import com.example.mapdemo.helper.CallbackHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,5 +63,10 @@ public class FavoriteRepositoryImpl implements FavoriteRepository {
     @Override
     public List<Accommodation> realmToList(RealmResults<Accommodation> realmAccom) {
         return accommodationDao.realmResultToList(realmAccom);
+    }
+
+    @Override
+    public void addOrUpdateListFavorite(List<Favorite> favorites, CallbackHelper callback) {
+        favoriteDao.addOrUpdateListFavorite(favorites, callback);
     }
 }

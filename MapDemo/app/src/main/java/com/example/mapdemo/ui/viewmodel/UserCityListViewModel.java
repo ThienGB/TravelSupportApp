@@ -11,6 +11,8 @@ import com.example.mapdemo.helper.CallbackHelper;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.realm.RealmResults;
 
 public class UserCityListViewModel extends ViewModel {
@@ -18,6 +20,7 @@ public class UserCityListViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private final MutableLiveData<String> error = new MutableLiveData<>();
     private final MutableLiveData<Boolean> onListChange = new MutableLiveData<>();
+    private Disposable disposable;
     public List<City> cityListFilter;
     private List<City> cityListOrigin;
     private RealmResults<City> cityRealmResults;
@@ -66,7 +69,7 @@ public class UserCityListViewModel extends ViewModel {
         return cityRepo.realmResultToList(cityRealm);
     }
     private void fetchCities(int countryCode) {
-        cityRepo.fetchcities(countryCode, new CallbackHelper() {
+        disposable = cityRepo.fetchcities(countryCode, new CallbackHelper() {
             @Override
             public void onStart() {
                 if (countryCode != 2)
@@ -99,5 +102,7 @@ public class UserCityListViewModel extends ViewModel {
         if (cityRealmResults != null) {
             cityRealmResults.removeAllChangeListeners();
         }
+        if (disposable != null)
+            disposable.dispose();
     }
 }

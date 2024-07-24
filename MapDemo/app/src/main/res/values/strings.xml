@@ -12,9 +12,9 @@
     <string name="default_web_client_id">137586477286-kdaaakliu9sudh19sujjufp5bdhp42i5.apps.googleusercontent.com</string>
     <string name="booking_list">Booking list</string>
     <string name="free_room">Free room: </string>
-    <string name="price_per_night">Price per night: </string>
-    <string name="address">Address: </string>
-    <string name="description">Description: </string>
+    <string name="price_per_night">Price per night </string>
+    <string name="address">Accommodation address </string>
+    <string name="description">Description </string>
     <string name="nearby_amenities">Nearby amenities</string>
     <string name="appname">Travel Support</string>
     <string name="wellcome">Wellcome</string>
@@ -23,10 +23,10 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="get_now">Get now</string>
     <string name="login">Login</string>
-    <string name="sign_up_with_email">Sign Up with email</string>
-    <string name="or">or</string>
+    <string name="sign_up_with_email">Sign up with email</string>
+    <string name="or">OR</string>
     <string name="create_new_account">Create new account</string>
-    <string name="hava_account">Hava account?</string>
+    <string name="have_account">Have account?</string>
     <string name="sign_in_now">Sign in now</string>
     <string name="sign_up">Sign up</string>
     <string name="choose_an_accommodation">Choose an accommodation</string>
@@ -53,4 +53,11 @@
     <string name="this_city_has_no_accommodation_yet">This city has no Accommodation yet</string>
     <string name="there_are_no_favorites_yet">There are no favorites yet</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="taxes_and_fees_included">Taxes and fees included</string>
+    <string name="no_credit_card_des">All options can be booked without a credit card</string>
+    <string name="no_credit_card_required">No credit card required</string>
+    <string name="whole_apartment">Whole apartment</string>
+    <string name="privacy_at_home_alone">Privacy at home alone</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="email">Email</string>
 </resources>

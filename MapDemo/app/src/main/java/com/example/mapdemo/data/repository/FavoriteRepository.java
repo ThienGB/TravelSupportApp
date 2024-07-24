@@ -2,6 +2,7 @@ package com.example.mapdemo.data.repository;
 
 import com.example.mapdemo.data.model.Accommodation;
 import com.example.mapdemo.data.model.Favorite;
+import com.example.mapdemo.helper.CallbackHelper;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface FavoriteRepository {
     Favorite getFavoriteById(String idFavorite);
 
     List<Accommodation> realmToList(RealmResults<Accommodation> realmAccom);
+    void addOrUpdateListFavorite(List<Favorite> favorites, CallbackHelper callback);
 }

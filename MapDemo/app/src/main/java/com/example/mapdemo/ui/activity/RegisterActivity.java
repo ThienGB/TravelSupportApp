@@ -15,6 +15,8 @@ public class RegisterActivity extends BaseActivity<RegisterViewModel, ActivityRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding.setVariable(getBindingVariable(), viewModel);
+        binding.setLifecycleOwner(this);
         addEvents();
     }
 
@@ -43,19 +45,7 @@ public class RegisterActivity extends BaseActivity<RegisterViewModel, ActivityRe
             startActivity(intent);
         });
         binding.btnSignUp.setOnClickListener(v -> {
-            String email = Objects.requireNonNull(binding.edtEmail.getText()).toString();
-            String password = Objects.requireNonNull(binding.edtPassword.getText()).toString();
-            String name = Objects.requireNonNull(binding.edtName.getText()).toString();
-            viewModel.handleSignUp(email, password, name, RegisterActivity.this, new CallbackHelper() {
-                @Override
-                public void onEmailError(String message) {
-                    binding.edtEmail.setError(message);
-                }
-                @Override
-                public void onPasswordError(String message) {
-                    binding.edtPassword.setError(message);
-                }
-            });
+            viewModel.handleSignUp(RegisterActivity.this);
         });
     }
 }
