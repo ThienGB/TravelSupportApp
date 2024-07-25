@@ -6,9 +6,12 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,6 +28,7 @@ public abstract class BaseActivity<T extends ViewModel, V extends ViewDataBindin
     protected MyViewModelFactory viewModelFactory;
     protected T viewModel;
     protected V binding;
+    private boolean isActive = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +37,7 @@ public abstract class BaseActivity<T extends ViewModel, V extends ViewDataBindin
         binding = DataBindingUtil.setContentView(this, getLayoutId());
         binding.setVariable(getBindingVariable(), viewModel);
         binding.setLifecycleOwner(this);
+        getLifecycle().addObserver(lifecycleObserver);
     }
     private void initInject() {
         MainApplication mainApplication = (MainApplication) getApplication();
@@ -51,8 +56,20 @@ public abstract class BaseActivity<T extends ViewModel, V extends ViewDataBindin
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
+    private final DefaultLifecycleObserver lifecycleObserver = new DefaultLifecycleObserver() {
+        @Override
+        public void onResume(@NonNull LifecycleOwner owner) {
+            isActive = true;
+        }
 
+        @Override
+        public void onPause(@NonNull LifecycleOwner owner) {
+            isActive = false;
+        }
+    };
     protected void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        if (isActive) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
     }
 }

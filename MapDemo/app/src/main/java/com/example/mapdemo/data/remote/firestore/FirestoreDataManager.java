@@ -8,6 +8,7 @@ public interface FirestoreDataManager {
     void getAccommodationById(String idAccom, CallbackHelper callback);
     void addAccommodation(Accommodation accom);
     void getFavoriteByUserId(String idUser, CallbackHelper callback);
+    void getFavoriteAccomById(String idAccom, CallbackHelper callback);
     void addFavorite(Favorite favorite);
     void deleteFavorite(String favoriteId);
     void removeAllListeners();

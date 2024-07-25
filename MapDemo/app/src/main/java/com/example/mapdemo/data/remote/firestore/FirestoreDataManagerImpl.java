@@ -64,6 +64,25 @@ public class FirestoreDataManagerImpl implements FirestoreDataManager {
         });
         listenerRegistrations.add(registration);
     }
+    @Override
+    public void getFavoriteAccomById(String idAccom, CallbackHelper callback) {
+        DocumentReference docRef = db.collection(CL_ACCOM).document(idAccom);
+        ListenerRegistration registration = docRef.addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.w(TAG, "Listen failed.", error);
+                return;
+            }
+            if (value != null) {
+                if (value.exists()) {
+                    AccommodationResponse accommodation = value.toObject(AccommodationResponse.class);
+                    callback.onAccommodationResRecieved(accommodation);
+                } else {
+                    callback.onAccommodationDeleted();
+                }
+            }
+        });
+        listenerRegistrations.add(registration);
+    }
 
     @Override
     public void addAccommodation(Accommodation accom) {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.ActivityChooserView;
 import androidx.databinding.library.baseAdapters.BR;
 import com.example.mapdemo.R;
 import com.example.mapdemo.data.model.api.AccommodationResponse;
@@ -77,12 +78,7 @@ public class AccomInforActivity extends BaseActivity<AccomInforViewModel, Activi
         binding.btnBooking.setOnClickListener(v -> showCalendarDialog());
         binding.btnBack.setOnClickListener(v -> {
             removeEvents();
-            if (currentAction == ACTION_RESEARCH_VIEW){
-                onBackPressed();
-            }else if (currentAction == ACTION_FAVORITE_VIEW) {
-                Intent intent = new Intent(AccomInforActivity.this, UserFavoriteListActivity.class);
-                startActivity(intent);
-            }
+            onBackPressed();
         });
     }
     private void loadData(){

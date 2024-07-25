@@ -82,6 +82,10 @@ public class UserFavoriteListActivity extends BaseActivity<UserFavoriteListViewM
                 binding.srlReload.setRefreshing(false);
                 binding.txvInfor.setVisibility(View.VISIBLE);
             }
+            @Override
+            public void onAccommodationDeleted(){
+                loadData();
+            }
         });
     }
     private void addEvents(){
