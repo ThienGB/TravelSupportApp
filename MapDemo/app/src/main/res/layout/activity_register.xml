@@ -58,11 +58,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
-                    app:text="@={viewModel.name}"
+                    android:text="@={viewModel.name}"
                     android:background="@drawable/background_fullbutton"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    app:text="@={viewModel.email}"
+                    android:text="@={viewModel.email}"
                     android:background="@drawable/background_fullbutton"
                     />
 
@@ -96,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    app:text="@={viewModel.password}"
+                    android:text="@={viewModel.password}"
                     android:background="@drawable/background_fullbutton"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -114,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    app:text="@={viewModel.confirmPassword}"
+                    android:text="@={viewModel.confirmPassword}"
                     android:background="@drawable/background_fullbutton"/>
 
             </com.google.android.material.textfield.TextInputLayout>

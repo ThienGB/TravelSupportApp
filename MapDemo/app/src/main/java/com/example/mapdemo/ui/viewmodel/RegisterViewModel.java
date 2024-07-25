@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.util.Patterns;
 import android.widget.Toast;
 import androidx.databinding.ObservableField;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import com.example.mapdemo.ui.activity.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +23,7 @@ public class RegisterViewModel extends ViewModel {
     public final ObservableField<String> email = new ObservableField<>();
     public final ObservableField<String> password = new ObservableField<>();
     public final ObservableField<String> confirmPassword = new ObservableField<>();
+
     @Inject
     public RegisterViewModel(FirebaseAuth firebaseAuth){
         this.firebaseAuth =firebaseAuth;

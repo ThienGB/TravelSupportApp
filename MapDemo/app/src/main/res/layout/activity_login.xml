@@ -58,7 +58,7 @@
                     android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:text="@={viewModel.email}"
+                    android:text="@={viewModel.email}"
                     android:background="@drawable/background_fullbutton"
                     android:inputType="textEmailAddress" />
 
@@ -75,7 +75,7 @@
                     android:id="@+id/edtPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:text="@={viewModel.password}"
+                    android:text="@={viewModel.password}"
                     android:background="@drawable/background_fullbutton"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
